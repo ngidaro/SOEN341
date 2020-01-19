@@ -1,2 +1,19 @@
 # SOEN-341
-SOEN 341 Project Winter 2020
+
+## Objective
+Develop an instragram application
+
+## Project
+Social media platforms allow people to connect from all around the world through technology. This application
+facilitates this by allowing users to post photos, follow friends as well as leave comments to a posted photo. 
+
+## Team Members
+- Celia Cai
+- Nick Gidaro
+- Riley Kilmer-Choi
+- Michael Lee
+- Armando Mancino
+- Veronique Young
+
+
+## Technologies
