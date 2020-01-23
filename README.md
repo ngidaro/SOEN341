@@ -11,7 +11,7 @@ facilitates this by allowing users to post photos, follow friends as well as lea
 - Celia Cai
 - Nick Gidaro
 - Riley Kilmer-Choi
-- Michael Lee
+- Michael Lee (mlee97)
 - Armando Mancino
 - Veronique Young
 
