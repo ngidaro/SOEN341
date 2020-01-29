@@ -13,7 +13,7 @@ facilitates this by allowing users to post photos, follow friends as well as lea
 - Riley Kilmer-Choi
 - Michael Lee (mlee97)
 - Armando Mancino
-- Veronique Young
+- Veronique Young (VeroniqueYoung)
 
 
 ## Technologies
