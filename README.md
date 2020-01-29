@@ -10,7 +10,7 @@ facilitates this by allowing users to post photos, follow friends as well as lea
 ## Team Members
 - Celia Cai
 - Nicholas Gidaro (ngidaro) (ID: 40075219)
-- Riley Kilmer-Choi
+- Riley Kilmer-Choi (rileykc98) (ID: 40048739)
 - Michael Lee (mlee97)
 - Armando Mancino (mandocino)
 - Veronique Young (VeroniqueYoung)
