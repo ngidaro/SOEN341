@@ -14,10 +14,10 @@ facilitates this by allowing users to post photos, follow friends as well as lea
 -Leave comments to a posted pictures
 
 ## Team Members
-- Celia Cai
+- Celia Cai (CeliaCaii) (ID: 40098535)
 - Nicholas Gidaro (ngidaro) (ID: 40075219)
-- Riley Kilmer-Choi
-- Michael Lee
+- Riley Kilmer-Choi (rileykc98) (ID: 40048739)
+- Michael Lee (mlee97)
 - Armando Mancino (mandocino) (ID: 40078466)
 - Veronique Young (VeroniqueYoung)
 
