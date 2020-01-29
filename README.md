@@ -25,7 +25,7 @@ facilitates this by allowing users to post photos, follow friends as well as lea
 - Riley Kilmer-Choi (rileykc98) (ID: 40048739)
 - Michael Lee (mlee97) (ID: 40054375)
 - Armando Mancino (mandocino) (ID: 40078466)
-- Veronique Young (VeroniqueYoung)
+- Veronique Young (VeroniqueYoung) (ID: 29700633)
 
 
 ## Technologies
