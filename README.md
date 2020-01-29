@@ -13,6 +13,12 @@ facilitates this by allowing users to post photos, follow friends as well as lea
 -Following a user
 -Leave comments to a posted pictures
 
+## Additional Features
+-Advertisements from Google
+-Direct Messaging
+-Like Feature
+-Notifications
+
 ## Team Members
 - Celia Cai (CeliaCaii) (ID: 40098535)
 - Nicholas Gidaro (ngidaro) (ID: 40075219)
