@@ -9,7 +9,7 @@ facilitates this by allowing users to post photos, follow friends as well as lea
 
 ## Team Members
 - Celia Cai
-- Nick Gidaro
+- Nicholas Gidaro (ngidaro)
 - Riley Kilmer-Choi
 - Michael Lee (mlee97)
 - Armando Mancino
