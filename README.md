@@ -23,3 +23,13 @@ facilitates this by allowing users to post photos, follow friends as well as lea
 
 
 ## Technologies
+Front-End:
+- React/Angular
+- Vue.js
+- Bootstrap (CSS Library)
+- JQuery
+
+Back-End:
+- MongoDB (database) 
+- JQuery
+
