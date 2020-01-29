@@ -12,7 +12,7 @@ facilitates this by allowing users to post photos, follow friends as well as lea
 - Nick Gidaro
 - Riley Kilmer-Choi
 - Michael Lee (mlee97)
-- Armando Mancino
+- Armando Mancino (mandocino)
 - Veronique Young (VeroniqueYoung)
 
 
