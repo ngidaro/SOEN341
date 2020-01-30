@@ -9,15 +9,15 @@ facilitates this by allowing users to post photos, follow friends as well as lea
 
 
 ## Core Features
--Posting a Picture (with text description)
--Following a user
--Leave comments to a posted pictures
+- Posting a Picture (with text description)
+- Following a user
+- Leave comments to a posted pictures
 
 ## Additional Features
--Advertisements from Google
--Direct Messaging
--Like Feature
--Notifications
+- Advertisements from Google
+- Direct Messaging
+- Like Feature
+- Notifications
 
 ## Team Members
 - Celia Cai (CeliaCaii) (ID: 40098535)
