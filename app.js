@@ -75,6 +75,14 @@ app.get('/Create_Account_Page',function(req,res)
   res.sendfile("front_end/Create_Account_Page.html");
 });
 
+app.get('/Profile_Page',function(req,res){
+  res.sendfile("front_end/Profile_Page.html");
+});
+
+app.get('/Post_Photo_Page',function(req,res){
+  res.sendfile("front_end/Post_Photo_Page.html");
+});
+
 var Users = mongoose.model('User',UserSchema);
 
 //Sign In page: method = get
@@ -93,10 +101,10 @@ app.post('/Login_Page',function(req,res) {
 
     // var parseDoc = JSON.parse(userData);
 
-    console.log(parseDoc.name);
+    // console.log(parseDoc.name);
   });
 
-  res.redirect('/');
+  res.redirect('/Profile_Page');
 
   //if data is correct:
   //var id = docs.id;
@@ -107,12 +115,12 @@ app.post('/Login_Page',function(req,res) {
 //Profile Page Router
 //req.params.id is the id coming in from url
 //So if user presses an object, it will load to new screen ../:id
-app.get('/Profile_Page/:id',function(req,res){
-  Users.findById(req.params.id,function(error,docs){
-    console.log(docs);//Will print all of info for the Id
-    return;
-  })
-})
+// app.get('/Profile_Page/:id',function(req,res){
+//   Users.findById(req.params.id,function(error,docs){
+//     console.log(docs);//Will print all of info for the Id
+//     return;
+//   })
+// })
 
 //post data to DB when in createaccount package
 //post must be same route as route in the action of the form in html file.
