@@ -88,9 +88,15 @@
   position: relative;
   width: 100%;
   height: auto;
-  min-height: 35rem;
-  padding: 15rem 0;
-  background: linear-gradient(to bottom, rgba(22, 22, 22, 0.3) 0%, rgba(22, 22, 22, 0.7) 75%, #161616 100%), url("../img/bg-masthead.jpg");
+  min-height: 10rem;
+  padding: 10rem 0 5rem 0;
+  background: linear-gradient(
+      to bottom,
+      rgba(22, 22, 22, 0.3) 0%,
+      rgba(22, 22, 22, 0.7) 75%,
+      #161616 100%
+    ),
+    url("../img/bg-masthead.jpg");
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: scroll;
@@ -98,16 +104,32 @@
 }
 
 .masthead h1 {
-  font-family: 'Varela Round';
+  font-family: "Varela Round";
   font-size: 2.5rem;
   line-height: 2.5rem;
   letter-spacing: 0.8rem;
-  background: -webkit-linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0));
+  background: -webkit-linear-gradient(
+    rgba(255, 255, 255, 0.9),
+    rgba(255, 255, 255, 0)
+  );
   -webkit-text-fill-color: transparent;
   -webkit-background-clip: text;
 }
 
 .masthead h2 {
+  font-family: "Varela Round";
+  font-size: 2.5rem;
+  line-height: 2.5rem;
+  letter-spacing: 0.8rem;
+  background: -webkit-linear-gradient(
+    rgba(255, 255, 255, 0.9),
+    rgba(255, 255, 255, 0)
+  );
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+}
+
+.masthead h3 {
   max-width: 20rem;
   font-size: 1rem;
 }
@@ -120,16 +142,16 @@
 }
 
 @media (min-width: 992px) {
-  .masthead {
-    height: 100vh;
-    padding: 0;
-  }
   .masthead h1 {
     font-size: 6.5rem;
     line-height: 6.5rem;
     letter-spacing: 0.8rem;
   }
   .masthead h2 {
+    max-width: 40rem;
+    font-size: 3rem;
+  }
+  .masthead h3 {
     max-width: 30rem;
     font-size: 1.25rem;
   }
@@ -163,8 +185,13 @@
 }
 
 .about-section {
-  padding-top: 10rem;
-  background: linear-gradient(to bottom, #161616 0%, rgba(22, 22, 22, 0.9) 75%, rgba(22, 22, 22, 0.8) 100%);
+  padding-top: 1rem;
+  background: linear-gradient(
+    to bottom,
+    #161616 0%,
+    rgba(22, 22, 22, 0.9) 75%,
+    rgba(22, 22, 22, 0.8) 100%
+  );
 }
 
 .about-section p {
@@ -197,14 +224,20 @@
   }
   .projects-section .project-text hr {
     border-color: #64a19d;
-    border-width: .25rem;
+    border-width: 0.25rem;
     width: 30%;
   }
 }
 
 .signup-section {
   padding: 10rem 0;
-  background: linear-gradient(to bottom, rgba(22, 22, 22, 0.1) 0%, rgba(22, 22, 22, 0.5) 75%, #161616 100%), url("../img/bg-signup.jpg");
+  background: linear-gradient(
+      to bottom,
+      rgba(22, 22, 22, 0.1) 0%,
+      rgba(22, 22, 22, 0.5) 75%,
+      #161616 100%
+    ),
+    url("../img/bg-signup.jpg");
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: scroll;
@@ -215,7 +248,7 @@
   box-shadow: 0 0.1875rem 0.1875rem 0 rgba(0, 0, 0, 0.1) !important;
   padding: 1.25rem 2rem;
   height: auto;
-  font-family: 'Varela Round';
+  font-family: "Varela Round";
   font-size: 80%;
   text-transform: uppercase;
   letter-spacing: 0.15rem;
@@ -233,7 +266,7 @@
 
 .contact-section .card h4 {
   font-size: 0.8rem;
-  font-family: 'Varela Round';
+  font-family: "Varela Round";
   text-transform: uppercase;
   letter-spacing: 0.15rem;
 }
@@ -267,7 +300,7 @@
 }
 
 body {
-  font-family: 'Nunito';
+  font-family: "Nunito";
   letter-spacing: 0.0625em;
 }
 
@@ -275,7 +308,8 @@ a {
   color: #64a19d;
 }
 
-a:focus, a:hover {
+a:focus,
+a:hover {
   text-decoration: none;
   color: #3c6360;
 }
