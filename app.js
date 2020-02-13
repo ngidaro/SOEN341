@@ -65,14 +65,14 @@ app.use(express.static('front_end'));
 app.get('/',function(req,res){
 
   //Send something to the browser -> in this case its whats writen in index.pug -> if not html-> res.render(filename)
-  res.sendFile("/Users/nicholasgidaro/Soen341_Local_Mod/front_end/Login_Page.html");
+  res.sendfile("front_end/Login_Page.html");
 
 });
 
 //Add Route
 app.get('/Create_Account_Page',function(req,res)
 {
-  res.sendFile("/Users/nicholasgidaro/Soen341_Local_Mod/front_end/Create_Account_Page.html");
+  res.sendfile("front_end/Create_Account_Page.html");
 });
 
 var Users = mongoose.model('User',UserSchema);
