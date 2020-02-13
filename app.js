@@ -16,6 +16,11 @@ const bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
+const crypto = require('crypto');
+const multer = require('multer');
+const GridFsStorage = require('multer-gridfs-storage');
+const Grid = require('gridfs-stream');
+const methodOverride = require('method-override');
 
 const router = express.Router();
 
@@ -30,10 +35,15 @@ mongoose.connect(MONGODB_URI,{useNewUrlParser:true, useUnifiedTopology:true});
 // mongoose.connect('mongodb://localhost:27017');
 
 let db = mongoose.connection;
+//Init GrifFsStorage
+let gfs;
 
+//init stream
 //Check Connection
 db.once('open',function(){
   console.log("Connected to MongoDB Remote Server");
+  gfs = Grid(db, mongoose.mongo)
+  gfs.collection('pics');
 });
 
 //Check for DB errors
@@ -49,7 +59,7 @@ const app = express();
 app.use(bodyParser.urlencoded({extended: false}));
 //parse application/json
 app.use(bodyParser.json());
-
+app.use(methodOverride('_method'));
 //Bring in Models
 let User = require('./models/user');
 
@@ -155,7 +165,31 @@ app.post('/Create_Account_Page',function(req,res){
   });
 
 });
+//Create storage Engine
 
+const storage = new GridFsStorage({
+  url: MONGODB_URI,
+  file: (req, file) => {
+    return new Promise((resolve, reject) => {
+      crypto.randomBytes(16, (err, buf) => {
+        if (err) {
+          return reject(err);
+        }
+        const filename = buf.toString('hex') + path.extname(file.originalname);
+        const fileInfo = {
+          filename: filename,
+          bucketName: 'pics'
+        };
+        resolve(fileInfo);
+      });
+    });
+  }
+});
+const upload = multer({ storage });
+
+app.post('/upload',upload.single('file'),(req, res)=> {
+  res.json({ file: req.file })
+})
 //Start Server
 // res.send won't do anythng unless listen is called
 app.listen(3000, function(){
