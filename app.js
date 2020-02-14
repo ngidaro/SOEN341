@@ -103,12 +103,8 @@ app.post('/Login_Page',function(req,res) {
   console.log(userName);
   console.log(passWord);
 
-  Users.find({username:'ngidaro'},'username password',{lean: true}, function(err, docs){
+  Users.find({username:userName},'username password',{lean: true}, function(err, docs){
     if (err) return handleError(err);
-
-    // let userData = '{ "name": "John", "age": 35, "isAdmin": false, "friends": [0,1,2,3] }';
-
-    // var parseDoc = JSON.parse(docs);
 
     console.log("%s %s",docs[0].username,docs[0].password);
 
@@ -123,11 +119,6 @@ app.post('/Login_Page',function(req,res) {
     }
 
   });
-
-
-  //if data is correct:
-  //var id = docs.id;
-  //app.redirect('/Profile_Page/:id');
 
 });
 
