@@ -2,6 +2,11 @@ mongoose = require('mongoose');
 
 LikeSchema = mongoose.Schema({
 
+  userID:{
+    type: String,
+    required: true
+  },
+
   postID:{
     type:String,
     required: true
@@ -12,4 +17,4 @@ LikeSchema = mongoose.Schema({
   }
 });
 
-let likes=module.exports = mongoose.model('likes',LikeSchema);
+let Likes=module.exports = mongoose.model('Likes',LikeSchema);

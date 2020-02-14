@@ -2,6 +2,11 @@ mongoose = require('mongoose');
 
 PicsSchema = mongoose.Schema({
 
+  // userID:{
+  //   type: String,
+  //   required: true
+  // },
+
 //  username:{
   //  type:String,
    // required: true

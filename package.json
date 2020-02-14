@@ -21,6 +21,7 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "crypto": "^1.0.1",
+    "ejs": "^3.0.1",
     "express": "^4.17.1",
     "express-validator": "^6.4.0",
     "gridfs-stream": "^1.1.1",
