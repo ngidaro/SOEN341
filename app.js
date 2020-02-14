@@ -73,7 +73,6 @@ app.use(express.static('front_end'));
 
 //Home Route
 app.get('/',function(req,res){
-
   //Send something to the browser -> in this case its whats writen in index.pug -> if not html-> res.render(filename)
   res.sendfile("front_end/Login_Page.html");
 
@@ -104,17 +103,27 @@ app.post('/Login_Page',function(req,res) {
   console.log(userName);
   console.log(passWord);
 
-  Users.find({ username: userName},'username password',{lean: true}, function(err, docs){
+  Users.find({username:'ngidaro'},'username password',{lean: true}, function(err, docs){
     if (err) return handleError(err);
 
     // let userData = '{ "name": "John", "age": 35, "isAdmin": false, "friends": [0,1,2,3] }';
 
-    // var parseDoc = JSON.parse(userData);
+    // var parseDoc = JSON.parse(docs);
 
-    // console.log(parseDoc.name);
+    console.log("%s %s",docs[0].username,docs[0].password);
+
+    if(docs[0].username == userName && docs[0].password == passWord)
+    {
+      console.log('Username and Password Correct');
+      res.redirect('/Profile_Page');
+    }
+    else {
+      console.log('Invalid UserName and Password');
+      res.redirect('/');
+    }
+
   });
 
-  res.redirect('/Profile_Page');
 
   //if data is correct:
   //var id = docs.id;
@@ -188,6 +197,7 @@ const storage = new GridFsStorage({
 const upload = multer({ storage });
 
 app.post('/upload',upload.single('file'),(req, res)=> {
+  console.log("Image saved");
   res.json({ file: req.file })
 })
 //Start Server
