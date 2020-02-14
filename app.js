@@ -73,7 +73,6 @@ app.use(express.static('front_end'));
 
 //Home Route
 app.get('/',function(req,res){
-
   //Send something to the browser -> in this case its whats writen in index.pug -> if not html-> res.render(filename)
   res.sendfile("front_end/Login_Page.html");
 
@@ -95,31 +94,27 @@ app.get('/Post_Photo_Page',function(req,res){
 
 var Users = mongoose.model('User',UserSchema);
 
-//Sign In page: method = get
+//Sign In page: method = post
 app.post('/Login_Page',function(req,res) {
 
   var userName = req.body.user;
   var passWord = req.body.pass;
 
-  console.log(userName);
-  console.log(passWord);
+  Users.find({username:userName},'username password',{lean: true}, function(err, docs){
+   if (err) return handleError(err);
 
-  Users.find({ username: userName},'username password',{lean: true}, function(err, docs){
-    if (err) return handleError(err);
+   console.log("%s %s",docs[0].username,docs[0].password);
 
-    // let userData = '{ "name": "John", "age": 35, "isAdmin": false, "friends": [0,1,2,3] }';
-
-    // var parseDoc = JSON.parse(userData);
-
-    // console.log(parseDoc.name);
-  });
-
-  res.redirect('/Profile_Page');
-
-  //if data is correct:
-  //var id = docs.id;
-  //app.redirect('/Profile_Page/:id');
-
+   if(docs[0].username == userName && docs[0].password == passWord)
+   {
+     console.log('Username and Password Correct');
+     res.redirect('/Profile_Page');
+   }
+   else {
+     console.log('Invalid UserName and Password');
+     res.redirect('/');
+   }
+ });
 });
 
 //Profile Page Router
@@ -136,8 +131,6 @@ app.post('/Login_Page',function(req,res) {
 //post must be same route as route in the action of the form in html file.
 //Make sure the method in the html file is "post"
 app.post('/Create_Account_Page',function(req,res){
-
-  // console.log(req.body);
 
   let user = new Users();
 
@@ -165,8 +158,8 @@ app.post('/Create_Account_Page',function(req,res){
   });
 
 });
-//Create storage Engine
 
+//Create storage Engine
 const storage = new GridFsStorage({
   url: MONGODB_URI,
   file: (req, file) => {
@@ -188,6 +181,7 @@ const storage = new GridFsStorage({
 const upload = multer({ storage });
 
 app.post('/upload',upload.single('file'),(req, res)=> {
+  console.log("Image saved");
   res.json({ file: req.file })
 })
 //Start Server
