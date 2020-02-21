@@ -2,6 +2,11 @@ mongoose = require('mongoose');
 
 CommentSchema = mongoose.Schema({
 
+  userID:{
+    type:String,
+    required: true
+  },
+
   postID:{
     type:String,
     required: true
@@ -10,13 +15,14 @@ CommentSchema = mongoose.Schema({
     type:String,
     required: true
   },
-  comment{
+  comment:{
     type:String,
     required: true
   },
   date:{
     type:String,
     required: true
+  }
 });
 
-let comments= module.exports = mongoose.model('comments',CommentSchema);
+let Comments = module.exports = mongoose.model('Comments',CommentSchema);

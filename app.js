@@ -13,14 +13,12 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const expressValidator = require('express-validator');
-const bcrypt = require('bcryptjs');
-const passport = require('passport');
 const crypto = require('crypto');
 const multer = require('multer');
 const GridFsStorage = require('multer-gridfs-storage');
 const Grid = require('gridfs-stream');
 const methodOverride = require('method-override');
+const ejs = require('ejs');
 
 const router = express.Router();
 
@@ -60,12 +58,16 @@ app.use(bodyParser.urlencoded({extended: false}));
 //parse application/json
 app.use(bodyParser.json());
 app.use(methodOverride('_method'));
+
+
 //Bring in Models
 let User = require('./models/user');
+let Comment = require('./models/comments');
+let Follow = require('./models/follow');
+let Like = require('./models/likes');
 
 //Load View Engine
-app.set('views',path.join(__dirname,'front_end')); // Folder called views
-//app.set('view engine','html'); // set it to pug -> define 'view engine' as 'pug'
+app.set('view engine','ejs');
 
 //Will add the css and images to the app
 //'front_end is the folder which contains the images and css folder'
@@ -73,26 +75,52 @@ app.use(express.static('front_end'));
 
 //Home Route
 app.get('/',function(req,res){
-  //Send something to the browser -> in this case its whats writen in index.pug -> if not html-> res.render(filename)
-  res.sendfile("front_end/Login_Page.html");
-
+  res.render("Login_Page");
 });
 
 //Add Route
-app.get('/Create_Account_Page',function(req,res)
-{
-  res.sendfile("front_end/Create_Account_Page.html");
+app.get('/Login_Page',function(req,res){
+  //Send something to the browser -> in this case its whats writen in index.pug -> if not html-> res.render(filename)
+  res.render("Login_Page");
 });
 
-app.get('/Profile_Page',function(req,res){
-  res.sendfile("front_end/Profile_Page.html");
+app.get('/Create_Account_Page',function(req,res){
+  res.render("Create_Account_Page");
 });
 
-app.get('/Post_Photo_Page',function(req,res){
-  res.sendfile("front_end/Post_Photo_Page.html");
+// app.get('/Profile_Page/:id',function(req,res){
+//   res.render("Profile_Page");
+// });
+
+app.get('/Post_Photo_Page/',function(req,res){
+    // Users.findById(req.params.id,function(error,docs){
+    //
+    // })
+    res.render('Post_Photo_Page'); //in ejs file do <%=username%>
 });
 
+//NOTE: 'User',Comment,etc is defined when we bring in the models
 var Users = mongoose.model('User',UserSchema);
+var Comments = mongoose.model('Comment',CommentSchema);
+var Follows = mongoose.model('Follow',FollowSchema);
+var Likes = mongoose.model('Like',LikeSchema);
+
+app.get('/Profile_Page/:id',function(req,res){
+  //findById returns object NOT Array of objects
+  User.findById(req.params.id,function(error,docs){
+    // var username = "";
+    // var followers = 99;
+    // var following = 99;
+    // var bio = "";
+    // var nbPosts = 0;
+
+    res.render('Profile_Page',{ username:docs.username,
+                                followers:docs.nbFollowers,
+                                following:docs.nbFollowing,
+                                bio:docs.bio,
+                                nbPosts:docs.nbPosts}); //in ejs file do <%=username%>
+  });
+});
 
 //Sign In page: method = post
 app.post('/Login_Page',function(req,res) {
@@ -108,11 +136,13 @@ app.post('/Login_Page',function(req,res) {
    if(docs[0].username == userName && docs[0].password == passWord)
    {
      console.log('Username and Password Correct');
-     res.redirect('/Profile_Page');
+     var sId = docs[0]._id;
+     console.log(sId);
+     res.redirect('/Profile_Page/' + sId);
    }
    else {
      console.log('Invalid UserName and Password');
-     res.redirect('/');
+     res.redirect('/Login_Page');
    }
  });
 });
@@ -133,11 +163,16 @@ app.post('/Login_Page',function(req,res) {
 app.post('/Create_Account_Page',function(req,res){
 
   let user = new Users();
+  let comment = new Comments();
+  let follow = new Follows();
+  let likes = new Likes();
 
   user.username = req.body.user;
   user.password = req.body.pass;
   user.firstName = req.body.fName;
   user.lastName = req.body.lName;
+  user.nbFollowers = 0;
+  user.nbFollowing = 0;
 
   Users.count({username: user.username}, function (err, count){
     if(count>0){
@@ -150,13 +185,12 @@ app.post('/Create_Account_Page',function(req,res){
           console.log(err);
           return;
         }else {
-          console.log("Saved to the database");
-          res.redirect('/');
+          console.log("Saved User to the database");
+          res.redirect('/Login_Page');
         }
       });
     }
   });
-
 });
 
 //Create storage Engine

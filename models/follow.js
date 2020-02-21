@@ -2,15 +2,20 @@ mongoose = require('mongoose');
 
 FollowSchema = mongoose.Schema({
 
+  userID:{
+    type: String,
+    required: true
+  },
+
   username:{
     type:String,
     required: true
   },
-  following:{
+  followUserID:{
     type:String,
     required: true
 }
 
 });
 
-let follow = module.exports = mongoose.model('follow',FollowSchema);
+let Follow = module.exports = mongoose.model('Follow',FollowSchema);
