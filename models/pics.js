@@ -2,34 +2,26 @@ mongoose = require('mongoose');
 
 PicsSchema = mongoose.Schema({
 
-  // userID:{
-  //   type: String,
-  //   required: true
-  // },
-
-//  username:{
-  //  type:String,
-   // required: true
-  //},
- // postID:{
- //   data: Buffer,
-   //type:String,
-    //required: true
-  //},
-    //picture:{
-    //}
-
-  //date:{
-    //type:String,
-    //required: true
-  //caption:{
-    //type:String,
-   // required: true
- // },
-  //location:{
-    //type:String,
-   // required: true
- // }
+  ownerID:{
+    type: String,
+    required: true
+  },
+  img:{
+   imgName: String,
+   contentType:String,
+  },
+  date:{
+    type:String,
+    required: true
+  },
+  caption:{
+    type:String,
+    required: false
+  },
+  location:{
+    type:String,
+    required: false
+ }
 });
 
-let Pics= module.exports = mongoose.model('Pics',PicsSchema);
+let Pics = module.exports = mongoose.model('Pics',PicsSchema);
