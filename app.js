@@ -65,6 +65,7 @@ let User = require('./models/user');
 let Comment = require('./models/comments');
 let Follow = require('./models/follow');
 let Like = require('./models/likes');
+let Pic = require('./models/pics')
 
 //Load View Engine
 app.set('view engine','ejs');
@@ -88,15 +89,8 @@ app.get('/Create_Account_Page',function(req,res){
   res.render("Create_Account_Page");
 });
 
-// app.get('/Profile_Page/:id',function(req,res){
-//   res.render("Profile_Page");
-// });
-
-app.get('/Post_Photo_Page/',function(req,res){
-    // Users.findById(req.params.id,function(error,docs){
-    //
-    // })
-    res.render('Post_Photo_Page'); //in ejs file do <%=username%>
+app.get('/Post_Photo_Page/:id',function(req,res){
+    res.render('Post_Photo_Page',{id:req.params.id});
 });
 
 //NOTE: 'User',Comment,etc is defined when we bring in the models
@@ -104,22 +98,24 @@ var Users = mongoose.model('User',UserSchema);
 var Comments = mongoose.model('Comment',CommentSchema);
 var Follows = mongoose.model('Follow',FollowSchema);
 var Likes = mongoose.model('Like',LikeSchema);
+var Pics = mongoose.model('Pics',PicsSchema);
 
 app.get('/Profile_Page/:id',function(req,res){
   //findById returns object NOT Array of objects
   User.findById(req.params.id,function(error,docs){
-    // var username = "";
-    // var followers = 99;
-    // var following = 99;
-    // var bio = "";
-    // var nbPosts = 0;
-
-    res.render('Profile_Page',{ username:docs.username,
+    res.render('Profile_Page',{ id:req.params.id,
+                                username:docs.username,
                                 followers:docs.nbFollowers,
                                 following:docs.nbFollowing,
                                 bio:docs.bio,
                                 nbPosts:docs.nbPosts}); //in ejs file do <%=username%>
   });
+});
+
+app.post('/Profile_Page/:id',function(req,res){
+
+  res.redirect('/Search_Page/'+req.params.id+'/'+req.body.search);
+
 });
 
 //Sign In page: method = post
@@ -158,8 +154,6 @@ app.post('/Login_Page',function(req,res) {
 // })
 
 //post data to DB when in createaccount package
-//post must be same route as route in the action of the form in html file.
-//Make sure the method in the html file is "post"
 app.post('/Create_Account_Page',function(req,res){
 
   let user = new Users();
@@ -214,10 +208,46 @@ const storage = new GridFsStorage({
 });
 const upload = multer({ storage });
 
-app.post('/upload',upload.single('file'),(req, res)=> {
-  console.log("Image saved");
-  res.json({ file: req.file })
-})
+app.post('/upload/:id',upload.single('file'),(req, res)=> {
+  image = new Pics();
+
+  image.ownerID = req.params.id;
+  image.img.imgName = req.file.filename;
+  image.img.contentType = req.file.contentType;
+
+  let dateObj = new Date();
+  // current date
+  let date = ("0" + dateObj.getDate()).slice(-2);
+  let month = ("0" + (dateObj.getMonth() + 1)).slice(-2);
+  let year = dateObj.getFullYear();
+  let hours = dateObj.getHours();
+  let minutes = dateObj.getMinutes();
+  let seconds = dateObj.getSeconds();
+  let currentDate = year + "-" + month + "-" + date + "-" + hours + ":" + minutes + ":" + seconds;
+  // prints date & time in YYYY-MM-DD HH:MM:SS format
+  console.log(currentDate);
+  image.date = currentDate;
+
+  image.save(function(err){
+    if(err){
+      console.log(err);
+      return;
+    }else {
+      console.log("Saved Image to the database");
+      res.redirect('/Profile_Page/'+image.ownerID);
+    }
+  });
+  // res.json({ file: req.file })
+});
+
+app.get('/Search_Page/:id/:name',function(req,res){
+
+  Users.find({username:{$regex: req.params.name, $options: "i"}},'firstName lastName username',{lean: true},
+          function(err, docs){
+    res.json({doc: docs});
+  });
+});
+
 //Start Server
 // res.send won't do anythng unless listen is called
 app.listen(3000, function(){

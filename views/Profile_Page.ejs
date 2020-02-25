@@ -47,9 +47,16 @@
           <i class="fas fa-bars"></i>
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
+          <!-- Search Bar -->
+          <!-- Must go to the Profile_Page "post" which will then redirect to Search_Page -->
+          <form class="Search" action="/Profile_Page/<%=id%>" method="POST">
+            <input type="text" name="search" id="search" placeholder="Search..">
+            <button type="submit"><i class="fa fa-search"></i></button>
+          </form>
+
           <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="news_feed.html"
+              <a class="nav-link js-scroll-trigger" href="/news_feed"
                 >Feed</a
               >
             </li>
@@ -59,7 +66,7 @@
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="/Post_Photo_Page"
+              <a class="nav-link js-scroll-trigger" href="/Post_Photo_Page/<%=id%>"
                 >Post Photo</a
               >
             </li>
