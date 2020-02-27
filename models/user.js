@@ -18,22 +18,18 @@ UserSchema = mongoose.Schema({
     type:String,
     required: true
   },
-  nbFollowers:{
-    type:Number,
-    required: true
+  followers:{
+    type:Array,
+    required: false
   },
-  nbFollowing:{
-    type:Number,
-    required: true
+  following:{
+    type:Array,
+    required: false
   },
   bio:{
     type:String,
     required: false
   },
-  nbPosts:{
-    type:Number,
-    required:false
-  }
 
 });
 

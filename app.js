@@ -101,12 +101,14 @@ var Likes = mongoose.model('Like',LikeSchema);
 var Pics = mongoose.model('Pics',PicsSchema);
 
 app.get('/Profile_Page/:id',function(req,res){
+
   //findById returns object NOT Array of objects
   User.findById(req.params.id,function(error,docs){
-    res.render('Profile_Page',{ id:req.params.id,
+
+  res.render('Profile_Page',{ id:req.params.id,
                                 username:docs.username,
-                                followers:docs.nbFollowers,
-                                following:docs.nbFollowing,
+                                followers:docs.followers.length,
+                                following:docs.following.length,
                                 bio:docs.bio,
                                 nbPosts:docs.nbPosts}); //in ejs file do <%=username%>
   });
@@ -127,19 +129,28 @@ app.post('/Login_Page',function(req,res) {
   Users.find({username:userName},'username password',{lean: true}, function(err, docs){
    if (err) return handleError(err);
 
-   console.log("%s %s",docs[0].username,docs[0].password);
-
-   if(docs[0].username == userName && docs[0].password == passWord)
+   //If no username exists in the database:
+   if (docs.length == 0)
    {
-     console.log('Username and Password Correct');
-     var sId = docs[0]._id;
-     console.log(sId);
-     res.redirect('/Profile_Page/' + sId);
-   }
-   else {
      console.log('Invalid UserName and Password');
      res.redirect('/Login_Page');
    }
+   else {
+     //Verify that the username and password are correct
+     if((docs[0].username == userName) && (docs[0].password == passWord))
+     {
+       console.log('Username and Password Correct');
+       var sId = docs[0]._id;
+       console.log(sId);
+       res.redirect('/Profile_Page/' + sId);
+     }
+     else {
+       console.log('Invalid UserName and Password');
+       res.redirect('/Login_Page');
+     }
+   }
+
+
  });
 });
 
@@ -157,16 +168,11 @@ app.post('/Login_Page',function(req,res) {
 app.post('/Create_Account_Page',function(req,res){
 
   let user = new Users();
-  let comment = new Comments();
-  let follow = new Follows();
-  let likes = new Likes();
 
   user.username = req.body.user;
   user.password = req.body.pass;
   user.firstName = req.body.fName;
   user.lastName = req.body.lName;
-  user.nbFollowers = 0;
-  user.nbFollowing = 0;
 
   Users.count({username: user.username}, function (err, count){
     if(count>0){
@@ -234,6 +240,7 @@ app.post('/upload/:id',upload.single('file'),(req, res)=> {
       return;
     }else {
       console.log("Saved Image to the database");
+      //Go back to user's profile page
       res.redirect('/Profile_Page/'+image.ownerID);
     }
   });
@@ -244,9 +251,105 @@ app.get('/Search_Page/:id/:name',function(req,res){
 
   Users.find({username:{$regex: req.params.name, $options: "i"}},'firstName lastName username',{lean: true},
           function(err, docs){
-    res.json({doc: docs});
+    res.render('Search_Page',{id:req.params.id,
+                              doc: docs});
+    // res.json({doc: docs});
+    // console.log(docs.length);
   });
 });
+
+// ------------------------------------------------------------------------------
+// Definition: Follow_Page is the page of the user who correspong to the searchID.
+//             This page contains a follow button and all information realting to the searched user
+//             This function populates the Follow_Page.ejs with a specific user's data
+// Variables:
+//   id =        The id of the current logged on user
+//   searchID =  The id of the user who has been searched
+//   docs =      All data which is associated with the sechID
+//   sFollow =   The string for the button -> Either "Follow" or "Unfollow"
+//
+//   NOTE: req.params.id gets the id coming from the url (:id)
+//         req.params.searchID get the searchID from the url (:searhID)
+//
+// ------------------------------------------------------------------------------
+app.get('/Follow_Page/:id/:searchID',function(req,res){
+
+  User.findById(req.params.searchID,function(error,docs){
+    if (error) return handleError(error);
+
+    //Check to see if user already follows the person, if he does then display Unfollow
+    var sFollow = "Follow";
+    var userID = req.params.id;
+    var foundID = (docs.followers.find(valueIS => userID));
+
+    //the searchID user does not have any followers
+    if(docs.followers.length != 0)
+    {
+      if(req.params.id == foundID)
+      {
+        sFollow = "Unfollow";
+      }
+    }
+
+    res.render('Follow_Page',{ id:req.params.id,
+                                searchID:req.params.searchID,
+                                username:docs.username,
+                                followers:docs.followers.length,
+                                following:docs.following.length,
+                                sFollow: sFollow,
+                                bio:docs.bio,
+                                nbPosts:docs.nbPosts});
+  });
+});
+
+//This is where the current user can follow as well as comment on another person's image
+app.post('/Follow_Page/:id/:searchID/:follow',function(req,res){
+
+  console.log("clicked");
+  console.log(req.params.follow);
+  var isFollow = true; //To know if we are following or unfollowing
+
+  if(req.params.follow == "Unfollow")
+  {
+    isFollow = false
+  }
+
+  //Update database --------------------------------------------------
+  //Manipulate userID from 'followers' in searhID-user DB
+  if(isFollow)
+  {
+    //Add users to the followers in the DB
+    User.updateOne({_id:req.params.searchID},{$push: {followers: req.params.id}},function (error, success) {
+        saved(error,success);
+    });
+    //Add users to the following in the DB
+    User.updateOne({_id:req.params.id},{$push: {following: req.params.searchID}},function (error, success) {
+        saved(error,success);
+    });
+  }
+  else {
+    //Delete users from the followers in the DB
+    User.updateOne({_id:req.params.searchID},{$pull: {followers: req.params.id}},function (error, success) {
+        saved(error,success);
+    });
+    //Delete users from the following in the DB
+    User.updateOne({_id:req.params.id},{$pull: {following: req.params.searchID}},function (error, success) {
+        saved(error,success);
+    });
+  }
+  //------------------------------------------------------------------
+
+  res.redirect('/Follow_Page/' + req.params.id + '/' + req.params.searchID);
+});
+
+function saved(error,success)
+{
+    if (error) {
+        console.log(error);
+    } else {
+        console.log(success);
+    }
+}
 
 //Start Server
 // res.send won't do anythng unless listen is called
