@@ -27,12 +27,18 @@ const router = express.Router();
 // mongodb+srv://mando:mando@341db-i1fo2.mongodb.net/test?retryWrites=true&w=majority
 
 
-//Note the word User in the following string is the name of the DB
+// ------------------------------------------------------------------------------
+// Definition: Connecting to the MongoDB databse on Mongodb.atlas
+// Variables:
+//   MONGODB_URI: The mongodb string gien in mongodb.alas to connect to the UserData DB
+// ------------------------------------------------------------------------------
+//Note the word UserData in the following string is the name of the DB
 const MONGODB_URI = 'mongodb+srv://soen341:soen341@clustersoen341-bbtjh.mongodb.net/UserData?retryWrites=true&w=majority'
 mongoose.connect(MONGODB_URI,{useNewUrlParser:true, useUnifiedTopology:true});
 // mongoose.connect('mongodb://localhost:27017');
 
 let db = mongoose.connection;
+
 //Init GrifFsStorage
 let gfs;
 
@@ -59,12 +65,8 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(methodOverride('_method'));
 
-
-//Bring in Models
+//Bring in Models from models folder
 let User = require('./models/user');
-let Comment = require('./models/comments');
-let Follow = require('./models/follow');
-let Like = require('./models/likes');
 let Pic = require('./models/pics')
 
 //Load View Engine
@@ -81,7 +83,6 @@ app.get('/',function(req,res){
 
 //Add Route
 app.get('/Login_Page',function(req,res){
-  //Send something to the browser -> in this case its whats writen in index.pug -> if not html-> res.render(filename)
   res.render("Login_Page");
 });
 
@@ -95,13 +96,33 @@ app.get('/Post_Photo_Page/:id',function(req,res){
 
 //NOTE: 'User',Comment,etc is defined when we bring in the models
 var Users = mongoose.model('User',UserSchema);
-var Comments = mongoose.model('Comment',CommentSchema);
-var Follows = mongoose.model('Follow',FollowSchema);
-var Likes = mongoose.model('Like',LikeSchema);
 var Pics = mongoose.model('Pics',PicsSchema);
 
+// ------------------------------------------------------------------------------
+//  app.get() -> Displays the ejs file specified
+//
+// Definition: Render's the user's profile page with all data taken from user collection in DB
+//
+// Variables:
+//   id:        The id of the current logged on user
+//   username:  The id of the user who has been searched
+//   docs:      All data from the database associated with the user id is stored in docs
+//      docs.username:  Get the string value of the username pertaining to the req.params.id
+//      docs.firstname: Get the string value of the firstname pertaining to the req.params.id
+//      docs.lastname:  Get the string value of the latname pertaining to the req.params.id
+//      docs.password:  Get the string value of the password pertaining to the req.params.id
+//      docs.followers: Returns array of all the followers following the user req.params.id
+//      docs.following: Returns array of all the users following the user req.params.id
+//      docs.bio:       Returns the user's bio
+//
+//   NOTE: - req.params.id gets the id coming from the url (:id)
+//         - In res.render(), there are variables being declared on the left side,
+//              ex. username: docs.username
+//                The variable on the left is the variable being used in the Profile_Page.ejs file.
+//                To use variables in the ejs file, do: <%=username%> wherever needed.
+//
+// ------------------------------------------------------------------------------
 app.get('/Profile_Page/:id',function(req,res){
-
   //findById returns object NOT Array of objects
   User.findById(req.params.id,function(error,docs){
 
@@ -109,16 +130,39 @@ app.get('/Profile_Page/:id',function(req,res){
                                 username:docs.username,
                                 followers:docs.followers.length,
                                 following:docs.following.length,
-                                bio:docs.bio,
-                                nbPosts:docs.nbPosts}); //in ejs file do <%=username%>
+                                bio:docs.bio}); //in ejs file do <%=username%>
   });
 });
 
+// ------------------------------------------------------------------------------
+//  app.post() -> Gets any written text or action (submit)and performs operations
+//
+//  Variables:
+//      req.params.id:     The user's id obtained from the url
+//      req.body.search:   Gets the text written in the search text field (name of field is "search")
+// ------------------------------------------------------------------------------
 app.post('/Profile_Page/:id',function(req,res){
 
   res.redirect('/Search_Page/'+req.params.id+'/'+req.body.search);
 
 });
+
+// ------------------------------------------------------------------------------
+/*  Path name: /Login_Page
+
+    Definition: Gets all data from the text fields and checks to see if the data entered
+                exists and is correct. If correct then page redirects to /Profile_Page,
+                if not then pages redirects to /Login_Page.
+
+    Variables:
+        req:      Request from page.
+        res:      Response from page.
+        userName: String which stores the text inputted by the user in the username textfield.
+        passWord: String which stores the text inputted by the user in the password textfield.
+        docs:     Object which contains all data pertaining to the username found by User.find().
+        sid:      string which conatins the user's id obtained from he url (req.params.id).
+*/
+// ------------------------------------------------------------------------------
 
 //Sign In page: method = post
 app.post('/Login_Page',function(req,res) {
@@ -149,21 +193,29 @@ app.post('/Login_Page',function(req,res) {
        res.redirect('/Login_Page');
      }
    }
-
-
  });
 });
 
-//Profile Page Router
-//req.params.id is the id coming in from url
-//So if user presses an object, it will load to new screen ../:id
-// app.get('/Profile_Page/:id',function(req,res){
-//   Users.findById(req.params.id,function(error,docs){
-//     console.log(docs);//Will print all of info for the Id
-//     return;
-//   })
-// })
+// ------------------------------------------------------------------------------
+/*  Path name: /Create_Account_Page
 
+    Definition: Gets all data entered in the textfields and validates to see if the user
+                already exists. If the user already exists, then the age will redirect to
+                /Create_Account_Page. If the user does not exist, the data will be stored in the DB.
+
+    Variables:
+        req:      Request from page.
+        res:      Response from page.
+        user:     Object from the model Users() -> which is the UserSchema located in /models/user.js
+          user.username:  String data obtained from the username textfield.
+          user.password:  String data obtained from the password textfield.
+          user.firstname: String data obtained from the firstname textfield.
+          user.lastname:  String data obtained from the lastname textfield.
+        count:    The count of user's that have the username searched.
+                  Either 0 or 1. If 0 then username does not exist.
+                                 If 1 then username is already taken.
+*/
+// ------------------------------------------------------------------------------
 //post data to DB when in createaccount package
 app.post('/Create_Account_Page',function(req,res){
 
@@ -193,7 +245,17 @@ app.post('/Create_Account_Page',function(req,res){
   });
 });
 
-//Create storage Engine
+// ------------------------------------------------------------------------------
+/*  Create storage Engine
+
+    Definition: Creates the GridFsStorage. Used for storing images in Post_Photo_Page.ejs
+
+    Variables:
+      url:    The url to access the mongoDB database.
+      file:   Object which contains all information pertaining to the image selected
+      filename: String of the hexed name of the image with specific extension (file.contentType).
+*/
+// ------------------------------------------------------------------------------
 const storage = new GridFsStorage({
   url: MONGODB_URI,
   file: (req, file) => {
@@ -214,6 +276,25 @@ const storage = new GridFsStorage({
 });
 const upload = multer({ storage });
 
+// ------------------------------------------------------------------------------
+/*  app.post('/upload/:id')
+
+    Definition: Stores the image selected in Post_Photo_Page into the pic DB in mongoDB.
+
+    Variables:
+      image;                    Object of the model Pics() of PicsSchema located in /models/pics.js
+        image.ownerID:          String which conatins the user's id who is posting the picture.
+        image.img.imgName:      String which containing the hexed filename name of the image.
+        image.imdg.contentType: String containing the contentType (jpg or jpeg).
+        image.date:             String of the date and time when image is posted
+                                YYYY-MM-DD HH:MM:SS format
+        image.caption:          String which conatins the user's caption.
+        image.location:         String containing the user's location.
+      req.file:   Object which contains all information pertaining to the image selected
+                  Can see all fields by inserting code: console.log(file);
+
+*/
+// ------------------------------------------------------------------------------
 app.post('/upload/:id',upload.single('file'),(req, res)=> {
   image = new Pics();
 
@@ -230,8 +311,7 @@ app.post('/upload/:id',upload.single('file'),(req, res)=> {
   let minutes = dateObj.getMinutes();
   let seconds = dateObj.getSeconds();
   let currentDate = year + "-" + month + "-" + date + "-" + hours + ":" + minutes + ":" + seconds;
-  // prints date & time in YYYY-MM-DD HH:MM:SS format
-  console.log(currentDate);
+
   image.date = currentDate;
 
   image.save(function(err){
@@ -244,17 +324,28 @@ app.post('/upload/:id',upload.single('file'),(req, res)=> {
       res.redirect('/Profile_Page/'+image.ownerID);
     }
   });
-  // res.json({ file: req.file })
 });
 
+// ------------------------------------------------------------------------------
+/*  app.get('/Search_Page/:id/:name')
+
+    Definition: Renders the Search_Page with all usernames queried from the DB which
+                contains the searched parameter (req.params.name)
+
+    Variables:
+      docs:   Object contains all information pertaining to the username fonud by User.find().
+      data:   Object which is used in the Search_Page.ejs which holds all fields from docs.
+              (data[0].username, data[1].username, data.[0].lastname...)
+
+      NOTE: The Users.find() oly returns _id, firstname, lastname and username.
+*/
+// ------------------------------------------------------------------------------
 app.get('/Search_Page/:id/:name',function(req,res){
 
   Users.find({username:{$regex: req.params.name, $options: "i"}},'firstName lastName username',{lean: true},
           function(err, docs){
     res.render('Search_Page',{id:req.params.id,
-                              doc: docs});
-    // res.json({doc: docs});
-    // console.log(docs.length);
+                              data: docs});
   });
 });
 
@@ -263,10 +354,10 @@ app.get('/Search_Page/:id/:name',function(req,res){
 //             This page contains a follow button and all information realting to the searched user
 //             This function populates the Follow_Page.ejs with a specific user's data
 // Variables:
-//   id =        The id of the current logged on user
-//   searchID =  The id of the user who has been searched
-//   docs =      All data which is associated with the sechID
-//   sFollow =   The string for the button -> Either "Follow" or "Unfollow"
+//   id:        The id of the current logged on user
+//   searchID:  The id of the user who has been searched
+//   docs:      All data which is associated with the sechID
+//   sFollow:   The string for the button -> Either "Follow" or "Unfollow"
 //
 //   NOTE: req.params.id gets the id coming from the url (:id)
 //         req.params.searchID get the searchID from the url (:searhID)
@@ -302,19 +393,32 @@ app.get('/Follow_Page/:id/:searchID',function(req,res){
   });
 });
 
+// ------------------------------------------------------------------------------
+/*  app.post('/Follow_Page/:id/:searchID/:follow')
+
+    Definition: Checks to see if the parameter :follow is "Follow" or "Unfollow".
+                Depending on :follow, this function will either remove the searchID
+                user from the 'following' array of the user's id and remove the user's id
+                from the 'followers' array of the searchID user or it will update the arrays.
+
+                searchID user: The us that was looked up.
+                user id:       The logged on user (main).
+
+    Variables:
+      isFollow: Boolean which determines if the use wants to Follow or Unfollow another user.
+*/
+// ------------------------------------------------------------------------------
 //This is where the current user can follow as well as comment on another person's image
 app.post('/Follow_Page/:id/:searchID/:follow',function(req,res){
 
-  console.log("clicked");
-  console.log(req.params.follow);
-  var isFollow = true; //To know if we are following or unfollowing
+  var isFollow = true;
 
   if(req.params.follow == "Unfollow")
   {
     isFollow = false
   }
 
-  //Update database --------------------------------------------------
+  //------------------------ Update database ----------------------------
   //Manipulate userID from 'followers' in searhID-user DB
   if(isFollow)
   {
@@ -352,7 +456,7 @@ function saved(error,success)
 }
 
 //Start Server
-// res.send won't do anythng unless listen is called
+// res.render won't do anythng unless listen is called
 app.listen(3000, function(){
   console.log("Server started on port 3000...");
 });

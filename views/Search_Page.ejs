@@ -38,10 +38,10 @@
      <header>Search Results</header>
         <nav>
             <ul>
-              <% for(var i = 0; i < doc.length; i++) {
-                    if(doc[i]._id == id) {i++}
+              <% for(var i = 0; i < data.length; i++) {
+                    if(data[i]._id == id) {i++}
                     else{%>
-                  <a method="GET" href="/Follow_Page/<%=id%>/<%=doc[i]._id%>"><%= doc[i].username %></a>
+                  <a method="GET" href="/Follow_Page/<%=id%>/<%=data[i]._id%>"><%= data[i].username %></a>
                   <br></<br>
               <%}}%>
             </ul>
