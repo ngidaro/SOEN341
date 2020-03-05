@@ -64,6 +64,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 //parse application/json
 app.use(bodyParser.json());
 app.use(methodOverride('_method'));
+app.use(express.static('./public/'));
 
 //Bring in Models from models folder
 let User = require('./models/user');
@@ -124,16 +125,19 @@ var Pics = mongoose.model('Pics',PicsSchema);
 // ------------------------------------------------------------------------------
 app.get('/Profile_Page/:id',function(req,res){
   //findById returns object NOT Array of objects
-  User.findById(req.params.id,function(error,docs){
+User.findById(req.params.id,function(error,docs){
+Pics.find({ownerID:req.params.id}, function(error,imgDocs){
 
   res.render('Profile_Page',{ id:req.params.id,
                                 username:docs.username,
                                 followers:docs.followers.length,
                                 following:docs.following.length,
-                                bio:docs.bio}); //in ejs file do <%=username%>
+                                bio:docs.bio,
+                                imgData:imgDocs
+                              }); //in ejs file do <%=username%>
   });
 });
-
+});
 // ------------------------------------------------------------------------------
 //  app.post() -> Gets any written text or action (submit)and performs operations
 //
@@ -264,17 +268,31 @@ const storage = new GridFsStorage({
         if (err) {
           return reject(err);
         }
-        const filename = buf.toString('hex') + path.extname(file.originalname);
+        const filename = /*buf.toString('hex')*/date() + file.originalname;
+        console.log(filename + "  storage");
         const fileInfo = {
           filename: filename,
-          bucketName: 'pics'
+          bucketName: 'pics' //Has to match the collection name gfs.collection('pics');
         };
         resolve(fileInfo);
       });
     });
   }
 });
-const upload = multer({ storage });
+
+const upload = multer({ storage: storage }).single('file');
+
+const localStorage = multer.diskStorage({
+  destination: './public/uploads/',
+  filename: function (req, file, cb) {
+    var filename = date() + file.originalname;
+    console.log(filename + "  localStorage");
+    cb(null,filename);
+  }
+});
+
+//file in the next line is the fieldname from the Post_Photo_Page_ejs file
+const uploadLocal = multer({ storage: localStorage }).single('file');
 
 // ------------------------------------------------------------------------------
 /*  app.post('/upload/:id')
@@ -295,36 +313,50 @@ const upload = multer({ storage });
 
 */
 // ------------------------------------------------------------------------------
-app.post('/upload/:id',upload.single('file'),(req, res)=> {
-  image = new Pics();
+app.post('/upload/:id'/*,upload.single('file')*/,(req, res)=> {
 
-  image.ownerID = req.params.id;
-  image.img.imgName = req.file.filename;
-  image.img.contentType = req.file.contentType;
+  upload(req,res,(err) => {
+    //Callback function with parameter err
+    if (err) {
+      console.log("Failed to upload to local storage");
+    }
+    else {
+      image = new Pics();
+      image.ownerID = req.params.id;
+      image.img.imgName = req.file.filename;
+      image.img.contentType = req.file.contentType;
+      //image.caption=req.body.caption;
 
-  let dateObj = new Date();
-  // current date
-  let date = ("0" + dateObj.getDate()).slice(-2);
-  let month = ("0" + (dateObj.getMonth() + 1)).slice(-2);
-  let year = dateObj.getFullYear();
-  let hours = dateObj.getHours();
-  let minutes = dateObj.getMinutes();
-  let seconds = dateObj.getSeconds();
-  let currentDate = year + "-" + month + "-" + date + "-" + hours + ":" + minutes + ":" + seconds;
+      console.log(req.body.caption);
+      var currentDate = date();
 
-  image.date = currentDate;
+      image.date = currentDate;
 
-  image.save(function(err){
-    if(err){
-      console.log(err);
-      return;
-    }else {
-      console.log("Saved Image to the database");
+      image.save(function(err){
+        if(err){
+          console.log(err);
+          return;
+        }else {
+          console.log("Saved Image to the database");
+        }
+      });
+    }
+  });
+
+  //Calls the function uploadLocal
+  uploadLocal(req,res,(err) => {
+    //Callback function with parameter err
+    if (err) {
+      console.log("Failed to upload to local storage");
+    }
+    else {
+      console.log("Image saved");
       //Go back to user's profile page
-      res.redirect('/Profile_Page/'+image.ownerID);
+      res.redirect('/Profile_Page/'+req.params.id);
     }
   });
 });
+
 
 // ------------------------------------------------------------------------------
 /*  app.get('/Search_Page/:id/:name')
@@ -363,6 +395,20 @@ app.get('/Search_Page/:id/:name',function(req,res){
 //         req.params.searchID get the searchID from the url (:searhID)
 //
 // ------------------------------------------------------------------------------
+app.get('/Profile_Page/:id',function(req,res){
+  //findById returns object NOT Array of objects
+User.findById(req.params.id,function(error,docs){
+Pics.find({ownerID:req.params.id}, function(error,imgDocs){
+  res.render('Profile_Page',{ id:req.params.id,
+                                username:docs.username,
+                                followers:docs.followers.length,
+                                following:docs.following.length,
+                                bio:docs.bio,
+                                imgData:imgDocs
+                              }); //in ejs file do <%=username%>
+  });
+});
+});
 app.get('/Follow_Page/:id/:searchID',function(req,res){
 
   User.findById(req.params.searchID,function(error,docs){
@@ -453,6 +499,19 @@ function saved(error,success)
     } else {
         console.log(success);
     }
+}
+function date()
+{
+  let dateObj = new Date();
+  // current date
+  let date = ("0" + dateObj.getDate()).slice(-2);
+  let month = ("0" + (dateObj.getMonth() + 1)).slice(-2);
+  let year = dateObj.getFullYear();
+  let hours = dateObj.getHours();
+  let minutes = dateObj.getMinutes();
+  let seconds = dateObj.getSeconds();
+
+  return year + "-" + month + "-" + date + "-" + hours + "_" + minutes + "_" + seconds;
 }
 
 //Start Server
