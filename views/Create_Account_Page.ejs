@@ -66,10 +66,16 @@
           <label>&nbsp;&nbsp;Password&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
           <input name = "pass" type="text" id="pass" placeholder="Password">
           <br/><br/>
-          <pre>              <input type="submit"></input></pre>
+          <pre>              <input type="submit" onclick="successMessage()"></input></pre>
         </form>
     </div>
   </section>
+
+  <script>
+  function successMessage() {
+    alert("Your account has been created successfully!");
+  }
+  </script>
 
   <!-- Contact Section -->
   <section class="contact-section bg-black">
