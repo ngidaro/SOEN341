@@ -91,9 +91,7 @@
               <h3 class="text-white-50 mx-auto mt-2 mb-5">Following <%=following%></h3>
             </div>
           </div>
-          <a href="#signIn" class="btn btn-primary js-scroll-trigger"
-            >Edit Profile</a
-          >
+          <a method ="GET" href="/Profile_Edit/<%=id%>" class="btn btn-primary js-scroll-trigger">Edit Profile</a>
         </div>
       </div>
     </header>
@@ -116,22 +114,25 @@
         <!-- todo : populate posts with data from back end, add some sort of recycler viewer-->
         <div class="row">
           <div class="col-4">
-            <img src="/img/demo-image-01.jpg" class="img-fluid" alt="" />
             <!-- todo : loaded image goes here-->
+            <% for (var C=0;C<imgData.length;C++){%>
+              <br/><img src="/uploads/<%=imgData[C].img.imgName%>" alt="not displaying" height="200" width ="200">
+              <br/>
+            <%}%>
           </div>
           <div class="col-8">
             <div class="row">
               <div class="col-2">
-                <h3 class="text-white">Likes:</h3>
+                <h3 class="text-white"></h3>
               </div>
               <div class="col-2">
-                <h3 class="text-white">0</h3>
+                <h3 class="text-white"></h3>
                 <!-- todo : likes number goes here -->
               </div>
             </div>
             <div class="row">
               <div class="col-8">
-                <h3 class="text-white">Caption here</h3>
+                <h3 class="text-white"></h3>
                 <!-- todo: load caption here-->
               </div>
             </div>
