@@ -15,12 +15,20 @@ PicsSchema = mongoose.Schema({
     required: true
   },
   caption:{
-    type:String,
+    type:Array,
+    required: false
+  },
+  likes:{
+    type:Array,
     required: false
   },
   location:{
     type:String,
     required: false
+ },
+ comments:{
+   type:Array,
+   required: false
  }
 });
 
