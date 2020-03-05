@@ -18,6 +18,10 @@ UserSchema = mongoose.Schema({
     type:String,
     required: true
   },
+  bio:{
+      type:Array,
+      required: false
+  },
   followers:{
     type:Array,
     required: false
@@ -25,12 +29,7 @@ UserSchema = mongoose.Schema({
   following:{
     type:Array,
     required: false
-  },
-  bio:{
-    type:String,
-    required: false
-  },
-
+  }
 });
 
 let User = module.exports = mongoose.model('User',UserSchema);

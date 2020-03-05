@@ -502,6 +502,48 @@ function saved(error,success)
         console.log(success);
     }
 }
+app.post('/leaveComment/:id/:username/:searchID/:imgName',function(req,res){
+  Pics.updateOne({"img.imgName":req.params.imgName},{$push: {comments: req.params.username+': '+req.body.theComment}},function (error, success) {
+      saved(error,success);
+      });
+    res.redirect('/Follow_Page/' + req.params.id + '/' + req.params.searchID);
+});
+app.get('/Focused_myImage/:id/:imgName',function(req,res)
+{
+  User.findById(req.params.id,function(error,docs){
+  Pics.find({"img.imgName":req.params.imgName}, function(error,imgDocs){
+
+    res.render('Focused_myImage',{ id:req.params.id,
+                                  username:docs.username,
+                                  followers:docs.followers.length,
+                                  following:docs.following.length,
+                                  bio:docs.bio,
+                                  imgData:imgDocs
+                                });
+});
+});
+});
+
+app.get('/Focused_Image/:id/:searchID/:imgName',function(req,res)
+{
+  User.findById(req.params.id,function(error,tempdocs){ //gets the user were looking at
+
+  User.findById(req.params.id,function(error,docs){
+  Pics.find({"img.imgName":req.params.imgName}, function(error,imgDocs){
+
+    res.render('Focused_Image',{ id:req.params.id,
+                                  username:docs.username,
+                                  followers:docs.followers.length,
+                                  following:docs.following.length,
+                                  bio:docs.bio,
+                                  searchID:req.params.searchID,
+                                  searchedUsername:tempdocs.username,
+                                  imgData:imgDocs
+                                });
+});
+});
+});
+});
 function date()
 {
   let dateObj = new Date();
