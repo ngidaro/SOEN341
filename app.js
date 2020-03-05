@@ -502,12 +502,14 @@ function saved(error,success)
         console.log(success);
     }
 }
+//leaves comment on a person's post
 app.post('/leaveComment/:id/:username/:searchID/:imgName',function(req,res){
   Pics.updateOne({"img.imgName":req.params.imgName},{$push: {comments: req.params.username+': '+req.body.theComment}},function (error, success) {
       saved(error,success);
       });
     res.redirect('/Follow_Page/' + req.params.id + '/' + req.params.searchID);
 });
+//displays my image in a bigger view
 app.get('/Focused_myImage/:id/:imgName',function(req,res)
 {
   User.findById(req.params.id,function(error,docs){
@@ -523,10 +525,10 @@ app.get('/Focused_myImage/:id/:imgName',function(req,res)
 });
 });
 });
-
+//displays somebody's picture in a better view
 app.get('/Focused_Image/:id/:searchID/:imgName',function(req,res)
 {
-  User.findById(req.params.id,function(error,tempdocs){ //gets the user were looking at
+  User.findById(req.params.searchID,function(error,tempdocs){ //gets the user were looking at
 
   User.findById(req.params.id,function(error,docs){
   Pics.find({"img.imgName":req.params.imgName}, function(error,imgDocs){
@@ -537,12 +539,12 @@ app.get('/Focused_Image/:id/:searchID/:imgName',function(req,res)
                                   following:docs.following.length,
                                   bio:docs.bio,
                                   searchID:req.params.searchID,
-                                  searchedUsername:tempdocs.username,
+                                  searchedUsername:searchDocs.username,
                                   imgData:imgDocs
                                 });
-});
-});
-});
+                              });
+                            });
+                          });
 });
 function date()
 {
