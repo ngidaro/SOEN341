@@ -564,6 +564,28 @@ app.post('/Like_Photo/:id/:imgName/:searchID',function(req,res){
   res.redirect('/Follow_Page/' + req.params.id + '/' + req.params.searchID);
 });
 });
+app.post('/Edit_Profile/:id',function(req,res){
+  User.updateOne({_id:req.params.id},{$set: {bio: req.body.bio}},function (error, success) {
+      saved(error,success);
+  });
+  res.redirect('/Profile_Page/'+req.params.id);
+});
+
+app.get('/Profile_Edit/:id',function(req,res){
+  //findById returns object NOT Array of objects
+User.findById(req.params.id,function(error,docs){
+Pics.find({ownerID:req.params.id}, function(error,imgDocs){
+  res.render('Profile_Edit',{ id:req.params.id,
+                                username:docs.username,
+                                followers:docs.followers.length,
+                                following:docs.following.length,
+                                bio:docs.bio,
+                                imgData:imgDocs
+                              }); //in ejs file do <%=username%>
+  });
+});
+});
+
 function date()
 {
   let dateObj = new Date();
