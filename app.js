@@ -411,9 +411,10 @@ Pics.find({ownerID:req.params.id}, function(error,imgDocs){
 });
 app.get('/Follow_Page/:id/:searchID',function(req,res){
 
+console.log("redirect ");
   User.findById(req.params.searchID,function(error,docs){
     if (error) return handleError(error);
-
+Pics.find({ownerID:req.params.searchID}, function(error,imgDocs){
     //Check to see if user already follows the person, if he does then display Unfollow
     var sFollow = "Follow";
     var userID = req.params.id;
@@ -435,10 +436,11 @@ app.get('/Follow_Page/:id/:searchID',function(req,res){
                                 following:docs.following.length,
                                 sFollow: sFollow,
                                 bio:docs.bio,
-                                nbPosts:docs.nbPosts});
+                                nbPosts:docs.nbPosts,
+                                imgData:imgDocs});
   });
 });
-
+});
 // ------------------------------------------------------------------------------
 /*  app.post('/Follow_Page/:id/:searchID/:follow')
 
