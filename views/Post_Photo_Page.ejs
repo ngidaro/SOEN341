@@ -75,13 +75,15 @@
             <form action="/upload/<%=id%>" method="POST" enctype="multipart/form-data">
                 <h2 class="mx-auto my-0 text-uppercase">
                     Choose photo from computer:
-                </h2>
+                </h2><br>
                 <input
                     type="file"
                     id="file"
                     name="file"
                     accept="image/png, image/jpeg"
-                />
+                /><Br>
+                  <Br>
+                <textarea name="caption" rows="6" cols="45">Enter Caption...</textarea>&nbsp;&nbsp;
                 <input type = "submit"></input>
             </form>
         </div>
