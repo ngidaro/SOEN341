@@ -502,14 +502,30 @@ function saved(error,success)
         console.log(success);
     }
 }
-//leaves comment on a person's post
+// ------------------------------------------------------------------------------
+/*  app.post('/leaveComment/:id/:username/:searchID/:imgName')
+
+    Definition: Pushed comment into the array of comments for a given picture
+
+                searchID user: The user that was looked up.
+                user id:       The logged on user (main).
+                imgName:       Name of the file accessed
+
+    Variables:
+      searchDocs: query of user DB.
+*/
+// ------------------------------------------------------------------------------
+//This is where the current user can leave a comment
 app.post('/leaveComment/:id/:username/:searchID/:imgName',function(req,res){
-  Pics.updateOne({"img.imgName":req.params.imgName},{$push: {comments: req.params.username+': '+req.body.theComment}},function (error, success) {
+  User.findById(req.params.id, function (error, searchDocs){
+
+  Pics.updateOne({"img.imgName":req.params.imgName},{$push: {comments: searchDocs.username+': '+req.body.theComment}},function (error, success) {
       saved(error,success);
       });
-    res.redirect('/Follow_Page/' + req.params.id + '/' + req.params.searchID);
+    res.redirect('/Focused_Image/' + req.params.id + '/' + req.params.searchID + '/' + req.params.imgName);
 });
-//displays my image in a bigger view
+});
+//displays my image in a better view
 app.get('/Focused_myImage/:id/:imgName',function(req,res)
 {
   User.findById(req.params.id,function(error,docs){
@@ -534,18 +550,30 @@ app.get('/Focused_Image/:id/:searchID/:imgName',function(req,res)
   Pics.find({"img.imgName":req.params.imgName}, function(error,imgDocs){
 
     res.render('Focused_Image',{ id:req.params.id,
-                                  username:docs.username,
-                                  followers:docs.followers.length,
-                                  following:docs.following.length,
-                                  bio:docs.bio,
+                                  username:searchDocs.username,
+                                  followers:searchDocs.followers.length,
+                                  following:searchDocs.following.length,
+                                  bio:searchDocs.bio,
                                   searchID:req.params.searchID,
-                                  searchedUsername:searchDocs.username,
                                   imgData:imgDocs
                                 });
                               });
                             });
                           });
 });
+// ------------------------------------------------------------------------------
+/*  app.post('/Like_Photo/:id/:imgName/:searchID')
+
+    Definition: Pushes a like into the array of likes for a given picture
+
+                user id:       The logged on user (main).
+                imgName:       Name of the file accessed
+
+    Variables:
+      imgDocs: query of Pics DB.
+*/
+// ------------------------------------------------------------------------------
+//This is where the current user can like a photo
 app.post('/Like_Photo/:id/:imgName/:searchID',function(req,res){
   Pics.find({"img.imgName":req.params.imgName}, function(error,imgDocs){
     for( var C=0;C<imgDocs[0].likes.length; C++)
@@ -564,6 +592,19 @@ app.post('/Like_Photo/:id/:imgName/:searchID',function(req,res){
   res.redirect('/Follow_Page/' + req.params.id + '/' + req.params.searchID);
 });
 });
+
+// ------------------------------------------------------------------------------
+/*  app.post('/Edit_Profile/:id')
+
+    Definition: Pushes bio into the bio array
+
+                user id:       The logged on user (main).
+
+    Variables:
+      req.body.bio yields the bio text inputted from the form.
+*/
+// ------------------------------------------------------------------------------
+//This is where the current user can edit their profile
 app.post('/Edit_Profile/:id',function(req,res){
   User.updateOne({_id:req.params.id},{$set: {bio: req.body.bio}},function (error, success) {
       saved(error,success);
@@ -571,6 +612,7 @@ app.post('/Edit_Profile/:id',function(req,res){
   res.redirect('/Profile_Page/'+req.params.id);
 });
 
+//Diplsays the get request for a request to edit the profile page
 app.get('/Profile_Edit/:id',function(req,res){
   //findById returns object NOT Array of objects
 User.findById(req.params.id,function(error,docs){

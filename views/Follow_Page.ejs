@@ -115,7 +115,7 @@
           <br/> <form action="/Like_Photo/<%=id%>/<%=imgData[C].img.imgName%>/<%=searchID%>" method="POST"><input type = "image" src="/uploads/like.png" width="40" height="40"> </form>
                       Likes: <%=imgData[C].likes.length%>
           <br/> Caption:<%=imgData[C].caption[0]%>
-          <br/> Comments: <a method="GET" href="/Focused_Image/<%=id%>/<%=searchID%>/<%=imgData[C].img.imgName%>">Show all (<%=imgData[C].comments.length%>)</a>
+          <br/> Comments: <br/><a method="GET" href="/Focused_Image/<%=id%>/<%=searchID%>/<%=imgData[C].img.imgName%>">Show all (<%=imgData[C].comments.length%>)</a>
           <br/> <label>Leave a comment</label> <form action="/leaveComment/<%=id%>/<%=username%>/<%=searchID%>/<%=imgData[C].img.imgName%>" method="POST">
                 <input type="text" id="theComment" name="theComment">
                 <input type="submit" value="Submit">

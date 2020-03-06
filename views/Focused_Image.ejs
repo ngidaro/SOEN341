@@ -116,11 +116,14 @@
           <div class="col-4">
             <!-- todo : loaded image goes here-->
               <br/><img src="/uploads/<%=imgData[0].img.imgName%>" alt="not displaying" height="400" width ="400">
-              <br/>               <form action="/Like_Photo/<%=id%>/<%=imgData[0].img.imgName%>/<%=searchID%>" method="POST"><input type = "image" src="/uploads/like.png" width="40" height="40"> </form>
-
-              Likes: <a method="GET" href="/..."><%=imgData[0].likes.length%></a>
-              <br/> Caption: <%=imgData[0].caption[0]%>
-              <br/> Comments: <% for (var C=0; C<imgData[0].comments.length; C++){ %>
+                  <form action="/Like_Photo/<%=id%>/<%=imgData[0].img.imgName%>/<%=searchID%>" method="POST"><input type = "image" src="/uploads/like.png" width="40" height="40"> Likes: <a method="GET" href="/..."><%=imgData[0].likes.length%></a>
+</form>
+             Caption: <%=imgData[0].caption[0]%>
+             <br/> <label>Leave a comment</label> <form action="/leaveComment/<%=id%>/<%=username%>/<%=searchID%>/<%=imgData[0].img.imgName%>" method="POST">
+                   <input type="text" id="theComment" name="theComment">
+                   <input type="submit" value="Submit">
+                   </form>
+              <br/> Comments: <br/> <% for (var C=0; C<imgData[0].comments.length; C++){ %>
                  <%=imgData[0].comments[C]%>
                  <br/>
               <%}%>
