@@ -411,19 +411,18 @@ Pics.find({ownerID:req.params.id}, function(error,imgDocs){
 });
 app.get('/Follow_Page/:id/:searchID',function(req,res){
 
-console.log("redirect ");
   User.findById(req.params.searchID,function(error,docs){
     if (error) return handleError(error);
-Pics.find({ownerID:req.params.searchID}, function(error,imgDocs){
+    Pics.find({ownerID:req.params.searchID}, function(error,imgDocs){
     //Check to see if user already follows the person, if he does then display Unfollow
     var sFollow = "Follow";
     var userID = req.params.id;
-    var foundID = (docs.followers.find(valueIS => userID));
+    var isfoundID = (docs.followers.includes(userID));
 
     //the searchID user does not have any followers
     if(docs.followers.length != 0)
     {
-      if(req.params.id == foundID)
+      if(isfoundID)
       {
         sFollow = "Unfollow";
       }
