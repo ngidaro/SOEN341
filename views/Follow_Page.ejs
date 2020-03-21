@@ -87,8 +87,11 @@
               <h3 class="text-white-50 mx-auto mt-2 mb-5">Following <%=following%></h3>
             </div>
           </div>
+          <!-- <button onclick="updateFollowButton('<%=sFollow%>')" type="button" class="btn btn-primary js-scroll-trigger"
+            id="sFollow"><%=sFollow%></button> -->
           <form action="/Follow_Page/<%=id%>/<%=searchID%>/<%=sFollow%>" method="POST">
-            <input type="submit" value="<%=sFollow%>" class="btn btn-primary js-scroll-trigger"></input>
+            <input type="submit" value="<%=sFollow%>" class="btn btn-primary js-scroll-trigger"
+            id="sFollow"></input>
           </form>
         </div>
       </div>
@@ -112,8 +115,10 @@
         <!-- todo : populate posts with data from back end, add some sort of recycler viewer-->
         <% for (var C=0;C<imgData.length;C++){%>
           <br/><img src="/uploads/<%=imgData[C].img.imgName%>" alt="not displaying" height="200" width ="200">
-          <br/> <form action="/Like_Photo/<%=id%>/<%=imgData[C].img.imgName%>/<%=searchID%>" method="POST"><input type = "image" src="/uploads/like.png" width="40" height="40"> </form>
-                      Likes: <%=imgData[C].likes.length%>
+          <br/> <form action="/Like_Photo/<%=id%>/<%=imgData[C].img.imgName%>/<%=searchID%>" method="POST">
+                  <input type = "image" src="/uploads/like.png" width="40" height="40">
+                </form>
+                Likes: <%=imgData[C].likes.length%>
           <br/> Caption:<%=imgData[C].caption[0]%>
           <br/> Comments: <br/><a method="GET" href="/Focused_Image/<%=id%>/<%=searchID%>/<%=imgData[C].img.imgName%>">Show all (<%=imgData[C].comments.length%>)</a>
           <br/> <label>Leave a comment</label> <form action="/leaveComment/<%=id%>/<%=username%>/<%=searchID%>/<%=imgData[C].img.imgName%>" method="POST">
@@ -165,5 +170,19 @@
 
     <!-- Custom scripts for this template -->
     <script src="/js/grayscale.min.js"></script>
+
+    <script>
+      function updateFollowButton(sFollow)
+      {
+        if(sFollow == "Unfollow")
+        {
+          document.getElementById("sFollow").innerHTML = "Follow";
+        }
+        else {
+          document.getElementById("sFollow").innerHTML = "Unfollow";
+        }
+      }
+    </script>
+
   </body>
 </html>

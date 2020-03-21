@@ -575,21 +575,19 @@ app.get('/Focused_Image/:id/:searchID/:imgName',function(req,res)
 //This is where the current user can like a photo
 app.post('/Like_Photo/:id/:imgName/:searchID',function(req,res){
   Pics.find({"img.imgName":req.params.imgName}, function(error,imgDocs){
-    for( var C=0;C<imgDocs[0].likes.length; C++)
-    {
-      console.log(imgDocs);
 
-      if(imgDocs[0].likes[C]==req.params.id)
-      {
-        console.log("already liked");
-        res.redirect('/Follow_Page/' + req.params.id + '/' + req.params.searchID);
-      }
+    if(imgDocs[0].likes.includes(req.params.id))
+    {
+      console.log("already liked");
     }
+    else {
       Pics.updateOne({"img.imgName":req.params.imgName},{$push: {likes: req.params.id}},function (error, success) {
           saved(error,success);
-  });
+        });
+    }
+
   res.redirect('/Follow_Page/' + req.params.id + '/' + req.params.searchID);
-});
+  });
 });
 
 // ------------------------------------------------------------------------------
