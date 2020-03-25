@@ -9,7 +9,7 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
 
-    <title>View Your Profile - Pic5</title>
+    <title>News Feed - Pic5</title>
 
     <!-- Bootstrap core CSS -->
     <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
@@ -55,64 +55,19 @@
 
           <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="/News_Feed/<%=id%>"
-                >Feed</a
-              >
-            </li>
-            <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#page-top"
+              <a class="nav-link js-scroll-trigger" href="/Profile_Page/<%=id%>"
                 >My Profile</a
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="/Post_Photo_Page/<%=id%>"
-                >Post Photo</a
+              <a class="nav-link js-scroll-trigger" href="/"
+                >Logout</a
               >
-            </li>
-            <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="/">Logout</a>
             </li>
           </ul>
         </div>
       </div>
     </nav>
-
-    <!-- Header -->
-    <header class="masthead">
-      <div class="container d-flex h-100 align-items-center">
-        <div class="mx-auto text-center">
-          <a href="/Post_Profile_Pic/<%=id%>">
-            <img src="/uploads/undefined_profile.png" alt="profile pic" id="profilePic"/>
-          </a>
-          <h2 class="mx-auto my-0 text-uppercase"><%=username%></h2>
-          <div class="row">
-            <!-- todo : populate table with data from backend-->
-            <div class="col">
-              <h3 class="text-white-50 mx-auto mt-2 mb-5">Posts 0</h3>
-            </div>
-            <div class="col">
-              <h3 class="text-white-50 mx-auto mt-2 mb-5">Followers <%=followers%></h3>
-            </div>
-            <div class="col">
-              <h3 class="text-white-50 mx-auto mt-2 mb-5">Following <%=following%></h3>
-            </div>
-          </div>
-          <a method ="GET" href="/Profile_Edit/<%=id%>" class="btn btn-primary js-scroll-trigger">Edit Profile</a>
-        </div>
-      </div>
-    </header>
-
-    <!-- About Section -->
-    <section id="about" class="about-section text-center">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-8 mx-auto">
-            <h2 class="text-white mb-4">About me:</h2>
-            <p class="text-white-50"><%=bio%></p>
-          </div>
-        </div>
-      </div>
-    </section>
 
     <!-- Projects Section -->
     <section id="posts" class="projects-section bg-dark">
@@ -122,10 +77,16 @@
           <div class="col-4">
             <!-- todo : loaded image goes here-->
             <% for (var C = imgData.length-1;C >= 0;C--){%>
-              <br/><img src="/uploads/<%=imgData[C].img.imgName%>" alt="not displaying" height="200" width ="200">
-              <br/> Likes: <a method="GET" href="/..."><%=imgData[C].likes.length%></a>
-              <br/> Caption: <%=imgData[C].caption[0]%>
+              <br/> <b><%=imgData[C].ownerUsername%></b>
+              <br/><img src="/uploads/<%=imgData[C].img.imgName%>" alt="not displaying" height="350" width ="350">
+              <form action="/Like_Photo/<%=id%>/<%=imgData[C].img.imgName%>/<%=imgData[C].ownerID%>" method="POST">
+                  <input type = "image" src="/uploads/like.png" width="27" height="27">
+              </form>
+              <!-- <button id = "likeButton" onclick="test()">LIKE</button> -->
+              <br/> <a method="GET" href="/..."><%=imgData[C].likes.length%></a> likes
+              <br/> <b><%=imgData[C].ownerUsername%></b> <%=imgData[C].caption[0]%>
               <br/> Comments: <a method="GET" href="/Focused_myImage/<%=id%>/<%=imgData[C].img.imgName%>">Show all (<%=imgData[C].comments.length%>)</a>
+
               <br/>
             <%}%>
           </div>
@@ -166,5 +127,16 @@
 
     <!-- Custom scripts for this template -->
     <script src="/js/grayscale.min.js"></script>
+
+    <script>
+
+      function test(){
+
+        alert("test");
+
+      }
+
+    </script>
+
   </body>
 </html>
