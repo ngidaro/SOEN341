@@ -52,19 +52,19 @@
 <!-- Signup Section -->
 <section id="createAccount" class="signup-section">
     <div class="container">
-      <form action="/Create_Account_Page" method = "POST">
-          <h2>&nbsp;Sign Up</h2>
-          <label>&nbsp;&nbsp;First Name&nbsp;&nbsp;&nbsp;&nbsp;</label>
+      <h1><strong>Sign Up</strong></h1>
+      <form action="/Create_Account_Page" method = "POST" class="createAccountForm">
+          <label for="fName">First Name:</label>
           <input name = "fName" type="text" id="fName" placeholder="First Name">
           <br/>
-          <label>&nbsp;&nbsp;Last Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+          <label for="lName">Last Name:</label>
           <input name = "lName" type="text" id="lName" placeholder="Last Name">
           <br/>
-          <label>&nbsp;&nbsp;Username&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+          <label for="user">Username:</label>
             <input name = "user" type="text" id="user" placeholder="Username">
             <br/>
-          <label>&nbsp;&nbsp;Password&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-          <input name = "pass" type="text" id="pass" placeholder="Password">
+          <label for="pass">Password:</label>
+          <input name = "pass" type="password" id="pass" placeholder="Password">
           <br/><br/>
           <pre>              <input type="submit" onclick="successMessage()"></input></pre>
         </form>
@@ -73,6 +73,7 @@
 
   <script>
   function successMessage() {
+    window.location.href=
     alert("Your account has been created successfully!");
   }
   </script>

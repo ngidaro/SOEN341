@@ -338,3 +338,7 @@ height: 25%;
 width: 25%;
 margin-bottom: 50px;
 }
+
+.createAccountForm label{
+  width:100px;
+}
