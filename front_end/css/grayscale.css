@@ -339,6 +339,16 @@ width: 25%;
 margin-bottom: 50px;
 }
 
+#profilePic {
+  height: 200px;
+  width: 200px;
+  margin: 30px;
+}
+
+.createAccountForm label{
+  width:100px;
+}
+
 #cancelEditBtn{
   margin:30px;
 }
@@ -348,3 +358,4 @@ margin-bottom: 50px;
   height: 100px;
   margin-bottom: 20px;
 }
+
