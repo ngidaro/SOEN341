@@ -348,3 +348,16 @@ margin-bottom: 50px;
 .createAccountForm label{
   width:100px;
 }
+
+#cancelEditBtn{
+  margin:30px;
+}
+
+#bio{
+  width:100%;
+  height: 100px;
+  margin-bottom: 20px;
+}
+
+
+
