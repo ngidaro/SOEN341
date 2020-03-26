@@ -88,7 +88,7 @@
           <div class="row">
             <!-- todo : populate table with data from backend-->
             <div class="col">
-              <h3 class="text-white-50 mx-auto mt-2 mb-5">Posts 0</h3>
+              <h3 class="text-white-50 mx-auto mt-2 mb-5">Posts <%=imgData.length%></h3>
             </div>
             <div class="col">
               <h3 class="text-white-50 mx-auto mt-2 mb-5">Followers <%=followers%></h3>
@@ -123,7 +123,7 @@
             <!-- todo : loaded image goes here-->
             <% for (var C = imgData.length-1;C >= 0;C--){%>
               <br/><img src="/uploads/<%=imgData[C].img.imgName%>" alt="not displaying" height="200" width ="200">
-              <br/> Likes: <a method="GET" href="/..."><%=imgData[C].likes.length%></a>
+              <br/><a method="GET" href="/..."><%=imgData[C].likes.length%></a> likes
               <br/> Caption: <%=imgData[C].caption[0]%>
               <br/> Comments: <a method="GET" href="/Focused_myImage/<%=id%>/<%=imgData[C].img.imgName%>">Show all (<%=imgData[C].comments.length%>)</a>
               <br/>

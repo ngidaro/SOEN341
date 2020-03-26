@@ -488,7 +488,6 @@ app.get('/Follow_Page/:id/:searchID',function(req,res){
                                 following:docs.following.length,
                                 sFollow: sFollow,
                                 bio:docs.bio,
-                                nbPosts:docs.nbPosts,
                                 imgData:imgDocs});
   });
 });
@@ -571,15 +570,26 @@ function saved(error,success)
 */
 // ------------------------------------------------------------------------------
 //This is where the current user can leave a comment
-app.post('/leaveComment/:id/:username/:searchID/:imgName',function(req,res){
+app.post('/leaveComment/:id/:username/:imgOwnerId/:imgName',function(req,res){
   User.findById(req.params.id, function (error, searchDocs){
 
     Pics.updateOne({"img.imgName":req.params.imgName},{$push: {comments: searchDocs.username+': '+req.body.theComment}},function (error, success) {
         saved(error,success);
     });
-      res.redirect('/Focused_Image/' + req.params.id + '/' + req.params.searchID + '/' + req.params.imgName);
+      res.redirect('/Focused_Image/' + req.params.id + '/' + req.params.imgOwnerId + '/' + req.params.imgName);
   });
 });
+//When a user comments on a picture on the News_Feed
+app.post('/News_Feed_Comment/:id/:username/:imgOwnerId/:imgName',function(req,res){
+  User.findById(req.params.id, function (error, searchDocs){
+
+    Pics.updateOne({"img.imgName":req.params.imgName},{$push: {comments: searchDocs.username+': '+req.body.theComment}},function (error, success) {
+        saved(error,success);
+    });
+      res.redirect('/News_Feed/' + req.params.id);
+  });
+});
+
 //displays my image in a better view
 app.get('/Focused_myImage/:id/:imgName',function(req,res)
 {
@@ -641,12 +651,27 @@ app.post('/Like_Photo/:id/:imgName/:searchID',function(req,res){
           saved(error,success);
         });
     }
-
-    const j = { test: "", gdgd: ""};
-
-  return res.json(j);
+  res.redirect('/Follow_Page/' + req.params.id + '/' + req.params.searchID);
   });
 });
+//Like a photo on the News_F
+app.post('/Like_Photo_News_Feed/:id/:imgName/:imgOwnerID', function(req,res){
+  Pics.find({"img.imgName":req.params.imgName}, function(error,imgDocs){
+
+    if(imgDocs[0].likes.includes(req.params.id))
+    {
+      console.log("already liked");
+    }
+    else {
+      Pics.updateOne({"img.imgName":req.params.imgName},{$push: {likes: req.params.id}},function (error, success) {
+          saved(error,success);
+        });
+    }
+    return res.json({likes:imgDocs[0].likes.length});
+  // res.redirect('/News_Feed/' + req.params.id);
+  });
+});
+
 
 // ------------------------------------------------------------------------------
 /*  app.post('/Edit_Profile/:id')

@@ -69,39 +69,6 @@
       </div>
     </nav>
 
-    <!-- Header -->
-    <header class="masthead">
-      <div class="container d-flex h-100 align-items-center">
-        <div class="mx-auto text-center">
-          <h2 class="mx-auto my-0 text-uppercase"><%=username%></h2>
-          <div class="row">
-            <!-- todo : populate table with data from backend-->
-            <div class="col">
-              <h3 class="text-white-50 mx-auto mt-2 mb-5">Posts 0</h3>
-            </div>
-            <div class="col">
-              <h3 class="text-white-50 mx-auto mt-2 mb-5">Followers <%=followers%></h3>
-            </div>
-            <div class="col">
-              <h3 class="text-white-50 mx-auto mt-2 mb-5">Following <%=following%></h3>
-            </div>
-          </div>
-        </div>
-      </div>
-    </header>
-
-    <!-- About Section -->
-    <section id="about" class="about-section text-center">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-8 mx-auto">
-            <h2 class="text-white mb-4">About me:</h2>
-            <p class="text-white-50"><%=bio%></p>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- Projects Section -->
     <section id="posts" class="projects-section bg-dark">
       <div class="container">
@@ -109,9 +76,12 @@
         <div class="row">
           <div class="col-4">
             <!-- todo : loaded image goes here-->
+            <br><b><%=username%></b>
               <br/><img src="/uploads/<%=imgData[0].img.imgName%>" alt="not displaying" height="400" width ="400">
-                  <form action="/Like_Photo/<%=id%>/<%=imgData[0].img.imgName%>/<%=searchID%>" method="POST"><input type = "image" src="/uploads/like.png" width="40" height="40"> Likes: <a method="GET" href="/..."><%=imgData[0].likes.length%></a>
-</form>
+              <br><form action="/Like_Photo/<%=id%>/<%=imgData[0].img.imgName%>/<%=searchID%>" method="POST">
+                    <input type = "image" src="/uploads/like.png" width="27" height="27">
+                    <br><a method="GET" href="/..."><%=imgData[0].likes.length%></a> likes
+                  </form>
              Caption: <%=imgData[0].caption[0]%>
              <br/> <label>Leave a comment</label> <form action="/leaveComment/<%=id%>/<%=username%>/<%=searchID%>/<%=imgData[0].img.imgName%>" method="POST">
                    <input type="text" id="theComment" name="theComment">

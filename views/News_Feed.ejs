@@ -79,33 +79,19 @@
             <% for (var C = imgData.length-1;C >= 0;C--){%>
               <br/> <b><%=imgData[C].ownerUsername%></b>
               <br/><img src="/uploads/<%=imgData[C].img.imgName%>" alt="not displaying" height="350" width ="350">
-              <form action="/Like_Photo/<%=id%>/<%=imgData[C].img.imgName%>/<%=imgData[C].ownerID%>" method="POST">
+              <!-- <form action="/Like_Photo_News_Feed/<%=id%>/<%=imgData[C].img.imgName%>/<%=imgData[C].ownerID%>" method="POST">
                   <input type = "image" src="/uploads/like.png" width="27" height="27">
-              </form>
-              <!-- <button id = "likeButton" onclick="test()">LIKE</button> -->
-              <br/> <a method="GET" href="/..."><%=imgData[C].likes.length%></a> likes
+              </form> -->
+              <button id="likeButton" onclick="likeSomething('<%=id%>','<%=imgData[C].img.imgName%>','<%=imgData[C].ownerID%>')">LIKE</button>
+              <a id="<%=imgData[C].img.imgName%>_likes" method="GET" href="/..."><%=imgData[C].likes.length%></a> likes
               <br/> <b><%=imgData[C].ownerUsername%></b> <%=imgData[C].caption[0]%>
               <br/> Comments: <a method="GET" href="/Focused_myImage/<%=id%>/<%=imgData[C].img.imgName%>">Show all (<%=imgData[C].comments.length%>)</a>
-
-              <br/>
+              <br/> <label>Leave a comment</label>
+                    <form action="/News_Feed_Comment/<%=id%>/<%=username%>/<%=imgData[C].ownerID%>/<%=imgData[C].img.imgName%>" method="POST">
+                      <input type="text" id="theComment" name="theComment">
+                      <input type="submit" value="Submit">
+                    </form>
             <%}%>
-          </div>
-          <div class="col-8">
-            <div class="row">
-              <div class="col-2">
-                <h3 class="text-white"></h3>
-              </div>
-              <div class="col-2">
-                <h3 class="text-white"></h3>
-                <!-- todo : likes number goes here -->
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-8">
-                <h3 class="text-white"></h3>
-                <!-- todo: load caption here-->
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -129,13 +115,25 @@
     <script src="/js/grayscale.min.js"></script>
 
     <script>
-
-      function test(){
-
-        alert("test");
-
+      function likeSomething(id,imgName,ownerId) {
+        fetch(`/Like_Photo_News_Feed/${id}/${imgName}/${ownerId}`,{method:'POST','Content-Type': 'application/json'})
+          // .then((res) => {
+          //   return(res.text());
+          // })
+          // .then(function(text){
+          //   alert(text);
+          //   // const div = $('#' + imgName + '_likes');
+          //   // getElementById(imgName+'_likes').innerHTML = text.likes;
+          // })
+          .then(res => res.json())
+          .then(function(data){
+            alert(data.likes);
+            document.getElementById(imgName+'_likes').innerHTML = data.likes;
+          })
+          .catch((err) => {
+            alert("Error");
+          })
       }
-
     </script>
 
   </body>

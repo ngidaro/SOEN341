@@ -55,12 +55,12 @@
 
           <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="/news_feed"
+              <a class="nav-link js-scroll-trigger" href="/News_Feed/<%=id%>"
                 >Feed</a
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#page-top"
+              <a class="nav-link js-scroll-trigger" href="/Profile_Page/<%=id%>"
                 >My Profile</a
               >
             </li>
@@ -74,40 +74,6 @@
       </div>
     </nav>
 
-    <!-- Header -->
-    <header class="masthead">
-      <div class="container d-flex h-100 align-items-center">
-        <div class="mx-auto text-center">
-          <h2 class="mx-auto my-0 text-uppercase"><%=username%></h2>
-          <div class="row">
-            <!-- todo : populate table with data from backend-->
-            <div class="col">
-              <h3 class="text-white-50 mx-auto mt-2 mb-5">Posts 0</h3>
-            </div>
-            <div class="col">
-              <h3 class="text-white-50 mx-auto mt-2 mb-5">Followers <%=followers%></h3>
-            </div>
-            <div class="col">
-              <h3 class="text-white-50 mx-auto mt-2 mb-5">Following <%=following%></h3>
-            </div>
-          </div>
-          <a method ="GET" href="/Profile_Edit/<%=id%>" class="btn btn-primary js-scroll-trigger">Edit Profile</a>
-        </div>
-      </div>
-    </header>
-
-    <!-- About Section -->
-    <section id="about" class="about-section text-center">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-8 mx-auto">
-            <h2 class="text-white mb-4">About me:</h2>
-            <p class="text-white-50"><%=bio%></p>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- Projects Section -->
     <section id="posts" class="projects-section bg-dark">
       <div class="container">
@@ -115,12 +81,19 @@
         <div class="row">
           <div class="col-4">
             <!-- todo : loaded image goes here-->
+              <br/> <b><%=imgData[0].ownerUsername%></b>
               <br/><img src="/uploads/<%=imgData[0].img.imgName%>" alt="not displaying" height="400" width ="400">
-              <br/> Likes: <a method="GET" href="/..."><%=imgData[0].likes.length%></a>
-              <br/> Caption: <%=imgData[0].caption[0]%>
+              <br><form action="/Like_Photo/<%=id%>/<%=imgData[0].img.imgName%>/<%=imgData[0].ownerID%>" method="POST">
+                    <input type = "image" src="/uploads/like.png" width="27" height="27">
+                    <br><a method="GET" href="/..."><%=imgData[0].likes.length%></a> likes
+                  </form>
+              Caption: <%=imgData[0].caption[0]%>
+              <br/> <label>Leave a comment</label> <form action="/leaveComment/<%=id%>/<%=username%>/<%=imgData[0].ownerID%>/<%=imgData[0].img.imgName%>" method="POST">
+                    <input type="text" id="theComment" name="theComment">
+                    <input type="submit" value="Submit">
+                    </form>
               <br/> Comments: <% for (var C=0; C<imgData[0].comments.length; C++){ %>
-                 <%=imgData[0].comments[C]%>
-                 <br/>
+                 <br/><%=imgData[0].comments[C]%>
               <%}%>
               <br/>
           </div>
