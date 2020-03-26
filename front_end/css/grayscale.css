@@ -338,3 +338,9 @@ height: 25%;
 width: 25%;
 margin-bottom: 50px;
 }
+
+#profilePic {
+  height: 200px;
+  width: 200px;
+  margin: 30px;
+}
