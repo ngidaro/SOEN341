@@ -245,7 +245,7 @@ app.post('/Create_Account_Page',function(req,res){
           return;
         }else {
           console.log("Saved User to the database");
-          res.redirect('/Login_Page');
+          res.redirect('/Profile_Page/' + user._id);
         }
       });
     }
