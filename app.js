@@ -94,6 +94,9 @@ app.get('/Create_Account_Page',function(req,res){
 app.get('/Post_Photo_Page/:id',function(req,res){
     res.render('Post_Photo_Page',{id:req.params.id});
 });
+app.get('/Post_Profile_Pic/:id',function(req,res){
+    res.render('Post_Profile_Pic',{id:req.params.id});
+});
 
 //NOTE: 'User',Comment,etc is defined when we bring in the models
 var Users = mongoose.model('User',UserSchema);
