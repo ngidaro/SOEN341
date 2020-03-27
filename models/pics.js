@@ -6,6 +6,10 @@ PicsSchema = mongoose.Schema({
     type: String,
     required: true
   },
+  ownerUsername:{
+    type: String,
+    required: true
+  },
   img:{
    imgName: String,
    contentType:String,

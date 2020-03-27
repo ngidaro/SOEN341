@@ -79,21 +79,19 @@
           <div class="row">
             <!-- todo : populate table with data from backend-->
             <div class="col">
-              <h3 class="text-white-50 mx-auto mt-2 mb-5">Posts 0</h3>
+              <h3 class="text-white-50 mx-auto mt-2 mb-5">Posts <%=imgData.length%></h3>
             </div>
             <div class="col">
-              <h3 class="text-white-50 mx-auto mt-2 mb-5">Followers <%=followers%></h3>
+              <h3 id="followers_id" class="text-white-50 mx-auto mt-2 mb-5">Followers <%=followers%></h3>
             </div>
             <div class="col">
-              <h3 class="text-white-50 mx-auto mt-2 mb-5">Following <%=following%></h3>
+              <h3 id="following_id" class="text-white-50 mx-auto mt-2 mb-5">Following <%=following%></h3>
             </div>
           </div>
           <!-- <button onclick="updateFollowButton('<%=sFollow%>')" type="button" class="btn btn-primary js-scroll-trigger"
             id="sFollow"><%=sFollow%></button> -->
-          <form action="/Follow_Page/<%=id%>/<%=searchID%>/<%=sFollow%>" method="POST">
-            <input type="submit" value="<%=sFollow%>" class="btn btn-primary js-scroll-trigger"
-            id="sFollow"></input>
-          </form>
+          <button id="sFollow" type="button" onclick="updateFollowButton('<%=id%>','<%=searchID%>')"
+                class="btn btn-primary js-scroll-trigger"><%=sFollow%></button>
         </div>
       </div>
     </header>
@@ -116,15 +114,15 @@
         <!-- todo : populate posts with data from back end, add some sort of recycler viewer-->
         <% for (var C=0;C<imgData.length;C++){%>
           <br/><img src="/uploads/<%=imgData[C].img.imgName%>" alt="not displaying" height="200" width ="200">
-          <br/> <form action="/Like_Photo/<%=id%>/<%=imgData[C].img.imgName%>/<%=searchID%>" method="POST">
-                  <input type = "image" src="/uploads/like.png" width="40" height="40">
-                </form>
-                Likes: <%=imgData[C].likes.length%>
+          <br><input type = "image" src="/uploads/like.png" width="27" height="27"
+                onclick="likePhoto('<%=id%>','<%=imgData[C].img.imgName%>','<%=imgData[C].ownerID%>')">
+          <br><a id="<%=imgData[C].img.imgName%>_likes" method="GET" href="/..."><%=imgData[C].likes.length%></a> likes
           <br/> Caption:<%=imgData[C].caption[0]%>
           <br/> Comments: <br/><a method="GET" href="/Focused_Image/<%=id%>/<%=searchID%>/<%=imgData[C].img.imgName%>">Show all (<%=imgData[C].comments.length%>)</a>
-          <br/> <label>Leave a comment</label> <form action="/leaveComment/<%=id%>/<%=username%>/<%=searchID%>/<%=imgData[C].img.imgName%>" method="POST">
-                <input type="text" id="theComment" name="theComment">
-                <input type="submit" value="Submit">
+          <br/> <label>Leave a comment</label>
+                <form action="/leaveComment/<%=id%>/<%=username%>/<%=searchID%>/<%=imgData[C].img.imgName%>" method="POST">
+                  <input type="text" id="theComment" name="theComment">
+                  <input type="submit" value="Submit">
                 </form>
 
           <br/>
@@ -150,15 +148,39 @@
     <script src="/js/grayscale.min.js"></script>
 
     <script>
-      function updateFollowButton(sFollow)
+      function updateFollowButton(id,searchId)
       {
-        if(sFollow == "Unfollow")
-        {
-          document.getElementById("sFollow").innerHTML = "Follow";
-        }
-        else {
-          document.getElementById("sFollow").innerHTML = "Unfollow";
-        }
+        var FollowUnfollow = "";
+        fetch(`/Follow_Page/${id}/${searchId}`,{ method:"POST", 'Content-Type': 'application/json' })
+        .then(res => res.json())
+        .then(function(data){
+          debugger;
+          document.getElementById("followers_id").innerHTML = "Followers\n" + data.sNbFollowers;
+
+          if(data.bIsFollowing)
+          {
+            FollowUnfollow = "Unfollow";
+          }
+          else {
+            FollowUnfollow = "Follow";
+          }
+          document.getElementById("sFollow").innerHTML = FollowUnfollow;
+        })
+        .catch((err) => {
+          alert("Follow Error");
+        })
+      }
+
+      function likePhoto(id,imgName,ownerId) {
+        fetch(`/Like_Photo/${id}/${imgName}/${ownerId}`,{method:'POST','Content-Type': 'application/json'})
+          .then(res => res.json())
+          .then(function(data){
+            // debugger;
+            document.getElementById(imgName+'_likes').innerHTML = data.likes;
+          })
+          .catch((err) => {
+            alert("Error");
+          })
       }
     </script>
 

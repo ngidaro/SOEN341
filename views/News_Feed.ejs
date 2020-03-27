@@ -9,7 +9,7 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
 
-    <title>View Your Profile - Pic5</title>
+    <title>News Feed - Pic5</title>
 
     <!-- Bootstrap core CSS -->
     <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
@@ -55,13 +55,13 @@
 
           <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="/news_feed"
-                >Feed</a
+              <a class="nav-link js-scroll-trigger" href="/Profile_Page/<%=id%>"
+                >My Profile</a
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="/Profile_Page/<%=id%>"
-                >My Profile</a
+              <a class="nav-link js-scroll-trigger" href="/"
+                >Logout</a
               >
             </li>
           </ul>
@@ -76,39 +76,20 @@
         <div class="row">
           <div class="col-4">
             <!-- todo : loaded image goes here-->
-            <br><b><%=username%></b>
-              <br/><img src="/uploads/<%=imgData[0].img.imgName%>" alt="not displaying" height="400" width ="400">
-              <br><form action="/Like_Photo/<%=id%>/<%=imgData[0].img.imgName%>/<%=searchID%>" method="POST">
-                    <input type = "image" src="/uploads/like.png" width="27" height="27">
-                    <br><a method="GET" href="/..."><%=imgData[0].likes.length%></a> likes
-                  </form>
-             Caption: <%=imgData[0].caption[0]%>
-             <br/> <label>Leave a comment</label> <form action="/leaveComment/<%=id%>/<%=username%>/<%=searchID%>/<%=imgData[0].img.imgName%>" method="POST">
-                   <input type="text" id="theComment" name="theComment">
-                   <input type="submit" value="Submit">
-                   </form>
-              <br/> Comments: <br/> <% for (var C=0; C<imgData[0].comments.length; C++){ %>
-                 <%=imgData[0].comments[C]%>
-                 <br/>
-              <%}%>
-              <br/>
-          </div>
-          <div class="col-8">
-            <div class="row">
-              <div class="col-2">
-                <h3 class="text-white"></h3>
-              </div>
-              <div class="col-2">
-                <h3 class="text-white"></h3>
-                <!-- todo : likes number goes here -->
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-8">
-                <h3 class="text-white"></h3>
-                <!-- todo: load caption here-->
-              </div>
-            </div>
+            <% for (var C = imgData.length-1;C >= 0;C--){%>
+              <br/> <b><%=imgData[C].ownerUsername%></b>
+              <br/><img src="/uploads/<%=imgData[C].img.imgName%>" alt="not displaying" height="350" width ="350">
+              <input type = "image" src="/uploads/like.png" width="27" height="27"
+                    onclick="likePhoto('<%=id%>','<%=imgData[C].img.imgName%>','<%=imgData[C].ownerID%>')">
+              <br><a id="<%=imgData[C].img.imgName%>_likes" method="GET" href="/..."><%=imgData[C].likes.length%></a> likes
+              <br/> <b><%=imgData[C].ownerUsername%></b> <%=imgData[C].caption[0]%>
+              <br/> Comments: <a method="GET" href="/Focused_myImage/<%=id%>/<%=imgData[C].img.imgName%>">Show all (<%=imgData[C].comments.length%>)</a>
+              <br/> <label>Leave a comment</label>
+                    <form action="/News_Feed_Comment/<%=id%>/<%=username%>/<%=imgData[C].ownerID%>/<%=imgData[C].img.imgName%>" method="POST">
+                      <input type="text" id="theComment" name="theComment">
+                      <input type="submit" value="Submit">
+                    </form>
+            <%}%>
           </div>
         </div>
       </div>
@@ -130,5 +111,28 @@
 
     <!-- Custom scripts for this template -->
     <script src="/js/grayscale.min.js"></script>
+
+    <script>
+      function likePhoto(id,imgName,ownerId) {
+        fetch(`/Like_Photo/${id}/${imgName}/${ownerId}`,{method:'POST','Content-Type': 'application/json'})
+          // .then((res) => {
+          //   return(res.text());
+          // })
+          // .then(function(text){
+          //   alert(text);
+          //   // const div = $('#' + imgName + '_likes');
+          //   // getElementById(imgName+'_likes').innerHTML = text.likes;
+          // })
+          .then(res => res.json())
+          .then(function(data){
+            // debugger;
+            document.getElementById(imgName+'_likes').innerHTML = data.likes;
+          })
+          .catch((err) => {
+            alert("Error");
+          })
+      }
+    </script>
+
   </body>
 </html>

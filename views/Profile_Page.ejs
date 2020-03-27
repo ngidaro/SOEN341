@@ -55,7 +55,7 @@
 
           <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="/news_feed"
+              <a class="nav-link js-scroll-trigger" href="/News_Feed/<%=id%>"
                 >Feed</a
               >
             </li>
@@ -88,7 +88,7 @@
           <div class="row">
             <!-- todo : populate table with data from backend-->
             <div class="col">
-              <h3 class="text-white-50 mx-auto mt-2 mb-5">Posts 0</h3>
+              <h3 class="text-white-50 mx-auto mt-2 mb-5">Posts <%=imgData.length%></h3>
             </div>
             <div class="col">
               <h3 class="text-white-50 mx-auto mt-2 mb-5">Followers <%=followers%></h3>
@@ -121,11 +121,14 @@
         <div class="row">
           <div class="col-4">
             <!-- todo : loaded image goes here-->
-            <% for (var C=0;C<imgData.length;C++){%>
+            <% for (var C = imgData.length-1;C >= 0;C--){%>
               <br/><img src="/uploads/<%=imgData[C].img.imgName%>" alt="not displaying" height="200" width ="200">
-              <br/> Likes: <a method="GET" href="/..."><%=imgData[C].likes.length%></a>
+              <br><input type = "image" src="/uploads/like.png" width="27" height="27"
+                    onclick="likePhoto('<%=id%>','<%=imgData[C].img.imgName%>','<%=imgData[C].ownerID%>')">
+              <br><a id="<%=imgData[C].img.imgName%>_likes" method="GET" href="/..."><%=imgData[C].likes.length%></a> likes
               <br/> Caption: <%=imgData[C].caption[0]%>
-              <br/> Comments: <a method="GET" href="/Focused_myImage/<%=id%>/<%=imgData[C].img.imgName%>">Show all (<%=imgData[C].comments.length%>)</a>
+              <br/> Comments: <a method="GET" href="/Focused_myImage/<%=id%>/<%=imgData[C].img.imgName%>">Show all (<%=imgData[C].comments.length%>)
+              <!-- <br/> Comments: <button id="comments_id" onclick="showComments('<%=id%>','<%=imgData[C].img.imgName%>')">Show all (<%=imgData[C].comments.length%>)</button> -->
 
               <br/>
             <%}%>
@@ -167,5 +170,38 @@
 
     <!-- Custom scripts for this template -->
     <script src="/js/grayscale.min.js"></script>
+
+    <script>
+    function showComments(id,name) {
+      fetch(`/Profile_Page/${id}/${name}`,{method:'POST','Content-Type': 'application/json'})
+        .then(res => res.json())
+        .then(function(data){
+          debugger;
+          // document.getElementById(imgName+'_likes').innerHTML = data.likes;
+          var sAllComments = "";
+          for (var i = 0; i < data.imgData.comments.length; i++) {
+            sAllComments += (data.imgData.comments[i] + "\n");
+          }
+
+          document.getElementById("comments_id").innerHTML = sAllComments;
+        })
+        .catch((err) => {
+          alert("Show Comments Error");
+        })
+    }
+
+      function likePhoto(id,imgName,ownerId) {
+        fetch(`/Like_Photo/${id}/${imgName}/${ownerId}`,{method:'POST','Content-Type': 'application/json'})
+          .then(res => res.json())
+          .then(function(data){
+            // debugger;
+            document.getElementById(imgName+'_likes').innerHTML = data.likes;
+          })
+          .catch((err) => {
+            alert("Error");
+          })
+      }
+    </script>
+
   </body>
 </html>
