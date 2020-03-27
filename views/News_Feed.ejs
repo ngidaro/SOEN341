@@ -79,11 +79,9 @@
             <% for (var C = imgData.length-1;C >= 0;C--){%>
               <br/> <b><%=imgData[C].ownerUsername%></b>
               <br/><img src="/uploads/<%=imgData[C].img.imgName%>" alt="not displaying" height="350" width ="350">
-              <!-- <form action="/Like_Photo_News_Feed/<%=id%>/<%=imgData[C].img.imgName%>/<%=imgData[C].ownerID%>" method="POST">
-                  <input type = "image" src="/uploads/like.png" width="27" height="27">
-              </form> -->
-              <button id="likeButton" onclick="likeSomething('<%=id%>','<%=imgData[C].img.imgName%>','<%=imgData[C].ownerID%>')">LIKE</button>
-              <a id="<%=imgData[C].img.imgName%>_likes" method="GET" href="/..."><%=imgData[C].likes.length%></a> likes
+              <input type = "image" src="/uploads/like.png" width="27" height="27"
+                    onclick="likePhoto('<%=id%>','<%=imgData[C].img.imgName%>','<%=imgData[C].ownerID%>')">
+              <br><a id="<%=imgData[C].img.imgName%>_likes" method="GET" href="/..."><%=imgData[C].likes.length%></a> likes
               <br/> <b><%=imgData[C].ownerUsername%></b> <%=imgData[C].caption[0]%>
               <br/> Comments: <a method="GET" href="/Focused_myImage/<%=id%>/<%=imgData[C].img.imgName%>">Show all (<%=imgData[C].comments.length%>)</a>
               <br/> <label>Leave a comment</label>
@@ -115,8 +113,8 @@
     <script src="/js/grayscale.min.js"></script>
 
     <script>
-      function likeSomething(id,imgName,ownerId) {
-        fetch(`/Like_Photo_News_Feed/${id}/${imgName}/${ownerId}`,{method:'POST','Content-Type': 'application/json'})
+      function likePhoto(id,imgName,ownerId) {
+        fetch(`/Like_Photo/${id}/${imgName}/${ownerId}`,{method:'POST','Content-Type': 'application/json'})
           // .then((res) => {
           //   return(res.text());
           // })
@@ -127,7 +125,7 @@
           // })
           .then(res => res.json())
           .then(function(data){
-            alert(data.likes);
+            // debugger;
             document.getElementById(imgName+'_likes').innerHTML = data.likes;
           })
           .catch((err) => {

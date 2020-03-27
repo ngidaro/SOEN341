@@ -154,6 +154,16 @@ app.post('/Profile_Page/:id',function(req,res){
 
 });
 
+app.post('/Profile_Page/:id/:imgName',function(req,res){
+
+  Pics.find({"img.imgName":req.params.imgName}, function(error,imgDocs){
+
+    res.json({imgData:imgDocs[0]});
+
+  });
+
+
+});
 // ------------------------------------------------------------------------------
 /*  Path name: /Login_Page
 
@@ -442,7 +452,7 @@ app.get('/News_Feed/:id',function(req,res){
                                       bio:docs.bio,
                                       imgData:displayImages.sort()
                                     });
-      },1000);
+      },250);
 
     });
   });
@@ -508,45 +518,41 @@ app.get('/Follow_Page/:id/:searchID',function(req,res){
 */
 // ------------------------------------------------------------------------------
 //This is where the current user can follow as well as comment on another person's image
-app.post('/Follow_Page/:id/:searchID/:follow',function(req,res){
-
-  var isFollow = true;
-
-  if(req.params.follow == "Unfollow")
-  {
-    isFollow = false
-  }
+app.post('/Follow_Page/:id/:searchID',function(req,res){
 
   //------------------------ Update database ----------------------------
   //Manipulate userID from 'followers' in searhID-user DB
-  if(isFollow)
-  {
-    //Add users to the followers in the DB
-    User.updateOne({_id:req.params.searchID},{$push: {followers: req.params.id}},function (error, success) {
-        saved(error,success);
-    });
-    //Add users to the following in the DB
-    User.updateOne({_id:req.params.id},{$push: {following: req.params.searchID}},function (error, success) {
-        saved(error,success);
-    });
-  }
-  else {
-    //Delete users from the followers in the DB
-    User.updateOne({_id:req.params.searchID},{$pull: {followers: req.params.id}},function (error, success) {
-        saved(error,success);
-    });
-    //Delete users from the following in the DB
-    User.updateOne({_id:req.params.id},{$pull: {following: req.params.searchID}},function (error, success) {
-        saved(error,success);
-    });
-  }
-  //------------------------------------------------------------------
 
-  setTimeout(function(){
-    res.redirect('/Follow_Page/' + req.params.id + '/' + req.params.searchID);
-  }, 50);
-
+  User.findById({_id:req.params.searchID},function(error,docs){
+    if(!docs.followers.includes(req.params.id))
+    {
+      //Add users to the followers in the DB
+      User.findOneAndUpdate({_id:req.params.searchID},{$push: {followers: req.params.id}}, {new: true},function (error, followersDoc) {
+          saved(error,followersDoc);
+          res.json({sNbFollowers:followersDoc.followers.length,
+                    bIsFollowing:true});
+      });
+      //Add users to the following in the DB
+      User.findOneAndUpdate({_id:req.params.id},{$push: {following: req.params.searchID}}, {new: true},function (error, followingDoc) {
+          saved(error,followingDoc);
+      });
+    }
+    else {
+      //Delete users from the followers in the DB
+      User.findOneAndUpdate({_id:req.params.searchID},{$pull: {followers: req.params.id}}, {new: true},function (error, followersDoc) {
+          saved(error,followersDoc);
+          res.json({sNbFollowers:followersDoc.followers.length,
+                    bIsFollowing:false});
+      });
+      //Delete users to the following in the DB
+      User.findOneAndUpdate({_id:req.params.id},{$pull: {following: req.params.searchID}}, {new: true},function (error, followingDoc) {
+          saved(error,followingDoc);
+      });
+    }
+  });
 });
+
+//------------------------------------------------------------------
 
 function saved(error,success)
 {
@@ -639,36 +645,23 @@ app.get('/Focused_Image/:id/:searchID/:imgName',function(req,res)
 */
 // ------------------------------------------------------------------------------
 //This is where the current user can like a photo
-app.post('/Like_Photo/:id/:imgName/:searchID',function(req,res){
+app.post('/Like_Photo/:id/:imgName/:imgOwnerID', async function(req,res){
   Pics.find({"img.imgName":req.params.imgName}, function(error,imgDocs){
-
     if(imgDocs[0].likes.includes(req.params.id))
     {
-      console.log("already liked");
+      Pics.findOneAndUpdate({"img.imgName":req.params.imgName},{$pull: {likes: req.params.id}}, {new: true}, function (error, doc) {
+          saved(error,doc);
+          res.json({likes:doc.likes.length});
+      });
     }
     else {
-      Pics.updateOne({"img.imgName":req.params.imgName},{$push: {likes: req.params.id}},function (error, success) {
-          saved(error,success);
+      Pics.findOneAndUpdate({"img.imgName":req.params.imgName},{$push: {likes: req.params.id}}, {new: true}, function (error, doc) {
+          saved(error,doc);
+          res.json({likes:doc.likes.length});
         });
     }
-  res.redirect('/Follow_Page/' + req.params.id + '/' + req.params.searchID);
-  });
-});
-//Like a photo on the News_F
-app.post('/Like_Photo_News_Feed/:id/:imgName/:imgOwnerID', function(req,res){
-  Pics.find({"img.imgName":req.params.imgName}, function(error,imgDocs){
 
-    if(imgDocs[0].likes.includes(req.params.id))
-    {
-      console.log("already liked");
-    }
-    else {
-      Pics.updateOne({"img.imgName":req.params.imgName},{$push: {likes: req.params.id}},function (error, success) {
-          saved(error,success);
-        });
-    }
-    return res.json({likes:imgDocs[0].likes.length});
-  // res.redirect('/News_Feed/' + req.params.id);
+    // res.json({likes:imgDocs[0].likes.length});
   });
 });
 
