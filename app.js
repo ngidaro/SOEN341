@@ -83,7 +83,7 @@ app.get('/',function(req,res){
 });
 
 //Add Route
-app.get('/Login_Page',function(req,res){
+app.get('/login_page',function(req,res){
   res.render("Login_Page");
 });
 
@@ -94,7 +94,7 @@ app.get('/Create_Account_Page',function(req,res){
 app.get('/Post_Photo_Page/:id',function(req,res){
     res.render('Post_Photo_Page',{id:req.params.id});
 });
-app.get('/Post_Profile_Pic/:id',function(req,res){
+app.get('/post_profile_pic/:id',function(req,res){
     res.render('Post_Profile_Pic',{id:req.params.id});
 });
 
@@ -126,7 +126,7 @@ var Pics = mongoose.model('Pics',PicsSchema);
 //                To use variables in the ejs file, do: <%=username%> wherever needed.
 //
 // ------------------------------------------------------------------------------
-app.get('/Profile_Page/:id',function(req,res){
+app.get('/profile_page/:id',function(req,res){
   //findById returns object NOT Array of objects
   Users.findById(req.params.id,function(error,docs){
     Pics.find({ownerID:req.params.id}, function(error,imgDocs){
@@ -148,13 +148,13 @@ app.get('/Profile_Page/:id',function(req,res){
 //      req.params.id:     The user's id obtained from the url
 //      req.body.search:   Gets the text written in the search text field (name of field is "search")
 // ------------------------------------------------------------------------------
-app.post('/Profile_Page/:id',function(req,res){
+app.post('/profile_page/:id',function(req,res){
 
   res.redirect('/Search_Page/'+req.params.id+'/'+req.body.search);
 
 });
 
-app.post('/Profile_Page/:id/:imgName',function(req,res){
+app.post('/profile_page/:id/:imgName',function(req,res){
 
   Pics.find({"img.imgName":req.params.imgName}, function(error,imgDocs){
 
@@ -165,11 +165,11 @@ app.post('/Profile_Page/:id/:imgName',function(req,res){
 
 });
 // ------------------------------------------------------------------------------
-/*  Path name: /Login_Page
+/*  Path name: /login_page
 
     Definition: Gets all data from the text fields and checks to see if the data entered
-                exists and is correct. If correct then page redirects to /Profile_Page,
-                if not then pages redirects to /Login_Page.
+                exists and is correct. If correct then page redirects to /profile_page,
+                if not then pages redirects to /login_page.
 
     Variables:
         req:      Request from page.
@@ -182,32 +182,35 @@ app.post('/Profile_Page/:id/:imgName',function(req,res){
 // ------------------------------------------------------------------------------
 
 //Sign In page: method = post
-app.post('/Login_Page',function(req,res) {
+app.post('/login_page/:userName/:passWord', function (req,res) {
 
-  var userName = req.body.user;
-  var passWord = req.body.pass;
+  console.log("username: " + req.params.userName + " password: " + req.params.passWord);
 
-  Users.find({username:userName},'username password',{lean: true}, function(err, docs){
-   if (err) return handleError(err);
+  Users.find({username:req.params.userName},'username password',{lean: true}, function(err, docs){
+   // if (err) return res.json({bExists:false,error:handleError(err)});
 
    //If no username exists in the database:
    if (docs.length == 0)
    {
-     console.log('Invalid UserName and Password');
-     res.redirect('/Login_Page');
+     console.log('Invalid Username and Password');
+     res.json({bExists:false,
+              id: sId});
    }
    else {
      //Verify that the username and password are correct
-     if((docs[0].username == userName) && (docs[0].password == passWord))
+     if((docs[0].username == req.params.userName) && (docs[0].password == req.params.passWord))
      {
        console.log('Username and Password Correct');
        var sId = docs[0]._id;
        console.log(sId);
-       res.redirect('/Profile_Page/' + sId);
+       // res.redirect('/profile_page/' + sId);
+       res.json({bExists:true,
+                id: sId});
      }
      else {
        console.log('Invalid UserName and Password');
-       res.redirect('/Login_Page');
+       res.json({bExists:false,
+                id: sId});
      }
    }
  });
@@ -255,7 +258,7 @@ app.post('/Create_Account_Page',function(req,res){
           return;
         }else {
           console.log("Saved User to the database");
-          res.redirect('/Profile_Page/' + user._id);
+          res.redirect('/profile_page/' + user._id);
         }
       });
     }
@@ -375,7 +378,7 @@ app.post('/upload/:id'/*,upload.single('file')*/,(req, res)=> {
 
   function renderProfile()
   {
-    res.redirect('/Profile_Page/'+req.params.id);
+    res.redirect('/profile_page/'+req.params.id);
   }
 });
 
@@ -404,7 +407,7 @@ app.get('/Search_Page/:id/:name',function(req,res){
 });
 
 // -------------------------------------------------------------------------------------------
-// Definition: News_Feed is the page where the user can view all the images of the users that
+// Definition: news_need is the page where the user can view all the images of the users that
 //             they follow. The images are displayed from newest to oldest.
 // Variables:
 //   id:            The id of the current logged on user
@@ -413,7 +416,7 @@ app.get('/Search_Page/:id/:name',function(req,res){
 //   images:        All image data pertaining to the person being followed by the current user
 //
 // -------------------------------------------------------------------------------------------
-app.get('/News_Feed/:id',function(req,res){
+app.get('/news_feed/:id',function(req,res){
 
   var displayImages = [];
 
@@ -586,13 +589,13 @@ app.post('/leaveComment/:id/:username/:imgOwnerId/:imgName',function(req,res){
   });
 });
 //When a user comments on a picture on the News_Feed
-app.post('/News_Feed_Comment/:id/:username/:imgOwnerId/:imgName',function(req,res){
+app.post('/news_feed_Comment/:id/:username/:imgOwnerId/:imgName',function(req,res){
   User.findById(req.params.id, function (error, searchDocs){
 
     Pics.updateOne({"img.imgName":req.params.imgName},{$push: {comments: searchDocs.username+': '+req.body.theComment}},function (error, success) {
         saved(error,success);
     });
-      res.redirect('/News_Feed/' + req.params.id);
+      res.redirect('/news_feed/' + req.params.id);
   });
 });
 
@@ -647,17 +650,20 @@ app.get('/Focused_Image/:id/:searchID/:imgName',function(req,res)
 //This is where the current user can like a photo
 app.post('/Like_Photo/:id/:imgName/:imgOwnerID', async function(req,res){
   Pics.find({"img.imgName":req.params.imgName}, function(error,imgDocs){
+
     if(imgDocs[0].likes.includes(req.params.id))
     {
       Pics.findOneAndUpdate({"img.imgName":req.params.imgName},{$pull: {likes: req.params.id}}, {new: true}, function (error, doc) {
           saved(error,doc);
-          res.json({likes:doc.likes.length});
+          res.json({likes:doc.likes.length,
+                    bLiked:false});
       });
     }
     else {
       Pics.findOneAndUpdate({"img.imgName":req.params.imgName},{$push: {likes: req.params.id}}, {new: true}, function (error, doc) {
           saved(error,doc);
-          res.json({likes:doc.likes.length});
+          res.json({likes:doc.likes.length,
+                    bLiked:true});
         });
     }
 
@@ -678,15 +684,15 @@ app.post('/Like_Photo/:id/:imgName/:imgOwnerID', async function(req,res){
 */
 // ------------------------------------------------------------------------------
 //This is where the current user can edit their profile
-app.post('/Edit_Profile/:id',function(req,res){
+app.post('/edit_profile/:id',function(req,res){
   User.updateOne({_id:req.params.id},{$set: {bio: req.body.bio}},function (error, success) {
       saved(error,success);
   });
-  res.redirect('/Profile_Page/'+req.params.id);
+  res.redirect('/profile_page/'+req.params.id);
 });
 
 //Diplsays the get request for a request to edit the profile page
-app.get('/Profile_Edit/:id',function(req,res){
+app.get('/edit_profile/:id',function(req,res){
   //findById returns object NOT Array of objects
 User.findById(req.params.id,function(error,docs){
 Pics.find({ownerID:req.params.id}, function(error,imgDocs){

@@ -81,15 +81,15 @@
         <div class="col-xl-4 col-lg-5">
           <div class="featured-text text-center text-lg-left">
             <div class = "inputs">
-              <form action = "/Login_Page" method = "POST">
+              <form>
                   <h2>&nbsp;Sign In</h2>
-                  <label>&nbsp;&nbsp;Username&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                    <input name="user" type="text" id="user" placeholder="Username">
+                  <label>&nbsp;Username&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                    <br/><input name="user" type="text" id="user" placeholder="Username">
                     <br/><br/>
-                  <label>&nbsp;&nbsp;Password&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                    <input name="pass" type="password" id="pass" placeholder="Password">
+                  <label>&nbsp;Password&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                    <br/><input name="pass" type="password" id="pass" placeholder="Password">
                   <br/><br/>
-                  <pre>              <input type = "submit"></input></pre>
+                  <pre><input type = "button" value = "Log in" onclick="loginAuthentication()"></input></pre>
                   <a href="Create_Account_Page">&nbsp;Don't have an account?</a>
                   <br/>
                   <a href="forgotpass.ejs">&nbsp;Forgot your password?</a>
@@ -176,6 +176,34 @@
 
   <!-- Custom scripts for this template -->
   <script src="js/grayscale.min.js"></script>
+
+  <script>
+
+    function loginAuthentication()
+    {
+      var username = document.getElementById("user").value;
+      var password = document.getElementById("pass").value;
+
+      fetch(`/login_page/${username}/${password}`,{method:'POST','Content-Type': 'application/json'})
+        .then(res => res.json())
+        .then(function(data){
+          // debugger;
+          if(!data.bExists)
+          {
+            alert("Invalid username or password, please try again.");
+          }
+          else {
+            window.location.href = "Profile_Page/" + data.id;
+          }
+        })
+        .catch((err) => {
+          // debugger;
+          alert("Please do not leave any empty fields, make sure to enter a username and a password!");
+        })
+    }
+
+  </script>
+
 
 </body>
 
