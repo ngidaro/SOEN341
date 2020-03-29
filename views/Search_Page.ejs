@@ -41,7 +41,7 @@
               <% for(var i = 0; i < data.length; i++) {
                     if(data[i]._id == id) {i++}
                     else{%>
-                  <a method="GET" href="/Follow_Page/<%=id%>/<%=data[i]._id%>"><%= data[i].username %></a>
+                  <a method="GET" href="/follow_page/<%=id%>/<%=data[i]._id%>"><%= data[i].username %></a>
                   <br></<br>
               <%}}%>
             </ul>

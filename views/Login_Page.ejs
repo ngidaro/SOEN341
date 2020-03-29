@@ -42,7 +42,7 @@
             <a class="nav-link js-scroll-trigger" href="#signIn">Sign In</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="Create_Account_Page">Create an Account</a>
+            <a class="nav-link js-scroll-trigger" href="create_account_page">Create an Account</a>
           </li>
         </ul>
       </div>
@@ -89,8 +89,8 @@
                   <label>&nbsp;Password&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                     <br/><input name="pass" type="password" id="pass" placeholder="Password">
                   <br/><br/>
-                  <pre><input type = "button" value = "Log in" onclick="loginAuthentication()"></input></pre>
-                  <a href="Create_Account_Page">&nbsp;Don't have an account?</a>
+                  <pre><input type = "button" onclick="loginAuthentication()" value="Login"></input></pre>
+                  <a href="create_account_page">&nbsp;Don't have an account?</a>
                   <br/>
                   <a href="forgotpass.ejs">&nbsp;Forgot your password?</a>
                 </form>
@@ -193,12 +193,14 @@
             alert("Invalid username or password, please try again.");
           }
           else {
-            window.location.href = "Profile_Page/" + data.id;
+            window.location.href = "profile_page/" + data.id;
+
           }
         })
         .catch((err) => {
           // debugger;
           alert("Please do not leave any empty fields, make sure to enter a username and a password!");
+
         })
     }
 

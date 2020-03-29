@@ -47,25 +47,25 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <!-- Search Bar -->
-          <!-- Must go to the Profile_Page "post" which will then redirect to Search_Page -->
-          <form class="Search" action="/Profile_Page/<%=id%>" method="POST">
+          <!-- Must go to the profile_page "post" which will then redirect to search_page -->
+          <form class="Search" action="/profile_page/<%=id%>" method="POST">
             <input type="text" name="search" id="search" placeholder="Search..">
             <button type="submit"><i class="fa fa-search"></i></button>
           </form>
 
           <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="/News_Feed/<%=id%>"
+              <a class="nav-link js-scroll-trigger" href="/news_feed/<%=id%>"
                 >Feed</a
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="/Profile_Page/<%=id%>"
+              <a class="nav-link js-scroll-trigger" href="/profile_page/<%=id%>"
                 >My Profile</a
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="/Post_Photo_Page/<%=id%>"
+              <a class="nav-link js-scroll-trigger" href="/post_photo_page/<%=id%>"
                 >Post Photo</a
               >
             </li>
@@ -83,8 +83,8 @@
             <!-- todo : loaded image goes here-->
               <br/> <b><%=imgData[0].ownerUsername%></b>
               <br/><img src="/uploads/<%=imgData[0].img.imgName%>" alt="not displaying" height="400" width ="400">
-              <br><form action="/Like_Photo/<%=id%>/<%=imgData[0].img.imgName%>/<%=imgData[0].ownerID%>" method="POST">
-                    <input type = "image" src="/uploads/like.png" width="27" height="27">
+              <br><form action="/like_photo/<%=id%>/<%=imgData[0].img.imgName%>/<%=imgData[0].ownerID%>" method="POST">
+                    <input type = "image" src="/uploads/like_photo.png" width="27" height="27">
                     <br><a method="GET" href="/..."><%=imgData[0].likes.length%></a> likes
                   </form>
               Caption: <%=imgData[0].caption[0]%>

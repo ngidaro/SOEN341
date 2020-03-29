@@ -79,20 +79,20 @@ app.use(express.static('front_end'));
 
 //Home Route
 app.get('/',function(req,res){
-  res.render("Login_Page");
+  res.render("login_page");
 });
 
 //Add Route
 app.get('/login_page',function(req,res){
-  res.render("Login_Page");
+  res.render("login_page");
 });
 
-app.get('/Create_Account_Page',function(req,res){
-  res.render("Create_Account_Page");
+app.get('/create_account_page',function(req,res){
+  res.render("create_account_page");
 });
 
-app.get('/Post_Photo_Page/:id',function(req,res){
-    res.render('Post_Photo_Page',{id:req.params.id});
+app.get('/post_photo_page/:id',function(req,res){
+    res.render('post_photo_page',{id:req.params.id});
 });
 app.get('/post_profile_pic/:id',function(req,res){
     res.render('Post_Profile_Pic',{id:req.params.id});
@@ -122,7 +122,7 @@ var Pics = mongoose.model('Pics',PicsSchema);
 //   NOTE: - req.params.id gets the id coming from the url (:id)
 //         - In res.render(), there are variables being declared on the left side,
 //              ex. username: docs.username
-//                The variable on the left is the variable being used in the Profile_Page.ejs file.
+//                The variable on the left is the variable being used in the profile_page.ejs file.
 //                To use variables in the ejs file, do: <%=username%> wherever needed.
 //
 // ------------------------------------------------------------------------------
@@ -131,7 +131,7 @@ app.get('/profile_page/:id',function(req,res){
   Users.findById(req.params.id,function(error,docs){
     Pics.find({ownerID:req.params.id}, function(error,imgDocs){
 
-      res.render('Profile_Page',{ id:req.params.id,
+      res.render('profile_page',{ id:req.params.id,
                                     username:docs.username,
                                     followers:docs.followers.length,
                                     following:docs.following.length,
@@ -150,7 +150,7 @@ app.get('/profile_page/:id',function(req,res){
 // ------------------------------------------------------------------------------
 app.post('/profile_page/:id',function(req,res){
 
-  res.redirect('/Search_Page/'+req.params.id+'/'+req.body.search);
+  res.redirect('/search_page/'+req.params.id+'/'+req.body.search);
 
 });
 
@@ -217,11 +217,11 @@ app.post('/login_page/:userName/:passWord', function (req,res) {
 });
 
 // ------------------------------------------------------------------------------
-/*  Path name: /Create_Account_Page
+/*  Path name: /create_account_page
 
     Definition: Gets all data entered in the textfields and validates to see if the user
                 already exists. If the user already exists, then the age will redirect to
-                /Create_Account_Page. If the user does not exist, the data will be stored in the DB.
+                /create_account_page. If the user does not exist, the data will be stored in the DB.
 
     Variables:
         req:      Request from page.
@@ -237,7 +237,7 @@ app.post('/login_page/:userName/:passWord', function (req,res) {
 */
 // ------------------------------------------------------------------------------
 //post data to DB when in createaccount package
-app.post('/Create_Account_Page',function(req,res){
+app.post('/create_account_page',function(req,res){
 
   let user = new Users();
 
@@ -249,7 +249,7 @@ app.post('/Create_Account_Page',function(req,res){
   Users.count({username: user.username}, function (err, count){
     if(count>0){
         console.log("Username already exists");
-        res.redirect('/Create_Account_Page')
+        res.redirect('/create_account_page')
     }
     else {
       user.save(function(err){
@@ -268,7 +268,7 @@ app.post('/Create_Account_Page',function(req,res){
 // ------------------------------------------------------------------------------
 /*  Create storage Engine
 
-    Definition: Creates the GridFsStorage. Used for storing images in Post_Photo_Page.ejs
+    Definition: Creates the GridFsStorage. Used for storing images in post_photo_page.ejs
 
     Variables:
       url:    The url to access the mongoDB database.
@@ -307,13 +307,13 @@ const localStorage = multer.diskStorage({
   }
 });
 
-//file in the next line is the fieldname from the Post_Photo_Page_ejs file
+//file in the next line is the fieldname from the post_photo_page_ejs file
 const uploadLocal = multer({ storage: localStorage }).single('file');
 
 // ------------------------------------------------------------------------------
 /*  app.post('/upload/:id')
 
-    Definition: Stores the image selected in Post_Photo_Page into the pic DB in mongoDB.
+    Definition: Stores the image selected in post_photo_page into the pic DB in mongoDB.
 
     Variables:
       image;                    Object of the model Pics() of PicsSchema located in /models/pics.js
@@ -384,24 +384,24 @@ app.post('/upload/:id'/*,upload.single('file')*/,(req, res)=> {
 
 
 // ------------------------------------------------------------------------------
-/*  app.get('/Search_Page/:id/:name')
+/*  app.get('/search_page/:id/:name')
 
-    Definition: Renders the Search_Page with all usernames queried from the DB which
+    Definition: Renders the search_page with all usernames queried from the DB which
                 contains the searched parameter (req.params.name)
 
     Variables:
       docs:   Object contains all information pertaining to the username fonud by User.find().
-      data:   Object which is used in the Search_Page.ejs which holds all fields from docs.
+      data:   Object which is used in the search_page.ejs which holds all fields from docs.
               (data[0].username, data[1].username, data.[0].lastname...)
 
       NOTE: The Users.find() oly returns _id, firstname, lastname and username.
 */
 // ------------------------------------------------------------------------------
-app.get('/Search_Page/:id/:name',function(req,res){
+app.get('/search_page/:id/:name',function(req,res){
 
   Users.find({username:{$regex: req.params.name, $options: "i"}},'firstName lastName username',{lean: true},
           function(err, docs){
-    res.render('Search_Page',{id:req.params.id,
+    res.render('search_page',{id:req.params.id,
                               data: docs});
   });
 });
@@ -448,7 +448,7 @@ app.get('/news_feed/:id',function(req,res){
 
       //wait 1 second before rendering the news_feed -> need time to loop through files for images
       setTimeout(function(){
-        res.render('News_Feed',{ id:req.params.id,
+        res.render('news_feed',{ id:req.params.id,
                                       username:docs.username,
                                       followers:docs.followers.length,
                                       following:docs.following.length,
@@ -462,9 +462,9 @@ app.get('/news_feed/:id',function(req,res){
 });
 
 // ------------------------------------------------------------------------------
-// Definition: Follow_Page is the page of the user who correspong to the searchID.
+// Definition: follow_page is the page of the user who correspong to the searchID.
 //             This page contains a follow button and all information realting to the searched user
-//             This function populates the Follow_Page.ejs with a specific user's data
+//             This function populates the follow_page.ejs with a specific user's data
 // Variables:
 //   id:        The id of the current logged on user
 //   searchID:  The id of the user who has been searched
@@ -475,7 +475,7 @@ app.get('/news_feed/:id',function(req,res){
 //         req.params.searchID get the searchID from the url (:searhID)
 //
 // ------------------------------------------------------------------------------
-app.get('/Follow_Page/:id/:searchID',function(req,res){
+app.get('/follow_page/:id/:searchID',function(req,res){
 
   User.findById(req.params.searchID,function(error,docs){
     if (error) return handleError(error);
@@ -494,7 +494,7 @@ app.get('/Follow_Page/:id/:searchID',function(req,res){
       }
     }
 
-    res.render('Follow_Page',{ id:req.params.id,
+    res.render('follow_page',{ id:req.params.id,
                                 searchID:req.params.searchID,
                                 username:docs.username,
                                 followers:docs.followers.length,
@@ -506,7 +506,7 @@ app.get('/Follow_Page/:id/:searchID',function(req,res){
 });
 });
 // ------------------------------------------------------------------------------
-/*  app.post('/Follow_Page/:id/:searchID/:follow')
+/*  app.post('/follow_page/:id/:searchID/:follow')
 
     Definition: Checks to see if the parameter :follow is "Follow" or "Unfollow".
                 Depending on :follow, this function will either remove the searchID
@@ -521,7 +521,7 @@ app.get('/Follow_Page/:id/:searchID',function(req,res){
 */
 // ------------------------------------------------------------------------------
 //This is where the current user can follow as well as comment on another person's image
-app.post('/Follow_Page/:id/:searchID',function(req,res){
+app.post('/follow_page/:id/:searchID',function(req,res){
 
   //------------------------ Update database ----------------------------
   //Manipulate userID from 'followers' in searhID-user DB
@@ -585,10 +585,11 @@ app.post('/leaveComment/:id/:username/:imgOwnerId/:imgName',function(req,res){
     Pics.updateOne({"img.imgName":req.params.imgName},{$push: {comments: searchDocs.username+': '+req.body.theComment}},function (error, success) {
         saved(error,success);
     });
-      res.redirect('/Focused_Image/' + req.params.id + '/' + req.params.imgOwnerId + '/' + req.params.imgName);
+      res.redirect('/focused_image/' + req.params.id + '/' + req.params.imgOwnerId + '/' + req.params.imgName);
   });
 });
-//When a user comments on a picture on the News_Feed
+
+//When a user comments on a picture on the news_feed
 app.post('/news_feed_Comment/:id/:username/:imgOwnerId/:imgName',function(req,res){
   User.findById(req.params.id, function (error, searchDocs){
 
@@ -600,12 +601,12 @@ app.post('/news_feed_Comment/:id/:username/:imgOwnerId/:imgName',function(req,re
 });
 
 //displays my image in a better view
-app.get('/Focused_myImage/:id/:imgName',function(req,res)
+app.get('/focused_myimage/:id/:imgName',function(req,res)
 {
   User.findById(req.params.id,function(error,docs){
     Pics.find({"img.imgName":req.params.imgName}, function(error,imgDocs){
 
-      res.render('Focused_myImage',{ id:req.params.id,
+      res.render('focused_myimage',{ id:req.params.id,
                                   username:docs.username,
                                   followers:docs.followers.length,
                                   following:docs.following.length,
@@ -616,14 +617,14 @@ app.get('/Focused_myImage/:id/:imgName',function(req,res)
   });
 });
 //displays somebody's picture in a better view
-app.get('/Focused_Image/:id/:searchID/:imgName',function(req,res)
+app.get('/focused_image/:id/:searchID/:imgName',function(req,res)
 {
   User.findById(req.params.searchID,function(error,searchDocs){ //gets the user were looking at
 
   User.findById(req.params.id,function(error,docs){
   Pics.find({"img.imgName":req.params.imgName}, function(error,imgDocs){
 
-    res.render('Focused_Image',{ id:req.params.id,
+    res.render('focused_image',{ id:req.params.id,
                                   username:searchDocs.username,
                                   followers:searchDocs.followers.length,
                                   following:searchDocs.following.length,
@@ -636,7 +637,7 @@ app.get('/Focused_Image/:id/:searchID/:imgName',function(req,res)
                           });
 });
 // ------------------------------------------------------------------------------
-/*  app.post('/Like_Photo/:id/:imgName/:searchID')
+/*  app.post('/like_photo/:id/:imgName/:searchID')
 
     Definition: Pushes a like into the array of likes for a given picture
 
@@ -648,7 +649,7 @@ app.get('/Focused_Image/:id/:searchID/:imgName',function(req,res)
 */
 // ------------------------------------------------------------------------------
 //This is where the current user can like a photo
-app.post('/Like_Photo/:id/:imgName/:imgOwnerID', async function(req,res){
+app.post('/like_photo/:id/:imgName/:imgOwnerID', async function(req,res){
   Pics.find({"img.imgName":req.params.imgName}, function(error,imgDocs){
 
     if(imgDocs[0].likes.includes(req.params.id))
@@ -684,9 +685,11 @@ app.post('/Like_Photo/:id/:imgName/:imgOwnerID', async function(req,res){
 */
 // ------------------------------------------------------------------------------
 //This is where the current user can edit their profile
-app.post('/edit_profile/:id',function(req,res){
-  User.updateOne({_id:req.params.id},{$set: {bio: req.body.bio}},function (error, success) {
-      saved(error,success);
+
+app.post('/edit_profile/:id/:bio',function(req,res){
+  User.findOneAndUpdate({_id:req.params.id},{$set: {bio: req.params.bio}},{new: true},function (error, docs) {
+      saved(error,docs);
+      res.json({sBio:docs.bio});
   });
   res.redirect('/profile_page/'+req.params.id);
 });
@@ -696,7 +699,7 @@ app.get('/edit_profile/:id',function(req,res){
   //findById returns object NOT Array of objects
 User.findById(req.params.id,function(error,docs){
 Pics.find({ownerID:req.params.id}, function(error,imgDocs){
-  res.render('Profile_Edit',{ id:req.params.id,
+  res.render('profile_edit',{ id:req.params.id,
                                 username:docs.username,
                                 followers:docs.followers.length,
                                 following:docs.following.length,

@@ -47,8 +47,8 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <!-- Search Bar -->
-          <!-- Must go to the Profile_Page "post" which will then redirect to Search_Page -->
-          <form class="Search" action="/Profile_Page/<%=id%>" method="POST">
+          <!-- Must go to the profile_page "post" which will then redirect to search_page -->
+          <form class="Search" action="/profile_page/<%=id%>" method="POST">
             <input type="text" name="search" id="search" placeholder="Search..">
             <button type="submit"><i class="fa fa-search"></i></button>
           </form>
@@ -65,7 +65,7 @@
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="/Post_Photo_Page/<%=id%>"
+              <a class="nav-link js-scroll-trigger" href="/post_photo_page/<%=id%>"
                 >Post Photo</a
               >
             </li>
@@ -82,7 +82,7 @@
           <div class="row">
             <!-- todo : populate table with data from backend-->
             <div class="col">
-              <h3 class="text-white-50 mx-auto mt-2 mb-5">Posts 0</h3>
+              <h3 class="text-white-50 mx-auto mt-2 mb-5">Posts <%=imgData.length%></h3>
             </div>
             <div class="col">
               <h3 class="text-white-50 mx-auto mt-2 mb-5">Followers <%=followers%></h3>
@@ -91,13 +91,12 @@
               <h3 class="text-white-50 mx-auto mt-2 mb-5">Following <%=following%></h3>
             </div>
           </div>
-          <a method ="GET" href="/Profile_Page/<%=id%>" class="btn btn-primary js-scroll-trigger" id= "cancelEditBtn">Cancel Edit</a>
+          <a method ="GET" href="/profile_page/<%=id%>" class="btn btn-primary js-scroll-trigger" id= "cancelEditBtn">Cancel Edit</a>
           <br/>
-
-          <form action="/Edit_Profile/<%=id%>" method="POST">
+          <form action="/edit_profile/<%=id%>" method="POST">
                 <textarea id="bio" name="bio" placeholder="Tell us about yourself..."><%=bio%></textarea><br/>
                 <input type="submit" value="Submit">
-                </form>
+          </form>
         </div>
       </div>
     </header>
