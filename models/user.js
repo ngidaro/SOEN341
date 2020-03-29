@@ -29,6 +29,10 @@ UserSchema = mongoose.Schema({
   following:{
     type:Array,
     required: false
+  },
+  profilePic:{
+    type:Array,
+    required: true
   }
 });
 

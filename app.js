@@ -136,7 +136,8 @@ app.get('/profile_page/:id',function(req,res){
                                     followers:docs.followers.length,
                                     following:docs.following.length,
                                     bio:docs.bio,
-                                    imgData:imgDocs
+                                    imgData:imgDocs,
+                                    profilePicture:docs.profilePic
                                   }); //in ejs file do <%=username%>
     });
   });
@@ -241,6 +242,7 @@ app.post('/create_account_page',function(req,res){
 
   let user = new Users();
 
+  user.profilePic = "undefined_profile.png";
   user.username = req.body.user;
   user.password = req.body.pass;
   user.firstName = req.body.fName;
@@ -372,14 +374,33 @@ app.post('/upload/:id'/*,upload.single('file')*/,(req, res)=> {
       console.log("Image saved");
       //Go back to user's profile page
       //There is a timeout because when an image is posted it does not display in the user profile right away
-      setTimeout(renderProfile,1000);
+      setTimeout(function()
+      {
+        res.redirect('/profile_page/'+req.params.id);
+      },250);
+    }
+  });
+});
+
+//Upload Profile picture
+app.post('/upload_profile/:id',(req, res)=> {
+
+  uploadLocal(req,res,(err) => {
+    //Callback function with parameter err
+    if (err) {
+      console.log("Failed to upload to local storage");
+    }
+    else {
+
+      User.findOneAndUpdate({_id:req.params.id},{$set: {profilePic: req.file.filename}},{new: true},function (error, docs) {
+          saved(error,docs);
+          console.log("Image saved");
+          res.redirect('/profile_page/'+req.params.id);
+      });
     }
   });
 
-  function renderProfile()
-  {
-    res.redirect('/profile_page/'+req.params.id);
-  }
+
 });
 
 
@@ -501,7 +522,8 @@ app.get('/follow_page/:id/:searchID',function(req,res){
                                 following:docs.following.length,
                                 sFollow: sFollow,
                                 bio:docs.bio,
-                                imgData:imgDocs});
+                                imgData:imgDocs,
+                                profilePicture:docs.profilePic});
   });
 });
 });
@@ -667,11 +689,8 @@ app.post('/like_photo/:id/:imgName/:imgOwnerID', async function(req,res){
                     bLiked:true});
         });
     }
-
-    // res.json({likes:imgDocs[0].likes.length});
   });
 });
-
 
 // ------------------------------------------------------------------------------
 /*  app.post('/Edit_Profile/:id')
@@ -708,6 +727,24 @@ Pics.find({ownerID:req.params.id}, function(error,imgDocs){
   });
 });
 });
+
+// ------------------------------------------------------------------------------
+/*  date()
+
+    Definition: Returns the date in format year-month-day-hours_minutes_seconds
+
+    Variables:
+                date:       The current day.
+                month:      The current month.
+                year:       The current year.
+                hours:      The current hour.
+                minutes:    The current minute.
+                seconds:    The current second.
+*/
+// ------------------------------------------------------------------------------
+
+
+app.post
 
 function date()
 {
