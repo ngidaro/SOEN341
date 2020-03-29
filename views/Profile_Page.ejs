@@ -26,6 +26,7 @@
     />
     <!-- Custom styles for this template -->
     <link href="/css/grayscale.css" rel="stylesheet" />
+    <link href="/css/profilePic.css" rel="stylesheet" />
   </head>
 
   <body id="page-top">
@@ -78,11 +79,12 @@
     </nav>
 
     <!-- Header -->
+
     <header class="masthead">
       <div class="container d-flex h-100 align-items-center">
         <div class="mx-auto text-center">
           <a href="/post_profile_pic/<%=id%>">
-            <img src="/uploads/undefined_profile.png" alt="profile pic" id="profilePic"/>
+            <img src="/uploads/<%=profilePicture%>" alt="profile pic" id="profilePic" class="profilePic"/>
           </a>
           <h2 class="mx-auto my-0 text-uppercase"><%=username%></h2>
           <div class="row">
