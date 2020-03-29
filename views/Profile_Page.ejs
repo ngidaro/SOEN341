@@ -143,12 +143,11 @@
               </svg>
               <br><a id="<%=imgData[C].img.imgName%>_likes" method="GET" href="/..."><%=imgData[C].likes.length%></a> likes
               <br/> <b><%=imgData[C].ownerUsername%></b> <%=imgData[C].caption[0]%>
-              <br/> Comments: <a method="GET" href="/focused_myimage/<%=id%>/<%=imgData[C].img.imgName%>">Show all (<%=imgData[C].comments.length%>)</a>
-              <br/> <label>Leave a comment</label>
-                    <form action="/news_feed_Comment/<%=id%>/<%=username%>/<%=imgData[C].ownerID%>/<%=imgData[C].img.imgName%>" method="POST">
-                      <input type="text" id="theComment" name="theComment">
-                      <input type="submit" value="Submit">
-                    </form>
+              <br/> Comments: <a id="showall_id" method="GET" href="/focused_myimage/<%=id%>/<%=imgData[C].img.imgName%>">Show all (<%=imgData[C].comments.length%>)</a>
+                <form>
+                  <input type="text" id="theComment" name="theComment" placeholder="Leave a comment">
+                  <input type="button" value="Submit" onclick="addComment('<%=id%>','<%=username%>','<%=imgData[C].ownerID%>','<%=imgData[C].img.imgName%>')">
+                </form>
             <%}%>
           </div>
           <div class="col-8">
@@ -188,6 +187,8 @@
 
     <!-- Custom scripts for this template -->
     <script src="/js/grayscale.min.js"></script>
+    <script src="/js/leaveComment.js"></script>
+    <script src="/js/likePhoto.js"></script>
 
     <script>
 
@@ -195,7 +196,11 @@
       {
         var bio = document.getElementById("bio").value;
 
-        fetch(`/edit_profile/${id}/${bio}`,{method:'POST','Content-Type': 'application/json'})
+        fetch(`/edit_profile/${id}`,{method:'POST',
+        headers: {
+                "Content-Type": "application/json"
+            },
+          body:JSON.stringify({"bio":bio})})
           .then(res => res.json())
           .then(function(data){
             debugger;
@@ -235,27 +240,6 @@
           })
           .catch((err) => {
             alert("Show Comments Error");
-          })
-      }
-
-      function likePhoto(id,imgName,ownerId) {
-
-        fetch(`/like_photo/${id}/${imgName}/${ownerId}`,{method:'POST','Content-Type': 'application/json'})
-          .then(res => res.json())
-          .then(function(data){
-
-            if(data.bLiked)
-            {
-              document.getElementById("heart_id_"+imgName).style.fill = "red";
-            }
-            else {
-              document.getElementById("heart_id_"+imgName).style.fill = "white";
-            }
-
-            document.getElementById(imgName+'_likes').innerHTML = data.likes;
-          })
-          .catch((err) => {
-            alert("Error");
           })
       }
     </script>

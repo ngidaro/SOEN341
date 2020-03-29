@@ -604,21 +604,14 @@ function saved(error,success)
 app.post('/leaveComment/:id/:username/:imgOwnerId/:imgName',function(req,res){
   User.findById(req.params.id, function (error, searchDocs){
 
-    Pics.updateOne({"img.imgName":req.params.imgName},{$push: {comments: searchDocs.username+': '+req.body.theComment}},function (error, success) {
-        saved(error,success);
-    });
-      res.redirect('/focused_image/' + req.params.id + '/' + req.params.imgOwnerId + '/' + req.params.imgName);
-  });
-});
+    var isPosted = false;
 
-//When a user comments on a picture on the news_feed
-app.post('/news_feed_Comment/:id/:username/:imgOwnerId/:imgName',function(req,res){
-  User.findById(req.params.id, function (error, searchDocs){
-
-    Pics.updateOne({"img.imgName":req.params.imgName},{$push: {comments: searchDocs.username+': '+req.body.theComment}},function (error, success) {
-        saved(error,success);
+    Pics.findOneAndUpdate({"img.imgName":req.params.imgName},{$push: {comments: searchDocs.username+': '+req.body.comment}},{new:true},async function (error, imgDocs) {
+        saved(error,imgDocs);
+        isPosted = true;
+        await res.json({isPosted:isPosted,
+                  totalComments:imgDocs.comments.length});
     });
-      res.redirect('/news_feed/' + req.params.id);
   });
 });
 
@@ -705,8 +698,8 @@ app.post('/like_photo/:id/:imgName/:imgOwnerID', async function(req,res){
 // ------------------------------------------------------------------------------
 //This is where the current user can edit their profile
 
-app.post('/edit_profile/:id/:bio',function(req,res){
-  User.findOneAndUpdate({_id:req.params.id},{$set: {bio: req.params.bio}},{new: true},function (error, docs) {
+app.post('/edit_profile/:id',function(req,res){
+  User.findOneAndUpdate({_id:req.params.id},{$set: {bio: req.body.bio}},{new: true},function (error, docs) {
       saved(error,docs);
       res.json({sBio:docs.bio});
   });
