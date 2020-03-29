@@ -42,7 +42,7 @@
             <a class="nav-link js-scroll-trigger" href="#signIn">Sign In</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="Create_Account_Page">Create an Account</a>
+            <a class="nav-link js-scroll-trigger" href="create_account_page">Create an Account</a>
           </li>
         </ul>
       </div>
@@ -81,16 +81,16 @@
         <div class="col-xl-4 col-lg-5">
           <div class="featured-text text-center text-lg-left">
             <div class = "inputs">
-              <form action = "/Login_Page" method = "POST">
+              <form>
                   <h2>&nbsp;Sign In</h2>
-                  <label>&nbsp;&nbsp;Username&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                    <input name="user" type="text" id="user" placeholder="Username">
+                  <label>&nbsp;Username&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                    <br/><input name="user" type="text" id="user" placeholder="Username">
                     <br/><br/>
-                  <label>&nbsp;&nbsp;Password&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                    <input name="pass" type="password" id="pass" placeholder="Password">
+                  <label>&nbsp;Password&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                    <br/><input name="pass" type="password" id="pass" placeholder="Password">
                   <br/><br/>
-                  <pre>              <input type = "submit"></input></pre>
-                  <a href="Create_Account_Page">&nbsp;Don't have an account?</a>
+                  <pre><input type = "button" onclick="loginAuthentication()" value="Login"></input></pre>
+                  <a href="create_account_page">&nbsp;Don't have an account?</a>
                   <br/>
                   <a href="forgotpass.ejs">&nbsp;Forgot your password?</a>
                 </form>
@@ -176,6 +176,34 @@
 
   <!-- Custom scripts for this template -->
   <script src="js/grayscale.min.js"></script>
+
+  <script>
+
+    function loginAuthentication()
+    {
+      var username = document.getElementById("user").value;
+      var password = document.getElementById("pass").value;
+
+      fetch(`/login_page/${username}/${password}`,{method:'POST','Content-Type': 'application/json'})
+        .then(res => res.json())
+        .then(function(data){
+          // debugger;
+          if(!data.bExists)
+          {
+            alert("Incorrect Username and Password");
+          }
+          else {
+            window.location.href = "profile_page/" + data.id;
+          }
+        })
+        .catch((err) => {
+          // debugger;
+          alert("loginAuthentication Error");
+        })
+    }
+
+  </script>
+
 
 </body>
 

@@ -32,7 +32,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
       <div class="container">
-        <a class="navbar-brand js-scroll-trigger" href="#page-top">Pic5</a>
+        <a class="navbar-brand js-scroll-trigger" href="/news_feed/<%=id%>">Pic5</a>
         <button
           class="navbar-toggler navbar-toggler-right"
           type="button"
@@ -47,15 +47,15 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <!-- Search Bar -->
-          <!-- Must go to the Profile_Page "post" which will then redirect to Search_Page -->
-          <form class="Search" action="/Profile_Page/<%=id%>" method="POST">
+          <!-- Must go to the profile_page "post" which will then redirect to search_page -->
+          <form class="Search" action="/profile_page/<%=id%>" method="POST">
             <input type="text" name="search" id="search" placeholder="Search..">
             <button type="submit"><i class="fa fa-search"></i></button>
           </form>
 
           <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="/News_Feed/<%=id%>"
+              <a class="nav-link js-scroll-trigger" href="/news_feed/<%=id%>"
                 >Feed</a
               >
             </li>
@@ -65,7 +65,7 @@
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="/Post_Photo_Page/<%=id%>"
+              <a class="nav-link js-scroll-trigger" href="/post_photo_page/<%=id%>"
                 >Post Photo</a
               >
             </li>
@@ -81,23 +81,32 @@
     <header class="masthead">
       <div class="container d-flex h-100 align-items-center">
         <div class="mx-auto text-center">
-          <a href="/Post_Profile_Pic/<%=id%>">
+          <a href="/post_profile_pic/<%=id%>">
             <img src="/uploads/undefined_profile.png" alt="profile pic" id="profilePic"/>
           </a>
           <h2 class="mx-auto my-0 text-uppercase"><%=username%></h2>
           <div class="row">
             <!-- todo : populate table with data from backend-->
             <div class="col">
-              <h3 class="text-white-50 mx-auto mt-2 mb-5">Posts <%=imgData.length%></h3>
+              <h3 class="text-white-50 mx-auto mt-2 mb-5">Posts <br/><%=imgData.length%></h3>
             </div>
             <div class="col">
-              <h3 class="text-white-50 mx-auto mt-2 mb-5">Followers <%=followers%></h3>
+              <h3 class="text-white-50 mx-auto mt-2 mb-5">Followers <br/><%=followers%></h3>
             </div>
             <div class="col">
-              <h3 class="text-white-50 mx-auto mt-2 mb-5">Following <%=following%></h3>
+              <h3 class="text-white-50 mx-auto mt-2 mb-5">Following <br/><%=following%></h3>
             </div>
           </div>
-          <a method ="GET" href="/Profile_Edit/<%=id%>" class="btn btn-primary js-scroll-trigger">Edit Profile</a>
+          <button id="editProfileButton_id" method ="GET" onclick="editProfile()" class="btn btn-primary js-scroll-trigger">Edit Profile</button>
+
+          <div id="editProfile_id" style="display: none">
+                <button id="btCancelEdit_id" onclick="cancelEdit()" class="btn btn-primary js-scroll-trigger">Cancel</button>
+                <br/><br/>
+                <form>
+                      <textarea id="bio" name="bio" placeholder="Tell us about yourself..." value="<%=bio%>"></textarea><br/>
+                      <input type="button" onclick="updateProfile('<%=id%>')" value="Submit">
+                </form>
+          </div>
         </div>
       </div>
     </header>
@@ -108,7 +117,7 @@
         <div class="row">
           <div class="col-lg-8 mx-auto">
             <h2 class="text-white mb-4">About me:</h2>
-            <p class="text-white-50"><%=bio%></p>
+            <p id="bio_id" class="text-white-50"><%=bio%></p>
           </div>
         </div>
       </div>
@@ -122,15 +131,22 @@
           <div class="col-4">
             <!-- todo : loaded image goes here-->
             <% for (var C = imgData.length-1;C >= 0;C--){%>
-              <br/><img src="/uploads/<%=imgData[C].img.imgName%>" alt="not displaying" height="200" width ="200">
-              <br><input type = "image" src="/uploads/like.png" width="27" height="27"
-                    onclick="likePhoto('<%=id%>','<%=imgData[C].img.imgName%>','<%=imgData[C].ownerID%>')">
+              <br/> <b><%=imgData[C].ownerUsername%></b>
+              <br/><img src="/uploads/<%=imgData[C].img.imgName%>" alt="not displaying" height="275" width ="275">
+              <!-- <input type = "image" src="/uploads/like_photo.png" width="27" height="27"
+                    onclick="likePhoto('<%=id%>','<%=imgData[C].img.imgName%>','<%=imgData[C].ownerID%>')"> -->
+              <%var heartColor = imgData[C].likes.includes(id) ? 'red' : 'white'%>
+              <br/><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" onclick="likePhoto('<%=id%>','<%=imgData[C].img.imgName%>','<%=imgData[C].ownerID%>')">
+                <path id="heart_id_<%=imgData[C].img.imgName%>" fill="<%=heartColor%>" d="M12 4.419c-2.826-5.695-11.999-4.064-11.999 3.27 0 7.27 9.903 10.938 11.999 15.311 2.096-4.373 12-8.041 12-15.311 0-7.327-9.17-8.972-12-3.27z"/>
+              </svg>
               <br><a id="<%=imgData[C].img.imgName%>_likes" method="GET" href="/..."><%=imgData[C].likes.length%></a> likes
-              <br/> Caption: <%=imgData[C].caption[0]%>
-              <br/> Comments: <a method="GET" href="/Focused_myImage/<%=id%>/<%=imgData[C].img.imgName%>">Show all (<%=imgData[C].comments.length%>)
-              <!-- <br/> Comments: <button id="comments_id" onclick="showComments('<%=id%>','<%=imgData[C].img.imgName%>')">Show all (<%=imgData[C].comments.length%>)</button> -->
-
-              <br/>
+              <br/> <b><%=imgData[C].ownerUsername%></b> <%=imgData[C].caption[0]%>
+              <br/> Comments: <a method="GET" href="/focused_myimage/<%=id%>/<%=imgData[C].img.imgName%>">Show all (<%=imgData[C].comments.length%>)</a>
+              <br/> <label>Leave a comment</label>
+                    <form action="/news_feed_Comment/<%=id%>/<%=username%>/<%=imgData[C].ownerID%>/<%=imgData[C].img.imgName%>" method="POST">
+                      <input type="text" id="theComment" name="theComment">
+                      <input type="submit" value="Submit">
+                    </form>
             <%}%>
           </div>
           <div class="col-8">
@@ -172,29 +188,68 @@
     <script src="/js/grayscale.min.js"></script>
 
     <script>
-    function showComments(id,name) {
-      fetch(`/Profile_Page/${id}/${name}`,{method:'POST','Content-Type': 'application/json'})
-        .then(res => res.json())
-        .then(function(data){
-          debugger;
-          // document.getElementById(imgName+'_likes').innerHTML = data.likes;
-          var sAllComments = "";
-          for (var i = 0; i < data.imgData.comments.length; i++) {
-            sAllComments += (data.imgData.comments[i] + "\n");
-          }
 
-          document.getElementById("comments_id").innerHTML = sAllComments;
-        })
-        .catch((err) => {
-          alert("Show Comments Error");
-        })
-    }
+      function updateProfile(id)
+      {
+        var bio = document.getElementById("bio").value;
 
-      function likePhoto(id,imgName,ownerId) {
-        fetch(`/Like_Photo/${id}/${imgName}/${ownerId}`,{method:'POST','Content-Type': 'application/json'})
+        fetch(`/edit_profile/${id}/${bio}`,{method:'POST','Content-Type': 'application/json'})
           .then(res => res.json())
           .then(function(data){
-            // debugger;
+            debugger;
+            document.getElementById("bio_id").innerHTML = data.sBio;
+            $("#editProfileButton_id").show();
+            $("#editProfile_id").hide();
+          })
+          .catch((err) => {
+            alert("Edit Profile Error");
+          })
+      }
+
+      function editProfile()
+      {
+        $("#editProfileButton_id").hide();
+        $("#editProfile_id").show();
+      }
+
+      function cancelEdit(){
+        $("#editProfileButton_id").show();
+        $("#editProfile_id").hide();
+      }
+
+      function showComments(id,name)
+      {
+        fetch(`/profile_page/${id}/${name}`,{method:'POST','Content-Type': 'application/json'})
+          .then(res => res.json())
+          .then(function(data){
+            debugger;
+            // document.getElementById(imgName+'_likes').innerHTML = data.likes;
+            var sAllComments = "";
+            for (var i = 0; i < data.imgData.comments.length; i++) {
+              sAllComments += (data.imgData.comments[i] + "\n");
+            }
+
+            document.getElementById("comments_id").innerHTML = sAllComments;
+          })
+          .catch((err) => {
+            alert("Show Comments Error");
+          })
+      }
+
+      function likePhoto(id,imgName,ownerId) {
+
+        fetch(`/like_photo/${id}/${imgName}/${ownerId}`,{method:'POST','Content-Type': 'application/json'})
+          .then(res => res.json())
+          .then(function(data){
+
+            if(data.bLiked)
+            {
+              document.getElementById("heart_id_"+imgName).style.fill = "red";
+            }
+            else {
+              document.getElementById("heart_id_"+imgName).style.fill = "white";
+            }
+
             document.getElementById(imgName+'_likes').innerHTML = data.likes;
           })
           .catch((err) => {
