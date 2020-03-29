@@ -604,14 +604,19 @@ function saved(error,success)
 app.post('/leaveComment/:id/:username/:imgOwnerId/:imgName',function(req,res){
   User.findById(req.params.id, function (error, searchDocs){
 
+    console.log(req.params.username + " " + searchDocs.username);
+
     var isPosted = false;
 
-    Pics.findOneAndUpdate({"img.imgName":req.params.imgName},{$push: {comments: searchDocs.username+': '+req.body.comment}},{new:true},async function (error, imgDocs) {
-        saved(error,imgDocs);
-        isPosted = true;
-        await res.json({isPosted:isPosted,
-                  totalComments:imgDocs.comments.length});
-    });
+    Pics.findOneAndUpdate({"img.imgName":req.params.imgName},
+      {$push: {comments: {username:searchDocs.username,comment:req.body.comment}}},
+      {new:true},
+      async function (error, imgDocs) {
+          saved(error,imgDocs);
+          isPosted = true;
+          await res.json({isPosted:isPosted,
+                    totalComments:imgDocs.comments.length});
+      });
   });
 });
 

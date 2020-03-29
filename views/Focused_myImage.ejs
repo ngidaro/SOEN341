@@ -93,7 +93,7 @@
                     <input type="submit" value="Submit">
                     </form>
               <br/> Comments: <% for (var C=0; C<imgData[0].comments.length; C++){ %>
-                 <br/><%=imgData[0].comments[C]%>
+                 <br/><b><%=imgData[0].comments[C].username%></b>: <%=imgData[0].comments[C].comment%>
               <%}%>
               <br/>
           </div>
