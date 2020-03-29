@@ -588,6 +588,7 @@ app.post('/leaveComment/:id/:username/:imgOwnerId/:imgName',function(req,res){
       res.redirect('/focused_image/' + req.params.id + '/' + req.params.imgOwnerId + '/' + req.params.imgName);
   });
 });
+
 //When a user comments on a picture on the news_feed
 app.post('/news_feed_Comment/:id/:username/:imgOwnerId/:imgName',function(req,res){
   User.findById(req.params.id, function (error, searchDocs){
@@ -684,12 +685,13 @@ app.post('/like_photo/:id/:imgName/:imgOwnerID', async function(req,res){
 */
 // ------------------------------------------------------------------------------
 //This is where the current user can edit their profile
+
 app.post('/edit_profile/:id/:bio',function(req,res){
   User.findOneAndUpdate({_id:req.params.id},{$set: {bio: req.params.bio}},{new: true},function (error, docs) {
       saved(error,docs);
       res.json({sBio:docs.bio});
-
   });
+  res.redirect('/profile_page/'+req.params.id);
 });
 
 //Diplsays the get request for a request to edit the profile page

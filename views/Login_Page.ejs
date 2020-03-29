@@ -194,11 +194,13 @@
           }
           else {
             window.location.href = "profile_page/" + data.id;
+
           }
         })
         .catch((err) => {
           // debugger;
-          alert("loginAuthentication Error");
+          alert("Please do not leave any empty fields, make sure to enter a username and a password!");
+
         })
     }
 
