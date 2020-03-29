@@ -691,7 +691,6 @@ app.post('/edit_profile/:id/:bio',function(req,res){
       saved(error,docs);
       res.json({sBio:docs.bio});
   });
-  res.redirect('/profile_page/'+req.params.id);
 });
 
 //Diplsays the get request for a request to edit the profile page
