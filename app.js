@@ -420,10 +420,12 @@ app.post('/upload_profile/:id',(req, res)=> {
 // ------------------------------------------------------------------------------
 app.get('/search_page/:id/:name',function(req,res){
 
-  Users.find({username:{$regex: req.params.name, $options: "i"}},'firstName lastName username',{lean: true},
-          function(err, docs){
+  Users.find({username:{$regex: req.params.name, $options: "i"}}, function(err, docs){
+
     res.render('search_page',{id:req.params.id,
-                              data: docs});
+                              data: docs,
+                              profilePicture: docs.profilePic
+                            });
   });
 });
 

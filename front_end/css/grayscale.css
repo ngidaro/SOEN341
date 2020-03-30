@@ -359,5 +359,21 @@ margin-bottom: 50px;
   margin-bottom: 20px;
 }
 
+#searchProfilePic{
+  height: 100px;
+  width: 100px;
+  margin: 30px;
+}
 
+#searchHead{
+  text-align:center;
+}
 
+#searchRes{
+  display:inline-block;
+  text-align: left;
+}
+
+#searchHead a{
+    font-size: 35px;
+}
