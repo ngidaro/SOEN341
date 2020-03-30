@@ -28,6 +28,8 @@
     <link href="/css/grayscale.css" rel="stylesheet" />
     <link href="/css/profilePic.css" rel="stylesheet" />
     <link href="/css/linkStyle.css" rel="stylesheet" />
+    <link href="/css/dropdownButton.css" rel="stylesheet" />
+    <link href="/css/paragraphStyle.css" rel="stylesheet" />
 
   </head>
 
@@ -135,7 +137,20 @@
           <div class="col-4">
             <!-- todo : loaded image goes here-->
             <% for (var C = imgData.length-1;C >= 0;C--){%>
-              <br/> <b><%=imgData[C].ownerUsername%></b>
+
+              <!-- Section above each photo {ProfileImg username     dots_button} -->
+              <div style="width:80%;Text-align:left;float:left;">
+                <br/><img src="/uploads/<%=profilePicture%>" alt="profile pic" id="miniProfilePic" class="miniProfilePic"/>
+                <b><%=imgData[C].ownerUsername%></b>
+                <div style="Text-align:right;Width:20%;float:right">
+                  <img onclick="displayDropdown('<%=imgData[C].img.imgName%>')" src="/uploads/vertical_dots.png" alt="dots" id="dots_<%=imgData[C].img.imgName%>" class="dots"/>
+                  <div id="myDropdown_<%=imgData[C].img.imgName%>" class="dropdown-content">
+                    <button onclick="deletePhoto('<%=id%>','<%=imgData[C].img.imgName%>')" class="dropdownButton">Delete</button>
+                  </div>
+                </div>
+              </div>
+
+
               <br/><a href="/focused_myimage/<%=id%>/<%=imgData[C].img.imgName%>">
                 <img src="/uploads/<%=imgData[C].img.imgName%>" alt="not displaying" height="275" width ="275">
               </a>
@@ -209,8 +224,52 @@
     <script src="/js/likePhoto.js"></script>
     <script src="/js/show_hide_comments.js"></script>
 
-
     <script>
+
+      function displayDropdown(imgName)
+      {
+        document.getElementById("myDropdown_"+imgName).classList.toggle("show");
+      }
+      //If user clicks outside the menu, the menu will close
+      window.onclick = function(event) {
+        if (!event.target.matches('.dots')) {
+          var dropdowns = document.getElementsByClassName("dropdown-content");
+          var i;
+          for (i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+              openDropdown.classList.remove('show');
+            }
+          }
+        }
+      }
+
+      function deletePhoto(id,imgName)
+      {
+        if(confirm("Are you sure you want to delete this photo?"))
+        {
+          fetch(`/delete_photo/${imgName}`,{method:'POST', "Content-Type": "application/json"})
+            .then(res => res.json())
+            .then(function(data){
+              debugger;
+
+              if(data.bDeleted)
+              {
+                alert("Your Photo has been deleted.");
+                window.location.href = "/profile_page/" + id;
+              }
+              else {
+                return;
+              }
+            })
+            .catch((err) => {
+              alert("Delete Photo Error");
+            })
+        }
+        else {
+          return;
+        }
+      }
 
       function updateProfile(id)
       {

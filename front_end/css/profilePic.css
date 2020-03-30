@@ -4,3 +4,10 @@
     width: 200px;
     height: 200px;
     }
+
+    .miniProfilePic{
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      margin-bottom: 4px
+    }
