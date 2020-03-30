@@ -95,10 +95,10 @@
               <h3 class="text-white-50 mx-auto mt-2 mb-5">Posts <br/><%=imgData.length%></h3>
             </div>
             <div class="col">
-              <h3 class="text-white-50 mx-auto mt-2 mb-5">Followers <br/><%=followers%></h3>
+              <h3 class="text-white-50 mx-auto mt-2 mb-5"><a method="GET" href="/myFollowers_List/<%=id%>">Followers </a><br/><%=followers%></h3>
             </div>
             <div class="col">
-              <h3 class="text-white-50 mx-auto mt-2 mb-5">Following <br/><%=following%></h3>
+              <h3 class="text-white-50 mx-auto mt-2 mb-5"><a method="GET" href="/myFollowing_List/<%=id%>">Following </a><br/><%=following%></h3>
             </div>
           </div>
           <button id="editProfileButton_id" method ="GET" onclick="editProfile()" class="btn btn-primary js-scroll-trigger">Edit Profile</button>
