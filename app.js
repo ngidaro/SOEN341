@@ -19,6 +19,7 @@ const GridFsStorage = require('multer-gridfs-storage');
 const Grid = require('gridfs-stream');
 const methodOverride = require('method-override');
 const ejs = require('ejs');
+var fs = require('fs');
 
 const router = express.Router();
 
@@ -77,6 +78,11 @@ app.set('view engine','ejs');
 //'front_end is the folder which contains the images and css folder'
 app.use(express.static('front_end'));
 
+
+//NOTE: 'User',Comment,etc is defined when we bring in the models
+var Users = mongoose.model('User',UserSchema);
+var Pics = mongoose.model('Pics',PicsSchema);
+
 //Home Route
 app.get('/',function(req,res){
   res.render("login_page");
@@ -94,13 +100,14 @@ app.get('/create_account_page',function(req,res){
 app.get('/post_photo_page/:id',function(req,res){
     res.render('post_photo_page',{id:req.params.id});
 });
-app.get('/post_profile_pic/:id',function(req,res){
-    res.render('Post_Profile_Pic',{id:req.params.id});
-});
 
-//NOTE: 'User',Comment,etc is defined when we bring in the models
-var Users = mongoose.model('User',UserSchema);
-var Pics = mongoose.model('Pics',PicsSchema);
+app.get('/post_profile_pic/:id',function(req,res){
+
+  User.findById(req.params.id,function(error,docs){
+    res.render('Post_Profile_Pic',{id:req.params.id,
+                                   profilePic:docs.profilePic});
+  });
+});
 
 // ------------------------------------------------------------------------------
 //  app.get() -> Displays the ejs file specified
@@ -382,8 +389,30 @@ app.post('/upload/:id'/*,upload.single('file')*/,(req, res)=> {
   });
 });
 
+// ------------------------------------------------------------------------------
+/*  app.post('/upload_profile/:id/:currentProfileImg')
+
+    Definition: When the user uploads a new profile image, the name of the image
+                will be stored in the User database. Also the previous profile image
+                gets overriden in the database and gets deleted on the local machine.
+                NOTE: if the image is the "undefined_profile.png", the image will not
+                      be deleted.
+
+    Variables:
+      id:                   The user's id.
+      currentProfileImg:    The current profile image of the user.
+*/
+// ------------------------------------------------------------------------------
 //Upload Profile picture
-app.post('/upload_profile/:id',(req, res)=> {
+app.post('/upload_profile/:id/:currentProfileImg',(req, res)=> {
+
+  if(req.params.currentProfileImg != "undefined_profile.png")
+  {
+    fs.unlink('public/uploads/'+req.params.currentProfileImg, function (err) {
+      if (err) throw err;
+      console.log("profile image deleted");
+    });
+  }
 
   uploadLocal(req,res,(err) => {
     //Callback function with parameter err
@@ -399,8 +428,35 @@ app.post('/upload_profile/:id',(req, res)=> {
       });
     }
   });
+});
 
+// ------------------------------------------------------------------------------
+/*  app.post('/delete_photo/:imgName')
 
+    Definition: When the user presses the delete button, the user's photo will be
+                deleted from the database as well as the local machine.
+
+    Variables:
+      bDeleted:             Returns true if image was succesfully deleted.
+      req.params.imgName:   The name of the image the user wants to delete.
+*/
+// ------------------------------------------------------------------------------
+
+//When the delete button is pressed, the image will be deleted from the DB and from local machine
+app.post('/delete_photo/:imgName',function(req,res){
+
+  var bDeleted = false;
+
+  Pics.deleteOne({"img.imgName":req.params.imgName},function(err,response){
+    if (err) return handleError(err);
+
+    fs.unlink('public/uploads/'+req.params.imgName, function (err) {
+      if (err) throw err;
+    });
+
+    bDeleted = true;
+    res.json({bDeleted:bDeleted});
+  });
 });
 
 
