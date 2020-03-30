@@ -712,6 +712,92 @@ app.post('/edit_profile/:id',function(req,res){
   });
 });
 
+app.get('/myFollowers_List/:id',function(req,res){
+
+  Users.findById(req.params.id,function(error,docs){
+    Pics.find({ownerID:req.params.id}, function(error,imgDocs){
+      Users.find({},function(error, allUsersDocs){
+console.log(allUsersDocs);
+
+      res.render('myFollowers_List',{ id:req.params.id,
+                                    username:docs.username,
+                                    totalFollowers:docs.followers,
+
+                                    UsersInfo:allUsersDocs,
+                                    followers:docs.followers.length,
+                                    following:docs.following.length,
+                                    bio:docs.bio,
+                                    imgData:imgDocs,
+                                    profilePicture:docs.profilePic
+                                  }); //in ejs file do <%=username%>
+                                });
+    });
+  });
+});
+app.get('/Followers_List/:id/:searchID',function(req,res){
+
+  Users.findById(req.params.searchID,function(error,docs){
+    Pics.find({ownerID:req.params.searchID}, function(error,imgDocs){
+      Users.find({},function(error, allUsersDocs){
+      res.render('Followers_List',{ id:req.params.id,
+                                    username:docs.username,
+                                    totalFollowers:docs.followers,
+                                    searchID:req.params.searchID,
+                                    UsersInfo:allUsersDocs,
+                                    followers:docs.followers.length,
+                                    following:docs.following.length,
+                                    bio:docs.bio,
+                                    imgData:imgDocs,
+                                    profilePicture:docs.profilePic
+                                  }); //in ejs file do <%=username%>
+                                });
+    });
+  });
+});
+
+app.get('/myFollowing_List/:id',function(req,res){
+
+  Users.findById(req.params.id,function(error,docs){
+    Pics.find({ownerID:req.params.id}, function(error,imgDocs){
+      Users.find({},function(error, allUsersDocs){
+console.log(allUsersDocs);
+
+      res.render('myFollowing_List',{ id:req.params.id,
+                                    username:docs.username,
+                                    totalFollowing:docs.following,
+
+                                    UsersInfo:allUsersDocs,
+                                    followers:docs.followers.length,
+                                    following:docs.following.length,
+                                    bio:docs.bio,
+                                    imgData:imgDocs,
+                                    profilePicture:docs.profilePic
+                                  }); //in ejs file do <%=username%>
+                                });
+    });
+  });
+});
+app.get('/Following_List/:id/:searchID',function(req,res){
+
+  Users.findById(req.params.searchID,function(error,docs){
+    Pics.find({ownerID:req.params.searchID}, function(error,imgDocs){
+      Users.find({},function(error, allUsersDocs){
+      res.render('Following_List',{ id:req.params.id,
+                                    username:docs.username,
+                                    totalFollowing:docs.following,
+                                    searchID:req.params.searchID,
+                                    UsersInfo:allUsersDocs,
+                                    followers:docs.followers.length,
+                                    following:docs.following.length,
+                                    bio:docs.bio,
+                                    imgData:imgDocs,
+                                    profilePicture:docs.profilePic
+                                  }); //in ejs file do <%=username%>
+                                });
+    });
+  });
+});
+
 //Diplsays the get request for a request to edit the profile page
 app.get('/edit_profile/:id',function(req,res){
   //findById returns object NOT Array of objects
@@ -743,8 +829,6 @@ Pics.find({ownerID:req.params.id}, function(error,imgDocs){
 */
 // ------------------------------------------------------------------------------
 
-
-app.post
 
 function date()
 {
