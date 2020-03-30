@@ -28,6 +28,8 @@
     <!-- Custom styles for this template -->
     <link href="/css/grayscale.css" rel="stylesheet" />
     <link href="/css/profilePic.css" rel="stylesheet" />
+    <link href="/css/linkStyle.css" rel="stylesheet" />
+
   </head>
 
   <body id="page-top">
@@ -64,6 +66,11 @@
             <li class="nav-item">
               <a class="nav-link js-scroll-trigger" href="/profile_page/<%=id%>"
                 >My Profile</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="/"
+                >Logout</a
               >
             </li>
           </ul>
@@ -124,11 +131,24 @@
           </svg>
           <br><a id="<%=imgData[C].img.imgName%>_likes" method="GET" href="/..."><%=imgData[C].likes.length%></a> likes
           <br/> <b><%=imgData[C].ownerUsername%></b> <%=imgData[C].caption[0]%>
-          <br/> Comments: <a id="showall_id" method="GET" href="/focused_myimage/<%=id%>/<%=imgData[C].img.imgName%>">Show all (<%=imgData[C].comments.length%>)</a>
-            <form>
-              <input type="text" id="theComment" name="theComment" placeholder="Leave a comment">
-              <input type="button" value="Submit" onclick="addComment('<%=id%>','<%=username%>','<%=imgData[C].ownerID%>','<%=imgData[C].img.imgName%>')">
-            </form>
+          <% if (imgData[C].caption[0] != ""){%>
+              <br/> <b><%=imgData[C].ownerUsername%></b> <%=imgData[C].caption[0]%>
+            <%}%>
+
+          <div id="<%=imgData[C].img.imgName%>_showAll">
+            Comments: <button class="link" id="showall_<%=imgData[C].img.imgName%>_id" onclick="showComments('<%=imgData[C].img.imgName%>','<%=imgData[C].comments.length%>')">Show all (<%=imgData[C].comments.length%>)</button>
+          </div>
+
+          <div id="<%=imgData[C].img.imgName%>_hideAll" style="display:none">
+            Comments: <% for (var i=0; i<imgData[C].comments.length; i++){ %>
+               <br/><b><%=imgData[C].comments[i].username%></b>: <%=imgData[C].comments[i].comment%>
+            <%}%>
+            <br/><button class="link" onclick="hideComments('<%=imgData[C].img.imgName%>')">Hide all</button>
+          </div>
+          <form>
+            <input type="text" id="theComment_<%=imgData[C].img.imgName%>" name="theComment" placeholder="Leave a comment">
+            <input type="button" value="Submit" onclick="addComment('<%=id%>','<%=username%>','<%=imgData[C].ownerID%>','<%=imgData[C].img.imgName%>')">
+          </form>
         <%}%>
       </div>
     </section>
@@ -152,6 +172,7 @@
     <script src="/js/leaveComment.js"></script>
     <script src="/js/likePhoto.js"></script>
     <script src="/js/updateFollowButton.js"></script>
+    <script src="/js/show_hide_comments.js"></script>
 
   </body>
 </html>

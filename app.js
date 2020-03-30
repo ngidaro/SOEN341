@@ -377,7 +377,7 @@ app.post('/upload/:id'/*,upload.single('file')*/,(req, res)=> {
       setTimeout(function()
       {
         res.redirect('/profile_page/'+req.params.id);
-      },250);
+      },1000);
     }
   });
 });
