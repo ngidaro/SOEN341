@@ -832,14 +832,14 @@ app.post('/edit_profile/:id',function(req,res){
   });
 });
 
-app.get('/myfollowers_list/:id',function(req,res){
+app.get('/myFollowers_List/:id',function(req,res){
 
   Users.findById(req.params.id,function(error,docs){
     Pics.find({ownerID:req.params.id}, function(error,imgDocs){
       Users.find({},function(error, allUsersDocs){
 console.log(allUsersDocs);
 
-      res.render('myfollowers_list',{ id:req.params.id,
+      res.render('myFollowers_List',{ id:req.params.id,
                                     username:docs.username,
                                     totalFollowers:docs.followers,
 
@@ -854,12 +854,12 @@ console.log(allUsersDocs);
     });
   });
 });
-app.get('/followers_list/:id/:searchID',function(req,res){
+app.get('/Followers_List/:id/:searchID',function(req,res){
 
   Users.findById(req.params.searchID,function(error,docs){
     Pics.find({ownerID:req.params.searchID}, function(error,imgDocs){
       Users.find({},function(error, allUsersDocs){
-      res.render('followers_list',{ id:req.params.id,
+      res.render('Followers_List',{ id:req.params.id,
                                     username:docs.username,
                                     totalFollowers:docs.followers,
                                     searchID:req.params.searchID,
@@ -875,14 +875,14 @@ app.get('/followers_list/:id/:searchID',function(req,res){
   });
 });
 
-app.get('/myfollowing_list/:id',function(req,res){
+app.get('/myFollowing_List/:id',function(req,res){
 
   Users.findById(req.params.id,function(error,docs){
     Pics.find({ownerID:req.params.id}, function(error,imgDocs){
       Users.find({},function(error, allUsersDocs){
 console.log(allUsersDocs);
 
-      res.render('myfollowing_list',{ id:req.params.id,
+      res.render('myFollowing_List',{ id:req.params.id,
                                     username:docs.username,
                                     totalFollowing:docs.following,
 
@@ -897,12 +897,12 @@ console.log(allUsersDocs);
     });
   });
 });
-app.get('/following_list/:id/:searchID',function(req,res){
+app.get('/Following_List/:id/:searchID',function(req,res){
 
   Users.findById(req.params.searchID,function(error,docs){
     Pics.find({ownerID:req.params.searchID}, function(error,imgDocs){
       Users.find({},function(error, allUsersDocs){
-      res.render('following_list',{ id:req.params.id,
+      res.render('Following_List',{ id:req.params.id,
                                     username:docs.username,
                                     totalFollowing:docs.following,
                                     searchID:req.params.searchID,
