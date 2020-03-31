@@ -5,7 +5,7 @@ function updateFollowButton(id,searchId)
   .then(res => res.json())
   .then(function(data){
     debugger;
-    document.getElementById("followers_id").innerHTML = "Followers\n" + data.sNbFollowers;
+    document.getElementById("nbFollowers_id").innerHTML = data.sNbFollowers;
 
     if(data.bIsFollowing)
     {
