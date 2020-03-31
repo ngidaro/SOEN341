@@ -459,7 +459,6 @@ app.post('/delete_photo/:imgName',function(req,res){
   });
 });
 
-
 // ------------------------------------------------------------------------------
 /*  app.get('/search_page/:id/:name')
 
@@ -489,20 +488,28 @@ app.get('/search_page/:id/:name',function(req,res){
 // Definition: news_need is the page where the user can view all the images of the users that
 //             they follow. The images are displayed from newest to oldest.
 // Variables:
-//   id:            The id of the current logged on user
-//   displayImage:  Array which contains all the images info to be displayed on the feed
-//   docs:          All data which is associated with the user's ID
-//   images:        All image data pertaining to the person being followed by the current user
+//   id:                  The id of the current logged on user
+//   displayImage:        Array which contains all the images info to be displayed on the feed
+//   docs:                All data which is associated with the user's ID
+//   images:              All image data pertaining to the person being followed by the current user
+//   storeFollowedUsers:  Array which contains all the info pertaing to the users being followed by the
+//                        current User
 //
 // -------------------------------------------------------------------------------------------
 app.get('/news_feed/:id',function(req,res){
 
   var displayImages = [];
+  var storeFollowedUsers = [];
 
   Users.findById(req.params.id,function(error,docs){
 
     for (var i = 0; i < docs.following.length; i++)
     {
+      //Find all the user's that the current user is following and store their data.
+      Users.findById(docs.following[i],function(err,followedUser){
+        storeFollowedUsers.push(followedUser);
+      });
+
       //Store all images in an array
       Pics.find({ownerID:docs.following[i]},function(error,images)
       {
@@ -524,6 +531,9 @@ app.get('/news_feed/:id',function(req,res){
     //If the User.find... is not there then the screen will render before performing the above loops
     Users.findById(req.params.id,function(error,documents){
       console.log(displayImages.length);
+      //Store current User
+      storeFollowedUsers.push(documents);
+      // console.log(storeFollowedUsers);
 
       //wait 1 second before rendering the news_feed -> need time to loop through files for images
       setTimeout(function(){
@@ -532,12 +542,62 @@ app.get('/news_feed/:id',function(req,res){
                                       followers:docs.followers.length,
                                       following:docs.following.length,
                                       bio:docs.bio,
-                                      imgData:displayImages.sort()
+                                      imgData:displayImages.sort(),
+                                      followedUsers:storeFollowedUsers
                                     });
       },250);
 
     });
   });
+});
+
+// ------------------------------------------------------------------------------
+/*  app.get('/search_page/:id/:name')
+
+    Definition: Renders the search_page with all usernames queried from the DB which
+                contains the searched parameter (req.params.name)
+
+    Variables:
+      docs:   Object contains all information pertaining to the username fonud by User.find().
+      data:   Object which is used in the search_page.ejs which holds all fields from docs.
+              (data[0].username, data[1].username, data.[0].lastname...)
+
+      NOTE: The Users.find() oly returns _id, firstname, lastname and username.
+*/
+// ------------------------------------------------------------------------------
+app.post('/show_comments/:imgName',function(req,res){
+
+  var allComments = new Array();
+  var userProfile = new Array();
+
+  Pics.find({"img.imgName":req.params.imgName}, async function(err,imgDocs){
+
+    if(imgDocs[0].comments.length == 0)
+    {
+      res.json({allComments:allComments,
+                userProfile:userProfile,
+                commentsExist: false})
+    }
+
+    for (var i = 0; i < imgDocs[0].comments.length; i++) {
+      allComments.push(imgDocs[0].comments[i]);
+      await Users.find({username:imgDocs[0].comments[i].username}, function(err,docs){
+        if(!userProfile.includes(docs[0].username))
+        {
+          userProfile.push(docs[0]);
+        }
+
+      });
+    }
+
+    if(allComments.length === imgDocs[0].comments.length)
+    {
+      await res.json({allComments:allComments,
+              userProfile:userProfile,
+              commentsExist: true});
+      }
+  });
+
 });
 
 // ------------------------------------------------------------------------------
@@ -681,25 +741,29 @@ app.post('/leaveComment/:id/:username/:imgOwnerId/:imgName',function(req,res){
 //displays my image in a better view
 app.get('/focused_myimage/:id/:imgName',function(req,res)
 {
-  User.findById(req.params.id,function(error,docs){
+  Users.findById(req.params.id,function(error,docs){
     Pics.find({"img.imgName":req.params.imgName}, function(error,imgDocs){
 
-      res.render('focused_myimage',{ id:req.params.id,
-                                  username:docs.username,
-                                  followers:docs.followers.length,
-                                  following:docs.following.length,
-                                  bio:docs.bio,
-                                  imgData:imgDocs
-                                });
+      Users.findById(imgDocs[0].ownerID,function(err,imgData)
+      {
+        res.render('focused_myimage',{ id:req.params.id,
+                                    username:docs.username,
+                                    followers:docs.followers.length,
+                                    following:docs.following.length,
+                                    bio:docs.bio,
+                                    imgData:imgDocs,
+                                    profilePicture:imgData.profilePic
+                                  });
+      });
     });
   });
 });
 //displays somebody's picture in a better view
 app.get('/focused_image/:id/:searchID/:imgName',function(req,res)
 {
-  User.findById(req.params.searchID,function(error,searchDocs){ //gets the user were looking at
+  Users.findById(req.params.searchID,function(error,searchDocs){ //gets the user were looking at
 
-  User.findById(req.params.id,function(error,docs){
+  Users.findById(req.params.id,function(error,docs){
   Pics.find({"img.imgName":req.params.imgName}, function(error,imgDocs){
 
     res.render('focused_image',{ id:req.params.id,
@@ -762,7 +826,7 @@ app.post('/like_photo/:id/:imgName/:imgOwnerID', async function(req,res){
 //This is where the current user can edit their profile
 
 app.post('/edit_profile/:id',function(req,res){
-  User.findOneAndUpdate({_id:req.params.id},{$set: {bio: req.body.bio}},{new: true},function (error, docs) {
+  Users.findOneAndUpdate({_id:req.params.id},{$set: {bio: req.body.bio}},{new: true},function (error, docs) {
       saved(error,docs);
       res.json({sBio:docs.bio});
   });
