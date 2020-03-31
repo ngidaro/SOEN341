@@ -26,6 +26,8 @@
     />
     <!-- Custom styles for this template -->
     <link href="/css/grayscale.css" rel="stylesheet" />
+    <link href="/css/profilePic.css" rel="stylesheet" />
+
   </head>
 
   <body id="page-top">
@@ -89,16 +91,20 @@
                   </svg>
               <br><a id="<%=imgData[0].img.imgName%>_likes" method="GET" href="/..."><%=imgData[0].likes.length%></a> likes
               <% if (imgData[0].caption[0] != ""){%>
-                  <br/><b><%=imgData[0].ownerUsername%></b> <%=imgData[0].caption[0]%>
+                  <br/><img src="/uploads/<%=profilePicture%>" alt="profile pic" class="miniminiProfilePic"/> <b><%=imgData[0].ownerUsername%></b> <%=imgData[0].caption[0]%>
                 <%}%>
 
-                <br/> Comments: <% for (var C=0; C<imgData[0].comments.length; C++){ %>
-                   <br/><b><%=imgData[0].comments[C].username%></b>: <%=imgData[0].comments[C].comment%>
-              <%}%>
+                <div id="allComments">
+                  <br/> Comments: <% for (var C=0; C<imgData[0].comments.length; C++){ %>
+                     <br/><b><%=imgData[0].comments[C].username%></b>: <%=imgData[0].comments[C].comment%>
+                     <%}%>
+                </div>
+                
               <br/>
+
               <form>
                 <input type="text" id="theComment_<%=imgData[0].img.imgName%>" name="theComment" placeholder="Leave a comment">
-                <input type="button" value="Submit" onclick="addComment('<%=id%>','<%=username%>','<%=imgData[0].ownerID%>','<%=imgData[0].img.imgName%>')">
+                <input type="button" value="Submit" onclick="addCommentFocused('<%=id%>','<%=username%>','<%=imgData[0].ownerID%>','<%=imgData[0].img.imgName%>')">
               </form>
           </div>
           <div class="col-8">

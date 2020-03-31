@@ -92,7 +92,7 @@
               <h3 class="text-white-50 mx-auto mt-2 mb-5">Posts <br/><%=imgData.length%></h3>
             </div>
             <div class="col">
-              <h3 id="followers_id" class="text-white-50 mx-auto mt-2 mb-5"><a method="GET" href="/Followers_List/<%=id%>/<%=searchID%>">Followers </a><a id="nbFollowers_id"><%=followers%></a></h3>
+              <h3 id="followers_id" class="text-white-50 mx-auto mt-2 mb-5"><a method="GET" href="/followers_list/<%=id%>/<%=searchID%>">Followers </a><a id="nbFollowers_id"><%=followers%></a></h3>
             </div>
             <div class="col">
               <h3 id="following_id" class="text-white-50 mx-auto mt-2 mb-5"><a method="GET" href="/Following_List/<%=id%>/<%=searchID%>">Following </a> <%=following%></h3>
@@ -142,19 +142,20 @@
           </div>
 
           <div id="<%=imgData[C].img.imgName%>_hideAll" style="display:none">
-            Comments: <% for (var i=0; i<imgData[C].comments.length; i++){ %>
-               <br/><b><%=imgData[C].comments[i].username%></b>: <%=imgData[C].comments[i].comment%>
-            <%}%>
+            <div id="<%=imgData[C].img.imgName%>_comments">
+              <!-- Data comes from show_hide_comments.js -->
+            </div>
             <br/><button class="link" onclick="hideComments('<%=imgData[C].img.imgName%>')">Hide all</button>
           </div>
+
           <form>
             <input type="text" id="theComment_<%=imgData[C].img.imgName%>" name="theComment" placeholder="Leave a comment">
             <input type="button" value="Submit" onclick="addComment('<%=id%>','<%=username%>','<%=imgData[C].ownerID%>','<%=imgData[C].img.imgName%>')">
           </form>
-                    </div>
-                              </div>
-      <%}%>
-</div>
+        </div>
+      </div>
+    <%}%>
+  </div>
 </div>
 
     <!-- Footer -->
