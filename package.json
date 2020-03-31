@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app",
-    "test": "mocha"
+    "test": "mocha --exit"
   },
   "repository": {
     "type": "git",
@@ -35,7 +35,8 @@
     "multer-gridfs-storage": "^4.0.2",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
-    "pug": "^2.0.4"
+    "pug": "^2.0.4",
+    "supertest": "^4.0.2"
   },
   "devDependencies": {
     "chai": "^4.2.0",
