@@ -92,7 +92,7 @@
               <h3 class="text-white-50 mx-auto mt-2 mb-5">Posts <br/><%=imgData.length%></h3>
             </div>
             <div class="col">
-              <h3 id="followers_id" class="text-white-50 mx-auto mt-2 mb-5"><a method="GET" href="/followers_list/<%=id%>/<%=searchID%>">Followers </a> <%=followers%></h3>
+              <h3 id="followers_id" class="text-white-50 mx-auto mt-2 mb-5"><a method="GET" href="/Followers_List/<%=id%>/<%=searchID%>">Followers </a><a id="nbFollowers_id"><%=followers%></a></h3>
             </div>
             <div class="col">
               <h3 id="following_id" class="text-white-50 mx-auto mt-2 mb-5"><a method="GET" href="/following_list/<%=id%>/<%=searchID%>">Following </a> <%=following%></h3>
@@ -152,19 +152,11 @@
             <input type="text" id="theComment_<%=imgData[C].img.imgName%>" name="theComment" placeholder="Leave a comment">
             <input type="button" value="Submit" onclick="addComment('<%=id%>','<%=username%>','<%=imgData[C].ownerID%>','<%=imgData[C].img.imgName%>')">
           </form>
-<<<<<<< Updated upstream
-          </div>
-        </div>
-      <%}%>
-    </div>
-  </div>
-=======
         </div>
       </div>
     <%}%>
   </div>
 </div>
->>>>>>> Stashed changes
 
     <!-- Footer -->
     <footer class="bg-black small text-center text-white-50">

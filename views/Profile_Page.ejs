@@ -28,7 +28,7 @@
     <link href="/css/grayscale.css" rel="stylesheet" />
     <link href="/css/profilePic.css" rel="stylesheet" />
     <link href="/css/linkStyle.css" rel="stylesheet" />
-
+    <link href="/css/dropdownButton.css" rel="stylesheet" />
   </head>
 
   <body id="page-top">
@@ -138,7 +138,8 @@
             <div style="width:80%;Text-align:left;float:left;">
               <br/><img src="/uploads/<%=profilePicture%>" alt="profile pic" id="miniProfilePic" class="miniProfilePic"/>
               <b><%=imgData[C].ownerUsername%></b>
-              <!-- <div style="Text-align:right;Width:20%;float:right">
+
+              <div style="Text-align:right;Width:20%;float:right">
                 <img onclick="displayDropdown('<%=imgData[C].img.imgName%>')" src="/uploads/vertical_dots.png" alt="dots" id="dots_<%=imgData[C].img.imgName%>" class="dots"/>
                 <div id="myDropdown_<%=imgData[C].img.imgName%>" class="dropdown-content">
                   <button onclick="deletePhoto('<%=id%>','<%=imgData[C].img.imgName%>')" class="dropdownButton">Delete</button>
@@ -157,6 +158,15 @@
                 <!-- Display Caption if it exists -->
                 <% if (imgData[C].caption[0] != ""){%>
                     <br/><img src="/uploads/<%=profilePicture%>" alt="profile pic" class="miniminiProfilePic"/> <b><%=imgData[C].ownerUsername%></b> <%=imgData[C].caption[0]%>
+                    <br/> <b><%=imgData[C].ownerUsername%></b> <%=imgData[C].caption[0]%>
+                  <%}%>
+                  <!-- When user presses the show all button, display all comments -->
+                <div id="<%=imgData[C].img.imgName%>_showAll">
+                  Comments: <button class="link" id="showall_<%=imgData[C].img.imgName%>_id" onclick="showComments('<%=imgData[C].img.imgName%>','<%=imgData[C].comments.length%>')">Show all (<%=imgData[C].comments.length%>)</button>
+                </div>
+                <div id="<%=imgData[C].img.imgName%>_hideAll" style="display:none">
+                  Comments: <% for (var i=0; i<imgData[C].comments.length; i++){ %>
+                     <br/><b><%=imgData[C].comments[i].username%></b>: <%=imgData[C].comments[i].comment%>
                   <%}%>
                   <!-- When user presses the show all button, display all comments -->
                 <div id="<%=imgData[C].img.imgName%>_showAll">
@@ -170,14 +180,14 @@
                   </div>
                   <br/><button class="link" onclick="hideComments('<%=imgData[C].img.imgName%>')">Hide all</button>
                 </div>
-
                 <form>
                   <input type="text" id="theComment_<%=imgData[C].img.imgName%>" name="theComment" placeholder="Leave a comment">
                   <input style="margin-top:3px" type="button" value="Submit" onclick="addComment('<%=id%>','<%=username%>','<%=imgData[C].ownerID%>','<%=imgData[C].img.imgName%>')">
                 </form>
-                            </div>
-                                      </div>
-              <%}%>
+
+              </div>
+            </div>
+          <%}%>
         </div>
       </div>
 
@@ -224,9 +234,7 @@
     <script src="/js/likePhoto.js"></script>
     <script src="/js/show_hide_comments.js"></script>
 
-
     <script>
-
       function displayDropdown(imgName)
       {
         document.getElementById("myDropdown_"+imgName).classList.toggle("show");
@@ -244,7 +252,6 @@
           }
         }
       }
-
       function deletePhoto(id,imgName)
       {
         if(confirm("Are you sure you want to delete this photo?"))
@@ -253,7 +260,6 @@
             .then(res => res.json())
             .then(function(data){
               debugger;
-
               if(data.bDeleted)
               {
                 alert("Your Photo has been deleted.");
@@ -271,7 +277,6 @@
           return;
         }
       }
-
       function updateProfile(id)
       {
         var bio = document.getElementById("bio").value;

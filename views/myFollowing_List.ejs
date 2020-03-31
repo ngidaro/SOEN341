@@ -121,8 +121,10 @@
               <% for (var C = 0; C<totalFollowing.length;C++){%>
                 <% for (var c=0;c<UsersInfo.length;c++){ %>
                   <% if (UsersInfo[c]._id==totalFollowing[C]){ %>
-                  <p><img src="/uploads/<%=UsersInfo[c].profilePic%>" alt="profile pic" id="searchProfilePic"/>
-                  <%=UsersInfo[c].username%></p>
+                  <p><img width="100px" height="100px" style="border-radius: 50%;"
+                    src="/uploads/<%=UsersInfo[c].profilePic%>" alt="profile pic" id="searchProfilePic"
+                    onclick="verifyID('<%=id%>','<%=UsersInfo[c]._id%>')"/>
+                  <button class="link" onclick="verifyID('<%=id%>','<%=UsersInfo[c]._id%>')"><%=UsersInfo[c].username%></button></p>
                   <%}%>
                   <%}%>
                 <%}%>
@@ -168,7 +170,7 @@
     <script src="/js/leaveComment.js"></script>
     <script src="/js/likePhoto.js"></script>
     <script src="/js/show_hide_comments.js"></script>
-
+    <script src="/js/verifyUser.js"></script>
 
   </body>
 </html>
