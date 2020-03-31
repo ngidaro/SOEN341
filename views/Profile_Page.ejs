@@ -28,8 +28,6 @@
     <link href="/css/grayscale.css" rel="stylesheet" />
     <link href="/css/profilePic.css" rel="stylesheet" />
     <link href="/css/linkStyle.css" rel="stylesheet" />
-    <link href="/css/dropdownButton.css" rel="stylesheet" />
-    <link href="/css/paragraphStyle.css" rel="stylesheet" />
 
   </head>
 
@@ -130,59 +128,57 @@
     </section>
 
     <!-- Projects Section -->
-    <section id="posts" class="projects-section bg-dark">
-      <div class="container">
-        <!-- todo : populate posts with data from back end, add some sort of recycler viewer-->
-        <div class="row">
-          <div class="col-4">
-            <!-- todo : loaded image goes here-->
-            <% for (var C = imgData.length-1;C >= 0;C--){%>
+    <div class="container">
+    <div class="row">
+        <% for (var C = imgData.length-1;C >= 0;C--){%>
+        <div class="col-lg-3 col-md-4 col-sm-6" id="displayContainer">
+          <div class="thumbnail">
 
-              <!-- Section above each photo {ProfileImg username     dots_button} -->
-              <div style="width:80%;Text-align:left;float:left;">
-                <br/><img src="/uploads/<%=profilePicture%>" alt="profile pic" id="miniProfilePic" class="miniProfilePic"/>
-                <b><%=imgData[C].ownerUsername%></b>
-                <div style="Text-align:right;Width:20%;float:right">
-                  <img onclick="displayDropdown('<%=imgData[C].img.imgName%>')" src="/uploads/vertical_dots.png" alt="dots" id="dots_<%=imgData[C].img.imgName%>" class="dots"/>
-                  <div id="myDropdown_<%=imgData[C].img.imgName%>" class="dropdown-content">
-                    <button onclick="deletePhoto('<%=id%>','<%=imgData[C].img.imgName%>')" class="dropdownButton">Delete</button>
-                  </div>
+            <!-- Section above each photo {ProfileImg username     dots_button} -->
+            <div style="width:80%;Text-align:left;float:left;">
+              <br/><img src="/uploads/<%=profilePicture%>" alt="profile pic" id="miniProfilePic" class="miniProfilePic"/>
+              <b><%=imgData[C].ownerUsername%></b>
+              <!-- <div style="Text-align:right;Width:20%;float:right">
+                <img onclick="displayDropdown('<%=imgData[C].img.imgName%>')" src="/uploads/vertical_dots.png" alt="dots" id="dots_<%=imgData[C].img.imgName%>" class="dots"/>
+                <div id="myDropdown_<%=imgData[C].img.imgName%>" class="dropdown-content">
+                  <button onclick="deletePhoto('<%=id%>','<%=imgData[C].img.imgName%>')" class="dropdownButton">Delete</button>
                 </div>
-              </div>
+              </div> -->
+            </div>
 
-
-              <br/><a href="/focused_myimage/<%=id%>/<%=imgData[C].img.imgName%>">
-                <img src="/uploads/<%=imgData[C].img.imgName%>" alt="not displaying" height="275" width ="275">
-              </a>
-              <%var heartColor = imgData[C].likes.includes(id) ? 'red' : 'white'%>
-              <br/><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" onclick="likePhoto('<%=id%>','<%=imgData[C].img.imgName%>','<%=imgData[C].ownerID%>')">
-                <path id="heart_id_<%=imgData[C].img.imgName%>" fill="<%=heartColor%>" d="M12 4.419c-2.826-5.695-11.999-4.064-11.999 3.27 0 7.27 9.903 10.938 11.999 15.311 2.096-4.373 12-8.041 12-15.311 0-7.327-9.17-8.972-12-3.27z"/>
-              </svg>
-              <br><a id="<%=imgData[C].img.imgName%>_likes" method="GET" href="/..."><%=imgData[C].likes.length%></a> likes
-
-              <!-- Display Caption if it exists -->
-              <% if (imgData[C].caption[0] != ""){%>
-                  <br/> <b><%=imgData[C].ownerUsername%></b> <%=imgData[C].caption[0]%>
-                <%}%>
-
-                <!-- When user presses the show all button, display all comments -->
-              <div id="<%=imgData[C].img.imgName%>_showAll">
-                Comments: <button class="link" id="showall_<%=imgData[C].img.imgName%>_id" onclick="showComments('<%=imgData[C].img.imgName%>','<%=imgData[C].comments.length%>')">Show all (<%=imgData[C].comments.length%>)</button>
-              </div>
-              <div id="<%=imgData[C].img.imgName%>_hideAll" style="display:none">
+                <a href="/focused_myimage/<%=id%>/<%=imgData[C].img.imgName%>" >
+                  <img src="/uploads/<%=imgData[C].img.imgName%>" alt="not displaying" height="275" width ="275">
+                </a>
+                <%var heartColor = imgData[C].likes.includes(id) ? 'red' : 'white'%>
+                <br/><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" onclick="likePhoto('<%=id%>','<%=imgData[C].img.imgName%>','<%=imgData[C].ownerID%>')">
+                  <path id="heart_id_<%=imgData[C].img.imgName%>" stroke="red" fill="<%=heartColor%>" d="M12 4.419c-2.826-5.695-11.999-4.064-11.999 3.27 0 7.27 9.903 10.938 11.999 15.311 2.096-4.373 12-8.041 12-15.311 0-7.327-9.17-8.972-12-3.27z"/>
+                </svg>
+                <br><a id="<%=imgData[C].img.imgName%>_likes" method="GET" href="/..."><%=imgData[C].likes.length%></a> likes
+                <!-- Display Caption if it exists -->
+                <% if (imgData[C].caption[0] != ""){%>
+                    <br/> <b><%=imgData[C].ownerUsername%></b> <%=imgData[C].caption[0]%>
+                  <%}%>
+                  <!-- When user presses the show all button, display all comments -->
+                <div id="<%=imgData[C].img.imgName%>_showAll">
+                  Comments: <button class="link" id="showall_<%=imgData[C].img.imgName%>_id" onclick="showComments('<%=imgData[C].img.imgName%>','<%=imgData[C].comments.length%>')">Show all (<%=imgData[C].comments.length%>)</button>
+                </div>
+                <div id="<%=imgData[C].img.imgName%>_hideAll" style="display:none">
                   Comments: <% for (var i=0; i<imgData[C].comments.length; i++){ %>
                      <br/><b><%=imgData[C].comments[i].username%></b>: <%=imgData[C].comments[i].comment%>
                   <%}%>
                   <br/><button class="link" onclick="hideComments('<%=imgData[C].img.imgName%>')">Hide all</button>
                 </div>
-
                 <form>
                   <input type="text" id="theComment_<%=imgData[C].img.imgName%>" name="theComment" placeholder="Leave a comment">
                   <input type="button" value="Submit" onclick="addComment('<%=id%>','<%=username%>','<%=imgData[C].ownerID%>','<%=imgData[C].img.imgName%>')">
                 </form>
-                <%}%>
-               </div>
-            </div>
+                            </div>
+                                      </div>
+              <%}%>
+        </div>
+      </div>
+
+
           </div>
           <div class="col-8">
             <div class="row">
@@ -224,6 +220,7 @@
     <script src="/js/leaveComment.js"></script>
     <script src="/js/likePhoto.js"></script>
     <script src="/js/show_hide_comments.js"></script>
+
 
     <script>
 
@@ -275,7 +272,6 @@
       function updateProfile(id)
       {
         var bio = document.getElementById("bio").value;
-
         fetch(`/edit_profile/${id}`,{method:'POST',
         headers: {
                 "Content-Type": "application/json"
@@ -292,14 +288,12 @@
             alert("Edit Profile Error");
           })
       }
-
       function editProfile()
       {
         debugger;
         $("#editProfileButton_id").hide();
         $("#editProfile_id").show();
       }
-
       function cancelEdit(){
         $("#editProfileButton_id").show();
         $("#editProfile_id").hide();
