@@ -9,3 +9,13 @@
   color: #069;
   cursor: pointer;
 }
+
+.imgBtn{
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0!important;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+}
