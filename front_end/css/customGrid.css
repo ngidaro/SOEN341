@@ -1,0 +1,8 @@
+#profileContent{
+
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  margin: auto;
+  max-width: 1000px;
+
+}
