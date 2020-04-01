@@ -205,6 +205,12 @@
   background-size: cover;
 }
 
+ .news_feed-section {
+   padding: 10rem 0;
+   background-repeat: no-repeat;
+   background-size: cover;
+ }
+
 .projects-section .featured-text {
   padding: 2rem;
 }
@@ -321,6 +327,10 @@ a:hover {
   background-color: #161616 !important;
 }
 
+.bg-snow {
+  background-color: #FFFAFA !important
+}
+
 .bg-primary {
   background-color: #64a19d !important;
 }
@@ -380,8 +390,11 @@ margin-bottom: 50px;
 }
 
 #displayContainer{
-  margin-left: 30px;
-  margin-right: 30px;
+  margin: auto;
+  margin-top: 10px;
+  border: 1 px black;
+  /* margin-left: 20px;
+  margin-right: 20px;
   margin-top: 30px;
-  margin-bottom: 30px;
+  margin-bottom: 30px; */
 }
