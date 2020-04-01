@@ -29,6 +29,7 @@
     <link href="/css/grayscale.css" rel="stylesheet" />
     <link href="/css/profilePic.css" rel="stylesheet" />
     <link href="/css/linkStyle.css" rel="stylesheet" />
+    <link href="/css/customGrid.css" rel="stylesheet" />
 
   </head>
 
@@ -120,21 +121,21 @@
 
     <!-- Projects Section -->
     <div class="container">
-    <div class="row">
+      <div id="profileContent">
         <% for (var C = imgData.length-1;C >= 0;C--){%>
-          <br/> <b><%=imgData[C].ownerUsername%></b>
-        <div class="col-lg-3 col-md-4 col-sm-6" id="displayContainer">
           <div class="thumbnail">
+            <br/><img src="/uploads/<%=profilePicture%>" alt="not displaying" class="miniProfilePic"> <b><%=imgData[C].ownerUsername%></b>
         <!-- todo : populate posts with data from back end, add some sort of recycler viewer-->
+        <a href="/focused_myimage/<%=id%>/<%=imgData[C].img.imgName%>">
           <br/><img src="/uploads/<%=imgData[C].img.imgName%>" alt="not displaying" height="275" width ="275">
-          <%var heartColor = imgData[C].likes.includes(id) ? 'red' : 'white'%>
+        </a>
+          <%var heartColor = imgData[C].likes.includes(id) ? 'red' : 'gainsboro'%>
           <br/><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" onclick="likePhoto('<%=id%>','<%=imgData[C].img.imgName%>','<%=imgData[C].ownerID%>')">
             <path id="heart_id_<%=imgData[C].img.imgName%>" fill="<%=heartColor%>" d="M12 4.419c-2.826-5.695-11.999-4.064-11.999 3.27 0 7.27 9.903 10.938 11.999 15.311 2.096-4.373 12-8.041 12-15.311 0-7.327-9.17-8.972-12-3.27z"/>
           </svg>
-          <br><a id="<%=imgData[C].img.imgName%>_likes" method="GET" href="/..."><%=imgData[C].likes.length%></a> likes
-          <br/> <b><%=imgData[C].ownerUsername%></b> <%=imgData[C].caption[0]%>
+          <a id="<%=imgData[C].img.imgName%>_likes" method="GET" href="/..."><%=imgData[C].likes.length%></a> likes
           <% if (imgData[C].caption[0] != ""){%>
-              <br/> <b><%=imgData[C].ownerUsername%></b> <%=imgData[C].caption[0]%>
+              <br/><img src="/uploads/<%=profilePicture%>" style="margin-top:4px" alt="not displaying" class="miniminiProfilePic"> <b><%=imgData[C].ownerUsername%></b> <%=imgData[C].caption[0]%>
             <%}%>
 
           <div id="<%=imgData[C].img.imgName%>_showAll">
@@ -145,15 +146,14 @@
             <div id="<%=imgData[C].img.imgName%>_comments">
               <!-- Data comes from show_hide_comments.js -->
             </div>
-            <br/><button class="link" onclick="hideComments('<%=imgData[C].img.imgName%>')">Hide all</button>
+            <button class="link" onclick="hideComments('<%=imgData[C].img.imgName%>')">Hide all</button>
           </div>
 
           <form>
             <input type="text" id="theComment_<%=imgData[C].img.imgName%>" name="theComment" placeholder="Leave a comment">
-            <input type="button" value="Submit" onclick="addComment('<%=id%>','<%=username%>','<%=imgData[C].ownerID%>','<%=imgData[C].img.imgName%>')">
+            <input type="button"  style="margin-top:4px; margin-bottom:4px" value="Submit" onclick="addComment('<%=id%>','<%=username%>','<%=imgData[C].ownerID%>','<%=imgData[C].img.imgName%>')">
           </form>
         </div>
-      </div>
     <%}%>
   </div>
 </div>

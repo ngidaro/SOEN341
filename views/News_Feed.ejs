@@ -26,8 +26,9 @@
     />
     <!-- Custom styles for this template -->
     <link href="/css/grayscale.css" rel="stylesheet" />
-    <link href="/css/linkStyle.css" rel="stylesheet" />
     <link href="/css/profilePic.css" rel="stylesheet" />
+    <link href="/css/linkStyle.css" rel="stylesheet" />
+    <link href="/css/imageLayout.css" rel="stylesheet" />
 
   </head>
 
@@ -35,7 +36,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
       <div class="container">
-        <a class="navbar-brand js-scroll-trigger" href="#page-top">Pic5</a>
+        <a class="navbar-brand js-scroll-trigger" href="#page-top" style="color:black">Pic5</a>
         <button
           class="navbar-toggler navbar-toggler-right"
           type="button"
@@ -58,17 +59,17 @@
 
           <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="/profile_page/<%=id%>"
+              <a class="nav-link js-scroll-trigger" style="color:black" href="/profile_page/<%=id%>"
                 >My Profile</a
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="/post_photo_page/<%=id%>"
+              <a class="nav-link js-scroll-trigger" style="color:black" href="/post_photo_page/<%=id%>"
                 >Post Photo</a
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="/"
+              <a class="nav-link js-scroll-trigger" style="color:black" href="/"
                 >Logout</a
               >
             </li>
@@ -78,11 +79,11 @@
     </nav>
 
     <!-- Projects Section -->
-    <section id="posts" class="projects-section bg-dark">
+    <section id="posts" class=" news_feed-section bg-snow">
       <div class="container">
         <!-- todo : populate posts with data from back end, add some sort of recycler viewer-->
         <div class="row">
-          <div class="col-4">
+          <div class="center">
             <!-- todo : loaded image goes here-->
             <% for (var C = imgData.length-1;C >= 0;C--){%>
 
@@ -97,15 +98,15 @@
 
               <br/> <img class="miniProfilePic" src="/uploads/<%=displayUser.profilePic[0]%>" onclick="verifyID('<%=id%>','<%=displayUser._id%>')"></img> <b><%=imgData[C].ownerUsername%></b>
               <br/><a href="/focused_myimage/<%=id%>/<%=imgData[C].img.imgName%>">
-                <img src="/uploads/<%=imgData[C].img.imgName%>" alt="not displaying" height="350" width ="350">
+                <img src="/uploads/<%=imgData[C].img.imgName%>" alt="not displaying" height="500" width ="500">
               </a>
 
-              <%var heartColor = imgData[C].likes.includes(id) ? 'red' : 'white'%>
+              <%var heartColor = imgData[C].likes.includes(id) ? 'red' : 'gainsboro'%>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" onclick="likePhoto('<%=id%>','<%=imgData[C].img.imgName%>','<%=imgData[C].ownerID%>')">
                 <path id="heart_id_<%=imgData[C].img.imgName%>" fill="<%=heartColor%>" d="M12 4.419c-2.826-5.695-11.999-4.064-11.999 3.27 0 7.27 9.903 10.938 11.999 15.311 2.096-4.373 12-8.041 12-15.311 0-7.327-9.17-8.972-12-3.27z"/>
               </svg>
 
-              <br><a id="<%=imgData[C].img.imgName%>_likes" method="GET" href="/..."><%=imgData[C].likes.length%></a> likes
+              <a id="<%=imgData[C].img.imgName%>_likes" style="margin-left:4px" method="GET" href="/..."><%=imgData[C].likes.length%></a> likes
 
               <% if (imgData[C].caption[0] != ""){%>
                   <br/> <img class="miniminiProfilePic" src="/uploads/<%=displayUser.profilePic[0]%>" onclick="verifyID('<%=id%>','<%=displayUser._id%>')"></img> <b><%=imgData[C].ownerUsername%></b> <%=imgData[C].caption[0]%>
