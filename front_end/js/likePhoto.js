@@ -10,7 +10,7 @@ function likePhoto(id,imgName,ownerId) {
         document.getElementById("heart_id_"+imgName).style.fill = "red";
       }
       else {
-        document.getElementById("heart_id_"+imgName).style.fill = "white";
+        document.getElementById("heart_id_"+imgName).style.fill = "gainsboro";
       }
 
       document.getElementById(imgName+'_likes').innerHTML = data.likes;
