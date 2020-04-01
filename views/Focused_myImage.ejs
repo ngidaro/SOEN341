@@ -28,6 +28,7 @@
     <link href="/css/grayscale.css" rel="stylesheet" />
     <link href="/css/profilePic.css" rel="stylesheet" />
     <link href="/css/imageLayout.css" rel="stylesheet" />
+    <link href="/css/linkStyle.css" rel="stylesheet" />
 
   </head>
 
@@ -85,7 +86,7 @@
           <div class="centerFocused">
             <!-- todo : loaded image goes here-->
               <br/><img src="/uploads/<%=profilePicture%>" alt="profile pic" style="margin-top:4px" class="miniProfilePic"/> <b><%=imgData[0].ownerUsername%></b>
-              <br/><img src="/uploads/<%=imgData[0].img.imgName%>" alt="not displaying" height="400" width ="400">
+              <br/><img src="/uploads/<%=imgData[0].img.imgName%>" alt="not displaying" height="500" width ="500">
               <%var heartColor = imgData[0].likes.includes(id) ? 'red' : 'gainsboro'%>
               <br/><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="margin-top:4px" onclick="likePhoto('<%=id%>','<%=imgData[0].img.imgName%>','<%=imgData[0].ownerID%>')">
                 <path id="heart_id_<%=imgData[0].img.imgName%>" fill="<%=heartColor%>" d="M12 4.419c-2.826-5.695-11.999-4.064-11.999 3.27 0 7.27 9.903 10.938 11.999 15.311 2.096-4.373 12-8.041 12-15.311 0-7.327-9.17-8.972-12-3.27z"/>
@@ -95,15 +96,23 @@
                   <br/><img src="/uploads/<%=profilePicture%>" alt="profile pic" style="margin-top:4px" class="miniminiProfilePic"/> <b><%=imgData[0].ownerUsername%></b> <%=imgData[0].caption[0]%>
                 <%}%>
 
-                <div id="allComments">
-                  Comments: <% for (var C=0; C<imgData[0].comments.length; C++){ %>
-                     <br/><b><%=imgData[0].comments[C].username%></b>: <%=imgData[0].comments[C].comment%>
-                     <%}%>
+
+                <!-- When user presses the show all button, display all comments -->
+              <div id="<%=imgData[0].img.imgName%>_showAll">
+                Comments: <button class="link" id="showall_<%=imgData[0].img.imgName%>_id" onclick="showComments('<%=imgData[0].img.imgName%>','<%=imgData[0].comments.length%>')">Show all (<%=imgData[0].comments.length%>)</button>
+              </div>
+
+              <!-- Hide Comments -->
+              <div id="<%=imgData[0].img.imgName%>_hideAll" style="display:none">
+                <div id="<%=imgData[0].img.imgName%>_comments">
+                  <!-- Data comes from show_hide_comments.js -->
                 </div>
+                <br/><button class="link" onclick="hideComments('<%=imgData[0].img.imgName%>')">Hide all</button>
+              </div>
 
               <form style="margin-top:10px">
                 <input type="text" id="theComment_<%=imgData[0].img.imgName%>" name="theComment" placeholder="Leave a comment">
-                <input type="button" value="Submit" onclick="addCommentFocused('<%=id%>','<%=username%>','<%=imgData[0].ownerID%>','<%=imgData[0].img.imgName%>')">
+                <input type="button" value="Submit" onclick="addComment('<%=id%>','<%=username%>','<%=imgData[0].ownerID%>','<%=imgData[0].img.imgName%>')">
               </form>
           </div>
           <div class="col-8">
@@ -145,5 +154,7 @@
     <script src="/js/grayscale.min.js"></script>
     <script src="/js/leaveComment.js"></script>
     <script src="/js/likePhoto.js"></script>
+    <script src="/js/show_hide_comments.js"></script>
+
   </body>
 </html>
