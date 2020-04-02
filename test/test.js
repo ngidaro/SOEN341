@@ -5,7 +5,7 @@ const expect = require("chai").expect;
 const MONGODB_URI =
   "mongodb+srv://soen341:soen341@clustersoen341-bbtjh.mongodb.net/UserData?retryWrites=true&w=majority";
 const username = "test";
-const userID = "5e84149dde6be044e854a069";
+const userID = "5e860748b1aa663a547f7a49";
 const password = "test";
 
 var imgname;
