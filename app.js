@@ -257,6 +257,7 @@ app.post('/create_account_page',function(req,res){
   user.password = req.body.pass;
   user.firstName = req.body.fName;
   user.lastName = req.body.lName;
+  user.email=req.body.email;
   user.backgroundColor= "#ffffff";
 
   Users.count({username: user.username}, function (err, count){
