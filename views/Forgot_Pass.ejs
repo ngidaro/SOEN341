@@ -8,7 +8,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Welcome to Pic5</title>
+  <title>Create an Account - Pic5</title>
 
   <!-- Bootstrap core CSS -->
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -28,7 +28,7 @@
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
     <div class="container">
-      <a class="navbar-brand js-scroll-trigger" href="#page-top">Pic5</a>
+      <a class="navbar-brand js-scroll-trigger" href="login_page">Pic5</a>
       <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         Menu
         <i class="fas fa-bars"></i>
@@ -36,72 +36,68 @@
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#about">About</a>
+            <a class="nav-link js-scroll-trigger" href="login_page">About</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#signIn">Sign In</a>
+            <a class="nav-link js-scroll-trigger" href="login_page">Sign In</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="create_account_page">Create an Account</a>
+            <a class="nav-link js-scroll-trigger" href="#createAccount">Create an Account</a>
           </li>
         </ul>
       </div>
     </div>
   </nav>
 
-  <!-- Header -->
-  <header class="masthead">
-    <div class="container d-flex h-100 align-items-center">
-      <div class="mx-auto text-center">
-        <img src="img/logo.png" id="logo" alt="logo">
-        <h1 class="mx-auto my-0 text-uppercase">Welcome to Pic5</h1>
-        <h3 class="text-white-50 mx-auto mt-2 mb-5">A place to share your photos</h3>
-        <a href="#signIn" class="btn btn-primary js-scroll-trigger">Sign In</a>
-      </div>
-    </div>
-  </header>
-
-  <!-- About Section -->
-  <section id="about" class="about-section text-center">
+<!-- Signup Section -->
+<section id="createAccount" class="signup-section">
     <div class="container">
-      <div class="row">
-        <div class="col-lg-8 mx-auto">
-          <h2 class="text-white mb-4">Created by</h2>
-          <p class="text-white-50">Celia Cai, Nick Gidaro, Riley Kilmer-Choi, Michael Lee, Armando Mancino</p>
-        </div>
-      </div>
+      <h1><strong>Recover Password</strong></h1>
+      <form method="GET" class="createAccountForm">
+          <label for="email">Email:</label>
+          <input name = "email" type="text" id="email" placeholder="Email">
+          <br/>
+          <label for="user">Username:</label>
+            <input name = "user" type="text" id="user" placeholder="Username">
+            <br/>
+
+          <pre>                          <button type="button" onclick="checkAuthentication()">Submit </input></pre>
+        </form>
     </div>
   </section>
 
-  <!-- Projects Section -->
-  <section id=signIn class="projects-section">
-    <div class="container">
-      <!-- Featured Project Row -->
-      <div class="row align-items-center no-gutters mb-4 mb-lg-5">
-        <div class="col-xl-4 col-lg-5">
-          <div class="featured-text text-center text-lg-left">
-            <div class = "inputs">
-              <form>
-                  <h2>&nbsp;Sign In</h2>
-                  <label>&nbsp;Username&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                    <br/><input name="user" type="text" id="user" placeholder="Username">
-                    <br/><br/>
-                  <label>&nbsp;Password&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                    <br/><input name="pass" type="password" id="pass" placeholder="Password">
-                  <br/><br/>
-                  <pre><input type = "button" onclick="loginAuthentication()" value="Login"></input></pre>
-                  <a href="create_account_page">&nbsp;Don't have an account?</a>
-                  <br/>
-                  <a href="/forgot_pass">&nbsp;Forgot your password?</a>
-                </form>
+  <script>
+  function successMessage() {
+    window.location.href=
+    alert("Your account has been created successfully!");
+  }
 
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </section>
+  function checkAuthentication()
+  {
+    var email = document.getElementById("email").value;
+    var username = document.getElementById("user").value;
+    fetch(`/forgot_pass/${email}/${username}`,{method:'POST',
+    headers: {
+            "Content-Type": "application/json"
+        },
+      body:JSON.stringify({"email":email, "username":username})})
+      .then(res => res.json())
+      .then(function(data){
+        console.log(data.queryExists);
+        if(!data.queryExists)
+        {
+          confirm("Invalid info. Please try again.");
+        }
+        else {
+          confirm("Your password is: "+ data.thePass);
+          window.location.href = "/login_page";
+        }
+      })
+      .catch((err) => {
+        confirm("Error when entering information!");
+      })
+  }
+  </script>
 
   <!-- Contact Section -->
   <section class="contact-section bg-black">
@@ -159,7 +155,6 @@
 
     </div>
   </section>
-
   <!-- Footer -->
   <footer class="bg-black small text-center text-white-50">
     <div class="container">
@@ -176,36 +171,6 @@
 
   <!-- Custom scripts for this template -->
   <script src="js/grayscale.min.js"></script>
-
-  <script>
-
-    function loginAuthentication()
-    {
-      var username = document.getElementById("user").value;
-      var password = document.getElementById("pass").value;
-
-      fetch(`/login_page/${username}/${password}`,{method:'POST','Content-Type': 'application/json'})
-        .then(res => res.json())
-        .then(function(data){
-          // debugger;
-          if(!data.bExists)
-          {
-            alert("Invalid username or password, please try again.");
-          }
-          else {
-            window.location.href = "profile_page/" + data.id;
-
-          }
-        })
-        .catch((err) => {
-          // debugger;
-          alert("Please do not leave any empty fields, make sure to enter a username and a password!");
-
-        })
-    }
-
-  </script>
-
 
 </body>
 
