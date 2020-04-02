@@ -853,7 +853,42 @@ app.get('/Following_List/:id/:searchID',function(req,res){
     });
   });
 });
+app.get('/forgot_pass',function(req,res){
+  res.render("Forgot_Pass");
+});
 
+app.post('/forgot_pass/:Email/:Username', function (req,res) {
+  Users.findOne({username:req.params.Username},'username email password',{lean: true}, function(err, docs){
+    console.log(docs);
+    if (docs==null)
+    {
+      console.log('Invalid Username or Email');
+      res.json({queryExists:false});
+    }
+    else {
+      //Verify that the username and password are correct
+      console.log(docs.username);
+      console.log(req.params.Username);
+
+      console.log(docs.email[0]);
+      console.log(req.params.Email);
+
+
+      if((docs.username == req.params.Username) && (docs.email[0] == req.params.Email))
+      {
+        console.log('Username and Email Correct');
+      //  var sId = docs[0]._id;
+        // res.redirect('/profile_page/' + sId);
+        res.json({queryExists:true,
+                  thePass:docs.password});
+      }
+      else {
+        console.log('Incorrect Info');
+        res.json({queryExists:false});
+      }
+    }
+  });
+});
 //Diplsays the get request for a request to edit the profile page
 app.get('/edit_profile/:id',function(req,res){
   //findById returns object NOT Array of objects
