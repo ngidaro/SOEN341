@@ -33,19 +33,7 @@ UserSchema = mongoose.Schema({
   profilePic:{
     type:Array,
     required: true
-  },
-  backgroundImg:{
-  type:Array,
-  required: false
-},
-email:{
-  type:Array,
-  required: true
-},
-backgroundColor:{
-  type:Array,
-  required: true
-}
+  }
 });
 
 let User = module.exports = mongoose.model('User',UserSchema);
