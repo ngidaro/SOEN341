@@ -54,18 +54,22 @@
     <div class="container">
       <h1><strong>Sign Up</strong></h1>
       <form action="/create_account_page" method = "POST" class="createAccountForm">
+         <label for="email">Email:</label>
+         <input name = "email" type="text" id="email" placeholder="Email">
+         <br/>
+         <label for="user">Username:</label>
+           <input name = "user" type="text" id="user" placeholder="Username">
+           <br/>
+         <label for="pass">Password:</label>
+         <input name = "pass" type="password" id="pass" placeholder="Password">
+         <br/>
           <label for="fName">First Name:</label>
           <input name = "fName" type="text" id="fName" placeholder="First Name">
           <br/>
           <label for="lName">Last Name:</label>
           <input name = "lName" type="text" id="lName" placeholder="Last Name">
           <br/>
-          <label for="user">Username:</label>
-            <input name = "user" type="text" id="user" placeholder="Username">
-            <br/>
-          <label for="pass">Password:</label>
-          <input name = "pass" type="password" id="pass" placeholder="Password">
-          <br/><br/>
+<br/>
           <pre>              <input type="submit" onclick="successMessage()"></input></pre>
         </form>
     </div>
