@@ -81,7 +81,7 @@
 
     <!-- Header -->
 
-    <header class="masthead">
+    <header class="masthead" style="background-image: url('/uploads/<%=backgroundImg%>');">
       <div class="container d-flex h-100 align-items-center">
         <div class="mx-auto text-center">
 
@@ -120,6 +120,8 @@
     </section>
 
     <!-- Projects Section -->
+    <section style="background-color:<%=backgroundColor%>">
+
     <div class="container">
       <div id="profileContent">
         <% for (var C = imgData.length-1;C >= 0;C--){%>
@@ -157,7 +159,7 @@
     <%}%>
   </div>
 </div>
-
+</section>
     <!-- Footer -->
     <footer class="bg-black small text-center text-white-50">
       <div class="container">

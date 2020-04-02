@@ -137,13 +137,15 @@ app.get('/profile_page/:id',function(req,res){
   //findById returns object NOT Array of objects
   Users.findById(req.params.id,function(error,docs){
     Pics.find({ownerID:req.params.id}, function(error,imgDocs){
-
+console.log(docs);
       res.render('profile_page',{ id:req.params.id,
                                     username:docs.username,
                                     followers:docs.followers.length,
                                     following:docs.following.length,
                                     bio:docs.bio,
                                     imgData:imgDocs,
+                                    backgroundImg:docs.backgroundImg[0],
+                                    backgroundColor:docs.backgroundColor[0],
                                     profilePicture:docs.profilePic
                                   }); //in ejs file do <%=username%>
     });
@@ -250,10 +252,12 @@ app.post('/create_account_page',function(req,res){
   let user = new Users();
 
   user.profilePic = "undefined_profile.png";
+  user.backgroundImg="undefined_background.jpg";
   user.username = req.body.user;
   user.password = req.body.pass;
   user.firstName = req.body.fName;
   user.lastName = req.body.lName;
+  user.backgroundColor= "#ffffff";
 
   Users.count({username: user.username}, function (err, count){
     if(count>0){
@@ -667,6 +671,8 @@ app.get('/follow_page/:id/:searchID',function(req,res){
                                 sFollow: sFollow,
                                 bio:docs.bio,
                                 imgData:imgDocs,
+                                backgroundImg:docs.backgroundImg[0],
+                                backgroundColor:docs.backgroundColor[0],
                                 profilePicture:docs.profilePic});
   });
 });
@@ -997,6 +1003,59 @@ Pics.find({ownerID:req.params.id}, function(error,imgDocs){
                               }); //in ejs file do <%=username%>
   });
 });
+});
+app.get('/edit_background/:id',function(req,res){
+
+  Users.findById(req.params.id,function(error,docs){
+    Pics.find({ownerID:req.params.id}, function(error,imgDocs){
+      res.render('Edit_Background',{ id:req.params.id,
+                                    bio:docs.bio,
+                                    username:docs.username,
+                                    followers:docs.followers.length,
+                                    following:docs.following.length,
+                                    profilePicture:docs.profilePic,
+                                    backgroundImg:docs.backgroundImg[0],
+                                    backgroundColor:docs.backgroundColor[0],
+                                    imgData:imgDocs
+                                  }); //in ejs file do <%=username%>
+});
+  });
+});
+app.post('/change_backgroundcolor/:id', function(req,res){
+  if (req.body.color!=null)
+  {
+  User.findOneAndUpdate({_id:req.params.id},{$set: {backgroundColor: req.body.color}},{new: true},function (error, docs) {
+      saved(error,docs);
+    });
+    setTimeout(function()
+    {
+      res.redirect('/profile_page/'+req.params.id);
+    },300);
+}
+});
+app.post('/upload_background/:id/:currentBackgroundImg',(req, res)=> {
+
+    fs.unlink('public/uploads/'+req.params.currentBackgroundImg, function (err) {
+      if (err) throw err;
+      console.log("Background image deleted");
+    });
+
+  uploadLocal(req,res,(err) => {
+    //Callback function with parameter err
+    if (err) {
+      console.log("Failed to upload to local storage");
+    }
+    else {
+      User.findOneAndUpdate({_id:req.params.id},{$set: {backgroundImg: req.file.filename}},{new: true},function (error, docs) {
+          saved(error,docs);
+          console.log("Image saved");
+          setTimeout(function()
+          {
+            res.redirect('/profile_page/'+req.params.id);
+          },1000);
+      });
+    }
+  });
 });
 
 // ------------------------------------------------------------------------------
