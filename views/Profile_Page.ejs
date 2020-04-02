@@ -138,11 +138,11 @@
           <div class="thumbnail">
 
             <!-- Section above each photo {ProfileImg username     dots_button} -->
-            <div style="width:80%;Text-align:left;float:left;">
+            <div style="width:100%;Text-align:left;float:left;">
               <br/><img src="/uploads/<%=profilePicture%>" alt="profile pic" id="miniProfilePic" class="miniProfilePic"/>
               <b><%=imgData[C].ownerUsername%></b>
-              <div style="Text-align:right;Width:20%;float:right">
-                <img onclick="displayDropdown('<%=imgData[C].img.imgName%>')" src="/uploads/vertical_dots.png" alt="dots" id="dots_<%=imgData[C].img.imgName%>" class="dots"/>
+              <div style="Text-align:right;float:right">
+                <div class="dots" onclick="displayDropdown('<%=imgData[C].img.imgName%>')"><img src="/uploads/vertical_dots.png" alt="dots" id="dots_<%=imgData[C].img.imgName%>" class="dots-img"/></div>
                 <div id="myDropdown_<%=imgData[C].img.imgName%>" class="dropdown-content">
                   <button onclick="deletePhoto('<%=id%>','<%=imgData[C].img.imgName%>')" class="dropdownButton">Delete</button>
                 </div>
@@ -150,7 +150,7 @@
             </div>
 
                 <a href="/focused_myimage/<%=id%>/<%=imgData[C].img.imgName%>" >
-                  <img src="/uploads/<%=imgData[C].img.imgName%>" alt="not displaying" height="275" width ="275">
+                  <img src="/uploads/<%=imgData[C].img.imgName%>" alt="not displaying" class="feed-image">
                 </a>
                 <%var heartColor = imgData[C].likes.includes(id) ? 'red' : 'gainsboro'%>
                 <br/><svg xmlns="http://www.w3.org/2000/svg" style="margin:auto" width="24" height="24" viewBox="0 0 24 24" onclick="likePhoto('<%=id%>','<%=imgData[C].img.imgName%>','<%=imgData[C].ownerID%>')">
