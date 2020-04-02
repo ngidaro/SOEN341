@@ -552,25 +552,28 @@ app.get('/news_feed/:id',function(req,res){
 });
 
 // ------------------------------------------------------------------------------
-/*  app.get('/search_page/:id/:name')
+/*  app.get('/show_comments/:imgName')
 
-    Definition: Renders the search_page with all usernames queried from the DB which
-                contains the searched parameter (req.params.name)
+    Definition: When "show all" button is clicked, this section executes.
+                It displays all the comments associated with a specific image.
+                Does a query to the DB for all users who commented on the photo and their profile.
 
     Variables:
-      docs:   Object contains all information pertaining to the username fonud by User.find().
-      data:   Object which is used in the search_page.ejs which holds all fields from docs.
-              (data[0].username, data[1].username, data.[0].lastname...)
-
-      NOTE: The Users.find() oly returns _id, firstname, lastname and username.
+      allComments:        Array, temporary container for all the the comments on a photo.
+      userProfile:        Array, temporary container for all the data of all user's who commented.
+      commentsArray:      Array, gets filled with data from allComments and gets returned to frontend.
+      usersArray:         Array, get filled with data from userProfile and gets returned to fronted.
 */
 // ------------------------------------------------------------------------------
-app.post('/show_comments/:imgName',function(req,res){
+app.post('/show_comments/:imgName', async function(req,res){
 
   var allComments = new Array();
   var userProfile = new Array();
 
-  Pics.find({"img.imgName":req.params.imgName}, async function(err,imgDocs){
+  var commentsArray = new Array();
+  var usersArray = new Array();
+
+  await Pics.find({"img.imgName":req.params.imgName}, async function(err,imgDocs){
 
     if(imgDocs[0].comments.length == 0)
     {
@@ -579,25 +582,48 @@ app.post('/show_comments/:imgName',function(req,res){
                 commentsExist: false})
     }
 
-    for (var i = 0; i < imgDocs[0].comments.length; i++) {
-      allComments.push(imgDocs[0].comments[i]);
-      await Users.find({username:imgDocs[0].comments[i].username}, function(err,docs){
-        if(!userProfile.includes(docs[0].username))
-        {
-          userProfile.push(docs[0]);
-        }
+    function getComments()
+    {
+      return new Promise(function(resolve,reject){
+
+          for (var i = 0; i < imgDocs[0].comments.length; i++) {
+            allComments.push(imgDocs[0].comments[i]);
+            }
+
+        resolve(allComments);
+      });
+    }
+
+
+    function getUsers(commentsArray)
+    {
+
+      return new Promise(async function(resolve,reject){
+
+        for (var i = 0; i < commentsArray.length; i++) {
+          await Users.find({username:commentsArray[i].username}, function(err,docs){
+             if(!userProfile.includes(docs[0].username))
+             {
+               userProfile.push(docs[0]);
+             }
+
+           });
+         }
+         //resolve is happening too soon so timeout was added;
+         //there is a timeout because async was not working -> resolve occured before for loop finished
+         setTimeout(()=>{resolve(userProfile);},2);
 
       });
     }
 
-    if(allComments.length === imgDocs[0].comments.length)
-    {
-      await res.json({allComments:allComments,
-              userProfile:userProfile,
-              commentsExist: true});
-      }
-  });
+    commentsArray = await getComments();
+    usersArray = await getUsers(commentsArray);
 
+    res.json({allComments:commentsArray,
+          userProfile:usersArray,
+          commentsExist: true});
+
+    });
 });
 
 // ------------------------------------------------------------------------------
@@ -733,7 +759,8 @@ app.post('/leaveComment/:id/:username/:imgOwnerId/:imgName',function(req,res){
           saved(error,imgDocs);
           isPosted = true;
           await res.json({isPosted:isPosted,
-                    totalComments:imgDocs.comments.length});
+                    totalComments:imgDocs.comments.length,
+                    userProfilePic:searchDocs.profilePic});
       });
   });
 });
@@ -741,6 +768,9 @@ app.post('/leaveComment/:id/:username/:imgOwnerId/:imgName',function(req,res){
 //displays my image in a better view
 app.get('/focused_myimage/:id/:imgName',function(req,res)
 {
+
+
+
   Users.findById(req.params.id,function(error,docs){
     Pics.find({"img.imgName":req.params.imgName}, function(error,imgDocs){
 
