@@ -66,39 +66,6 @@
     </div>
   </section>
 
-  <script>
-  function successMessage() {
-    window.location.href=
-    alert("Your account has been created successfully!");
-  }
-
-  function checkAuthentication()
-  {
-    var email = document.getElementById("email").value;
-    var username = document.getElementById("user").value;
-    fetch(`/forgot_pass/${email}/${username}`,{method:'POST',
-    headers: {
-            "Content-Type": "application/json"
-        },
-      body:JSON.stringify({"email":email, "username":username})})
-      .then(res => res.json())
-      .then(function(data){
-        console.log(data.queryExists);
-        if(!data.queryExists)
-        {
-          confirm("Invalid info. Please try again.");
-        }
-        else {
-          confirm("Your password is: "+ data.thePass);
-          window.location.href = "/login_page";
-        }
-      })
-      .catch((err) => {
-        confirm("Error when entering information!");
-      })
-  }
-  </script>
-
   <!-- Contact Section -->
   <section class="contact-section bg-black">
     <div class="container">
@@ -171,6 +138,38 @@
 
   <!-- Custom scripts for this template -->
   <script src="js/grayscale.min.js"></script>
+  <script>
+  function successMessage() {
+    window.location.href=
+    alert("Your account has been created successfully!");
+  }
+
+  function checkAuthentication()
+  {
+    var email = document.getElementById("email").value;
+    var username = document.getElementById("user").value;
+    fetch(`/forgot_pass/${email}/${username}`,{method:'POST',
+    headers: {
+            "Content-Type": "application/json"
+        },
+      body:JSON.stringify({"email":email, "username":username})})
+      .then(res => res.json())
+      .then(function(data){
+        console.log(data.queryExists);
+        if(!data.queryExists)
+        {
+          alert("Invalid info. Please try again.");
+        }
+        else {
+          confirm("Your password is: "+ data.thePass);
+          window.location.href = "/login_page";
+        }
+      })
+      .catch((err) => {
+        alert("Error when entering information!");
+      })
+  }
+  </script>
 
 </body>
 
