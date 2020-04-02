@@ -5,7 +5,7 @@ os:
 
 cache: npm
 
-before_script:
-  - npm install
+before_script: chmod 0777 ./node_modules/.bin/mocha
+
 script:
   - npm test
