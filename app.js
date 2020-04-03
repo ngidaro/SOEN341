@@ -247,17 +247,17 @@ app.post('/login_page/:userName/:passWord', function (req,res) {
 */
 // ------------------------------------------------------------------------------
 //post data to DB when in createaccount package
-app.post('/create_account_page/:user/:pass/:fName/:lName/:email',function(req,res){
+app.post('/create_account_page',function(req,res){
 
   let user = new Users();
 
   user.profilePic = "undefined_profile.png";
   user.backgroundImg="undefined_background.jpg";
-  user.username = req.params.user;
-  user.password = req.params.pass;
-  user.firstName = req.params.fName;
-  user.lastName = req.params.lName;
-  user.email=req.params.email;
+  user.username = req.body.user;
+  user.password = req.body.password;
+  user.firstName = req.body.fname;
+  user.lastName = req.body.lname;
+  user.email=req.body.email;
   user.backgroundColor= "#ffffff";
 
   Users.count({username: user.username}, function (err, count){

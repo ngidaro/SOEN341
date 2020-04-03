@@ -62,40 +62,7 @@
             <br/>
 
           <pre>                         <button type="button" onclick="checkAuthentication()">Submit </input></pre>
-            <script>
-            function successMessage() {
-              window.location.href=
-              alert("Your account has been created successfully!");
-            }
 
-            function checkAuthentication()
-            {
-              alert();
-              var email = document.getElementById("email").value;
-              var username = document.getElementById("user").value;
-              fetch(`/forgot_pass/${email}/${username}`,{method:'POST',
-              headers: {
-                      "Content-Type": "application/json"
-                  },
-                body:JSON.stringify({"email":email, "username":username})})
-                .then(res => res.json())
-                .then(function(data){
-                  console.log(data.queryExists);
-                  if(!data.queryExists)
-                  {
-                    alert("Invalid info. Please try again.");
-                  }
-                  else {
-                    confirm("Your password is: "+ data.thePass);
-                    window.location.href = "/login_page";
-                  }
-                })
-                .catch((err) => {
-                  alert("Error when entering information!");
-                })
-            }
-            </script>
-            </script>
         </form>
 
     </div>
@@ -156,6 +123,33 @@
       </div>
 
     </div>
+    <script>
+    function checkAuthentication()
+    {
+      var email = document.getElementById("email").value;
+      var username = document.getElementById("user").value;
+      fetch(`/forgot_pass/${email}/${username}`,{method:'POST',
+      headers: {
+              "Content-Type": "application/json"
+          },
+        body:JSON.stringify({"email":email, "username":username})})
+        .then(res => res.json())
+        .then(function(data){
+          console.log(data.queryExists);
+          if(!data.queryExists)
+          {
+            alert("Invalid info. Please try again.");
+          }
+          else {
+            confirm("Your password is: "+ data.thePass);
+            window.location.href = "/login_page";
+          }
+        })
+        .catch((err) => {
+          alert("Error when entering information!");
+        })
+    }
+    </script>
   </section>
   <!-- Footer -->
   <footer class="bg-black small text-center text-white-50">

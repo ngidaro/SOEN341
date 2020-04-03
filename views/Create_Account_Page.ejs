@@ -75,40 +75,6 @@
     </div>
   </section>
 
-  <script>
-    function checkAuthentication()
-    {
-      var fname = document.getElementById("fName").value;
-      var lname = document.getElementById("lName").value;
-      var user = document.getElementById("user").value;
-      var password = document.getElementById("pass").value;
-      var email = document.getElementById("email").value;
-
-      fetch(`/create_account_page/${fname}/${lname}/${user}/${password}/${email}`,{method:'POST',
-      headers: {
-              "Content-Type": "application/json"
-            },
-          body:JSON.stringify({"email":email, "user":user,"fname":fname,"lname":lname,"password":password})})
-        .then(res => res.json())
-        .then(function(data){
-          console.log(data.userExists);
-          if(data.userExists==true)
-          {
-            alert("Error! Username is already in use!");
-            window.location.href = "/create_account_page";
-
-          }
-          else {
-            alert("Account creation successful");
-            window.location.href = "/login_page";
-          }
-        })
-        .catch((err) => {
-          alert("Error when entering information!");
-        })
-    }
-  </script>
-
   <!-- Contact Section -->
   <section class="contact-section bg-black">
     <div class="container">
@@ -164,6 +130,39 @@
       </div>
 
     </div>
+    <script>
+      function checkAuthentication()
+      {
+        var fname = document.getElementById("fName").value;
+        var lname = document.getElementById("lName").value;
+        var user = document.getElementById("user").value;
+        var password = document.getElementById("pass").value;
+        var email = document.getElementById("email").value;
+
+        fetch(`/create_account_page`,{method:'POST',
+        headers: {
+                "Content-Type": "application/json"
+              },
+            body:JSON.stringify({"email":email, "user":user,"fname":fname,"lname":lname,"password":password})})
+          .then(res => res.json())
+          .then(function(data){
+            console.log(data.userExists);
+            if(data.userExists==true)
+            {
+              alert("Error! Username is already in use!");
+              window.location.href = "/create_account_page";
+
+            }
+            else {
+              alert("Account creation successful");
+              window.location.href = "/login_page";
+            }
+          })
+          .catch((err) => {
+            alert("Error when entering information!");
+          })
+      }
+    </script>
   </section>
   <!-- Footer -->
   <footer class="bg-black small text-center text-white-50">
