@@ -251,19 +251,24 @@ app.post('/create_account_page',function(req,res){
 
   let user = new Users();
 
+
   user.profilePic = "undefined_profile.png";
   user.backgroundImg="undefined_background.jpg";
   user.username = req.body.user;
-  user.password = req.body.pass;
-  user.firstName = req.body.fName;
-  user.lastName = req.body.lName;
+  user.password = req.body.password;
+  user.firstName = req.body.fname;
+  user.lastName = req.body.lname;
   user.email=req.body.email;
   user.backgroundColor= "#ffffff";
-
+if (req.body.user==""||req.body.password==""||req.body.fname==""||req.body.lname==""||req.body.email==""){
+  res.json({dataReceived:false, userExists:false});
+}
+else {
+}
   Users.count({username: user.username}, function (err, count){
     if(count>0){
         console.log("Username already exists");
-        res.redirect('/create_account_page')
+        res.json({dataReceived:true, userExists: true});
     }
     else {
       user.save(function(err){
@@ -272,7 +277,7 @@ app.post('/create_account_page',function(req,res){
           return;
         }else {
           console.log("Saved User to the database");
-          res.redirect('/profile_page/' + user._id);
+          res.json({dataReceived:true, userExists: false});
         }
       });
     }
@@ -389,7 +394,7 @@ app.post('/upload/:id'/*,upload.single('file')*/,(req, res)=> {
       setTimeout(function()
       {
         res.redirect('/profile_page/'+req.params.id);
-      },1000);
+      },300);
     }
   });
 });
@@ -1035,12 +1040,17 @@ app.post('/change_backgroundcolor/:id', function(req,res){
 }
 });
 app.post('/upload_background/:id/:currentBackgroundImg',(req, res)=> {
-
+console.log(req.file);
+if (req.file!=undefined)
+{
+  Users.findById(req.params.id,function(error,docs){
+if (docs.backgroundImg!="undefined_background.jpg"){
     fs.unlink('public/uploads/'+req.params.currentBackgroundImg, function (err) {
       if (err) throw err;
       console.log("Background image deleted");
     });
-
+}
+});
   uploadLocal(req,res,(err) => {
     //Callback function with parameter err
     if (err) {
@@ -1053,10 +1063,15 @@ app.post('/upload_background/:id/:currentBackgroundImg',(req, res)=> {
           setTimeout(function()
           {
             res.redirect('/profile_page/'+req.params.id);
-          },1000);
+          },300);
       });
     }
   });
+}
+else {
+  res.redirect('/profile_page/'+req.params.id);
+
+}
 });
 
 // ------------------------------------------------------------------------------
@@ -1086,7 +1101,7 @@ function date()
   let minutes = dateObj.getMinutes();
   let seconds = dateObj.getSeconds();
 
-  return year + "-" + month + "-" + date + "-" + hours + "_" + minutes + "_" + seconds;
+  return year + "_" + month + "_" + date + "_" + hours + "_" + minutes + "_" + seconds;
 }
 
 //Start Server

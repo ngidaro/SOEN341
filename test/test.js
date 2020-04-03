@@ -131,11 +131,11 @@ function date() {
 
   return (
     year +
-    "-" +
+    "_" +
     month +
-    "-" +
+    "_" +
     date +
-    "-" +
+    "_" +
     hours +
     "_" +
     minutes +

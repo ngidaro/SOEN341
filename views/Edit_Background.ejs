@@ -78,7 +78,7 @@
     <header class="masthead" style="background-image: url('/uploads/<%=backgroundImg%>');">
       <div class="container d-flex h-100 align-items-center">
         <div class="mx-auto text-center">
-                      <form action="/upload_background/<%=id%>/<%=backgroundImg%>" method="POST" enctype="multipart/form-data">
+                <form action="/upload_background/<%=id%>/<%=backgroundImg%>" method="POST" enctype="multipart/form-data">
                 <h2 class="mx-auto my-0 text-uppercase">
                     Choose photo from computer
                 </h2><br>
@@ -87,8 +87,8 @@
                     id="file"
                     name="file"
                     accept="image/png, image/jpeg"
-                />
-                <input type="submit" value="Submit">
+                    />
+                <input type="submit" value="Submit"></input>
 </form>
           <br><br>
           <h2 style="color:blue;"> Choose Background Colour </h2>
@@ -104,7 +104,7 @@
             <label for="Light Beige">Light Beige</label>
             <input type="radio" id="lblue" name="color" value="#87CEFA">
             <label for="Light Blue">Light Blue</label> &nbsp;&nbsp;&nbsp;
-            <input type="submit" value="Submit">
+            <input type="submit" value="Submit"></input>
           </form>
 
           <a method ="GET" href="/profile_page/<%=id%>" class="btn btn-primary js-scroll-trigger" id= "cancelEditBtn">Cancel Edit</a>

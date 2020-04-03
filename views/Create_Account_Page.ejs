@@ -53,7 +53,7 @@
 <section id="createAccount" class="signup-section">
     <div class="container">
       <h1><strong>Sign Up</strong></h1>
-      <form action="/create_account_page" method = "POST" class="createAccountForm">
+      <form  class="createAccountForm">
          <label for="email">Email:</label>
          <input name = "email" type="text" id="email" placeholder="Email">
          <br/>
@@ -70,17 +70,10 @@
           <input name = "lName" type="text" id="lName" placeholder="Last Name">
           <br/>
 <br/>
-          <pre>              <input type="submit" onclick="successMessage()"></input></pre>
+          <pre>                          <button type="button" onclick="checkAuthentication()">Submit</button></pre>
         </form>
     </div>
   </section>
-
-  <script>
-  function successMessage() {
-    window.location.href=
-    alert("Your account has been created successfully!");
-  }
-  </script>
 
   <!-- Contact Section -->
   <section class="contact-section bg-black">
@@ -137,6 +130,46 @@
       </div>
 
     </div>
+    <script>
+      function checkAuthentication()
+      {
+        var fname = document.getElementById("fName").value;
+        var lname = document.getElementById("lName").value;
+        var user = document.getElementById("user").value;
+        var password = document.getElementById("pass").value;
+        var email = document.getElementById("email").value;
+
+        fetch(`/create_account_page`,{method:'POST',
+        headers: {
+                "Content-Type": "application/json"
+              },
+            body:JSON.stringify({"email":email, "user":user,"fname":fname,"lname":lname,"password":password})})
+          .then(res => res.json())
+          .then(function(data){
+            console.log(data.userExists);
+            if (data.dataReceived==true){
+
+            if(data.userExists==true)
+            {
+              alert("Error! Username is already in use!");
+              window.location.href = "/create_account_page";
+
+            }
+            else {
+              alert("Account creation successful");
+              window.location.href = "/login_page";
+            }
+          }
+          else {
+            alert("Invalid input!");
+            window.location.href = "/create_account_page";
+          }
+          })
+          .catch((err) => {
+            alert("Error when entering information!");
+          })
+      }
+    </script>
   </section>
   <!-- Footer -->
   <footer class="bg-black small text-center text-white-50">
