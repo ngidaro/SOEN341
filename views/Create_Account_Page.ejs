@@ -70,7 +70,7 @@
           <input name = "lName" type="text" id="lName" placeholder="Last Name">
           <br/>
 <br/>
-          <pre>                           <button type="button" onclick="checkAuthentication()">Submit</button></pre>
+          <pre>                          <button type="button" onclick="checkAuthentication()">Submit</button></pre>
         </form>
     </div>
   </section>
@@ -147,6 +147,8 @@
           .then(res => res.json())
           .then(function(data){
             console.log(data.userExists);
+            if (data.dataReceived==true){
+
             if(data.userExists==true)
             {
               alert("Error! Username is already in use!");
@@ -157,6 +159,11 @@
               alert("Account creation successful");
               window.location.href = "/login_page";
             }
+          }
+          else {
+            alert("Invalid input!");
+            window.location.href = "/create_account_page";
+          }
           })
           .catch((err) => {
             alert("Error when entering information!");

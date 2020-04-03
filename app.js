@@ -251,6 +251,7 @@ app.post('/create_account_page',function(req,res){
 
   let user = new Users();
 
+
   user.profilePic = "undefined_profile.png";
   user.backgroundImg="undefined_background.jpg";
   user.username = req.body.user;
@@ -259,11 +260,15 @@ app.post('/create_account_page',function(req,res){
   user.lastName = req.body.lname;
   user.email=req.body.email;
   user.backgroundColor= "#ffffff";
-
+if (req.body.user==""||req.body.password==""||req.body.fname==""||req.body.lname==""||req.body.email==""){
+  res.json({dataReceived:false, userExists:false});
+}
+else {
+}
   Users.count({username: user.username}, function (err, count){
     if(count>0){
         console.log("Username already exists");
-        res.json({userExists: true});
+        res.json({dataReceived:true, userExists: true});
     }
     else {
       user.save(function(err){
@@ -272,7 +277,7 @@ app.post('/create_account_page',function(req,res){
           return;
         }else {
           console.log("Saved User to the database");
-          res.json({userExists: false});
+          res.json({dataReceived:true, userExists: false});
         }
       });
     }
