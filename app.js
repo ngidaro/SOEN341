@@ -247,41 +247,39 @@ app.post('/login_page/:userName/:passWord', function (req,res) {
 */
 // ------------------------------------------------------------------------------
 //post data to DB when in createaccount package
-app.post('/create_account_page',function(req,res){
+app.post('/create_account_page', function(req,res){
 
   let user = new Users();
 
-
   user.profilePic = "undefined_profile.png";
-  user.backgroundImg="undefined_background.jpg";
   user.username = req.body.user;
   user.password = req.body.password;
   user.firstName = req.body.fname;
   user.lastName = req.body.lname;
   user.email=req.body.email;
   user.backgroundColor= "#ffffff";
-if (req.body.user==""||req.body.password==""||req.body.fname==""||req.body.lname==""||req.body.email==""){
-  res.json({dataReceived:false, userExists:false});
-}
-else {
-}
-  Users.count({username: user.username}, function (err, count){
+  user.backgroundImg="bg-masthead.jpg";
+
+  Users.countDocuments({username: user.username}, function (err, count){
     if(count>0){
         console.log("Username already exists");
-        res.json({dataReceived:true, userExists: true});
+        res.json({userExists  : true,
+                  userID: 0});
     }
     else {
-      user.save(function(err){
+      user.save(function(err,docs){
         if(err){
           console.log(err);
           return;
         }else {
           console.log("Saved User to the database");
-          res.json({dataReceived:true, userExists: false});
+          res.json({userExists: false,
+                    userID: docs._id});
         }
       });
     }
   });
+
 });
 
 // ------------------------------------------------------------------------------
@@ -879,20 +877,20 @@ app.get('/myFollowers_List/:id',function(req,res){
   Users.findById(req.params.id,function(error,docs){
     Pics.find({ownerID:req.params.id}, function(error,imgDocs){
       Users.find({},function(error, allUsersDocs){
-console.log(allUsersDocs);
+        console.log(allUsersDocs);
 
-      res.render('myFollowers_List',{ id:req.params.id,
-                                    username:docs.username,
-                                    totalFollowers:docs.followers,
+        res.render('myFollowers_List',{ id:req.params.id,
+                                      username:docs.username,
+                                      totalFollowers:docs.followers,
 
-                                    UsersInfo:allUsersDocs,
-                                    followers:docs.followers.length,
-                                    following:docs.following.length,
-                                    bio:docs.bio,
-                                    imgData:imgDocs,
-                                    profilePicture:docs.profilePic
-                                  }); //in ejs file do <%=username%>
-                                });
+                                      UsersInfo:allUsersDocs,
+                                      followers:docs.followers.length,
+                                      following:docs.following.length,
+                                      bio:docs.bio,
+                                      imgData:imgDocs,
+                                      profilePicture:docs.profilePic
+                                    });
+                                  });
     });
   });
 });
@@ -998,17 +996,17 @@ app.post('/forgot_pass/:Email/:Username', function (req,res) {
 //Diplsays the get request for a request to edit the profile page
 app.get('/edit_profile/:id',function(req,res){
   //findById returns object NOT Array of objects
-User.findById(req.params.id,function(error,docs){
-Pics.find({ownerID:req.params.id}, function(error,imgDocs){
-  res.render('profile_edit',{ id:req.params.id,
-                                username:docs.username,
-                                followers:docs.followers.length,
-                                following:docs.following.length,
-                                bio:docs.bio,
-                                imgData:imgDocs
-                              }); //in ejs file do <%=username%>
+  User.findById(req.params.id,function(error,docs){
+    Pics.find({ownerID:req.params.id}, function(error,imgDocs){
+      res.render('profile_edit',{ id:req.params.id,
+                                    username:docs.username,
+                                    followers:docs.followers.length,
+                                    following:docs.following.length,
+                                    bio:docs.bio,
+                                    imgData:imgDocs
+                                  }); //in ejs file do <%=username%>
+    });
   });
-});
 });
 app.get('/edit_background/:id',function(req,res){
 
@@ -1023,55 +1021,57 @@ app.get('/edit_background/:id',function(req,res){
                                     backgroundImg:docs.backgroundImg[0],
                                     backgroundColor:docs.backgroundColor[0],
                                     imgData:imgDocs
-                                  }); //in ejs file do <%=username%>
-});
+                                  });
+    });
   });
 });
+
 app.post('/change_backgroundcolor/:id', function(req,res){
   if (req.body.color!=null)
   {
-  User.findOneAndUpdate({_id:req.params.id},{$set: {backgroundColor: req.body.color}},{new: true},function (error, docs) {
-      saved(error,docs);
-    });
-    setTimeout(function()
-    {
-      res.redirect('/profile_page/'+req.params.id);
-    },300);
-}
-});
-app.post('/upload_background/:id/:currentBackgroundImg',(req, res)=> {
-console.log(req.file);
-if (req.file!=undefined)
-{
-  Users.findById(req.params.id,function(error,docs){
-if (docs.backgroundImg!="undefined_background.jpg"){
-    fs.unlink('public/uploads/'+req.params.currentBackgroundImg, function (err) {
-      if (err) throw err;
-      console.log("Background image deleted");
-    });
-}
-});
-  uploadLocal(req,res,(err) => {
-    //Callback function with parameter err
-    if (err) {
-      console.log("Failed to upload to local storage");
-    }
-    else {
-      User.findOneAndUpdate({_id:req.params.id},{$set: {backgroundImg: req.file.filename}},{new: true},function (error, docs) {
-          saved(error,docs);
-          console.log("Image saved");
-          setTimeout(function()
-          {
-            res.redirect('/profile_page/'+req.params.id);
-          },300);
+    User.findOneAndUpdate({_id:req.params.id},{$set: {backgroundColor: req.body.color}},{new: true},function (error, docs) {
+        saved(error,docs);
       });
+      setTimeout(function()
+      {
+        res.redirect('/profile_page/'+req.params.id);
+      },10);
+  }
+});
+
+app.post('/upload_background/:id/:currentBackgroundImg',(req, res)=> {
+  console.log(req.file);
+  if (req.file!="undefined")
+  {
+    Users.findById(req.params.id,function(error,docs){
+    if (docs.backgroundImg!="bg-masthead.jpg"){
+        fs.unlink('public/uploads/'+req.params.currentBackgroundImg, function (err) {
+          if (err) throw err;
+          console.log("Background image deleted");
+        });
     }
   });
-}
-else {
-  res.redirect('/profile_page/'+req.params.id);
-
-}
+    uploadLocal(req,res,(err) => {
+      //Callback function with parameter err
+      if (err) {
+        console.log("Failed to upload to local storage");
+      }
+      else {
+        User.findOneAndUpdate({_id:req.params.id},{$set: {backgroundImg: req.file.filename}},{new: true},function (error, docs) {
+            saved(error,docs);
+            console.log("Image saved");
+            // setTimeout(function()
+            // {
+            //   res.redirect('/profile_page/'+req.params.id);
+            // },100);
+            res.redirect('/profile_page/' + req.params.id);
+        });
+      }
+    });
+  }
+  else {
+    res.redirect('/profile_page/'+req.params.id);
+  }
 });
 
 // ------------------------------------------------------------------------------

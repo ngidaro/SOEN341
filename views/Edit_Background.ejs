@@ -55,12 +55,12 @@
 
           <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="/news_feed"
+              <a class="nav-link js-scroll-trigger" href="/news_feed/<%=id%>"
                 >Feed</a
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#page-top"
+              <a class="nav-link js-scroll-trigger" href="/profile_page/<%=id%>"
                 >My Profile</a
               >
             </li>
@@ -75,7 +75,8 @@
     </nav>
 
     <!-- Header -->
-    <header class="masthead" style="background-image: url('/uploads/<%=backgroundImg%>');">
+    <!-- <header class="masthead" style="background-image: url('/uploads/<%=backgroundImg%>');"> -->
+    <header class="masthead">
       <div class="container d-flex h-100 align-items-center">
         <div class="mx-auto text-center">
                 <form action="/upload_background/<%=id%>/<%=backgroundImg%>" method="POST" enctype="multipart/form-data">
