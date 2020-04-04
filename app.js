@@ -137,7 +137,6 @@ app.get('/profile_page/:id',function(req,res){
   //findById returns object NOT Array of objects
   Users.findById(req.params.id,function(error,docs){
     Pics.find({ownerID:req.params.id}, function(error,imgDocs){
-console.log(docs);
       res.render('profile_page',{ id:req.params.id,
                                     username:docs.username,
                                     followers:docs.followers.length,
@@ -194,8 +193,6 @@ app.post('/profile_page/:id/:imgName',function(req,res){
 //Sign In page: method = post
 app.post('/login_page/:userName/:passWord', function (req,res) {
 
-  console.log("username: " + req.params.userName + " password: " + req.params.passWord);
-
   Users.find({username:req.params.userName},'username password',{lean: true}, function(err, docs){
    // if (err) return res.json({bExists:false,error:handleError(err)});
 
@@ -212,7 +209,6 @@ app.post('/login_page/:userName/:passWord', function (req,res) {
      {
        console.log('Username and Password Correct');
        var sId = docs[0]._id;
-       console.log(sId);
        // res.redirect('/profile_page/' + sId);
        res.json({bExists:true,
                 id: sId});
@@ -302,7 +298,7 @@ const storage = new GridFsStorage({
           return reject(err);
         }
         const filename = /*buf.toString('hex')*/date() + file.originalname;
-        console.log(filename + "  storage");
+        // console.log(filename + "  storage");
         const fileInfo = {
           filename: filename,
           bucketName: 'pics' //Has to match the collection name gfs.collection('pics');
@@ -362,7 +358,6 @@ app.post('/upload/:id'/*,upload.single('file')*/,(req, res)=> {
         image.img.contentType = req.file.contentType;
         image.caption=req.body.caption;
 
-        console.log(req.body.caption);
         var currentDate = date();
 
         image.date = currentDate;
@@ -538,7 +533,8 @@ app.get('/news_feed/:id',function(req,res){
     //The User.find... is needed so that this app.get can execute sequentially
     //If the User.find... is not there then the screen will render before performing the above loops
     Users.findById(req.params.id,function(error,documents){
-      console.log(displayImages.length);
+      // console.log(displayImages.length);
+
       //Store current User
       storeFollowedUsers.push(documents);
       // console.log(storeFollowedUsers);
@@ -585,9 +581,7 @@ app.post('/show_comments/:imgName', async function(req,res){
 
     if(imgDocs[0].comments.length == 0)
     {
-      res.json({allComments:allComments,
-                userProfile:userProfile,
-                commentsExist: false})
+      return;
     }
 
     function getComments()
@@ -758,8 +752,6 @@ function saved(error,success)
 app.post('/leaveComment/:id/:username/:imgOwnerId/:imgName',function(req,res){
   User.findById(req.params.id, function (error, searchDocs){
 
-    console.log(req.params.username + " " + searchDocs.username);
-
     var isPosted = false;
 
     Pics.findOneAndUpdate({"img.imgName":req.params.imgName},
@@ -872,17 +864,14 @@ app.post('/edit_profile/:id',function(req,res){
   });
 });
 
-app.get('/myFollowers_List/:id',function(req,res){
+app.get('/myfollowers_list/:id',function(req,res){
 
   Users.findById(req.params.id,function(error,docs){
     Pics.find({ownerID:req.params.id}, function(error,imgDocs){
-      Users.find({},function(error, allUsersDocs){
-        console.log(allUsersDocs);
-
-        res.render('myFollowers_List',{ id:req.params.id,
+      Users.find({following:req.params.id},function(error, allUsersDocs){
+        res.render('myfollowers_list',{ id:req.params.id,
                                       username:docs.username,
                                       totalFollowers:docs.followers,
-
                                       UsersInfo:allUsersDocs,
                                       followers:docs.followers.length,
                                       following:docs.following.length,
@@ -894,11 +883,11 @@ app.get('/myFollowers_List/:id',function(req,res){
     });
   });
 });
-app.get('/Followers_List/:id/:searchID',function(req,res){
+app.get('/followers_list/:id/:searchID',function(req,res){
 
   Users.findById(req.params.searchID,function(error,docs){
     Pics.find({ownerID:req.params.searchID}, function(error,imgDocs){
-      Users.find({},function(error, allUsersDocs){
+      Users.find({following:req.params.searchID},function(error, allUsersDocs){
       res.render('Followers_List',{ id:req.params.id,
                                     username:docs.username,
                                     totalFollowers:docs.followers,
@@ -909,50 +898,47 @@ app.get('/Followers_List/:id/:searchID',function(req,res){
                                     bio:docs.bio,
                                     imgData:imgDocs,
                                     profilePicture:docs.profilePic
-                                  }); //in ejs file do <%=username%>
+                                  });
                                 });
     });
   });
 });
 
-app.get('/myFollowing_List/:id',function(req,res){
+app.get('/myfollowing_list/:id',function(req,res){
 
   Users.findById(req.params.id,function(error,docs){
     Pics.find({ownerID:req.params.id}, function(error,imgDocs){
-      Users.find({},function(error, allUsersDocs){
-console.log(allUsersDocs);
-
-      res.render('myFollowing_List',{ id:req.params.id,
-                                    username:docs.username,
-                                    totalFollowing:docs.following,
-
-                                    UsersInfo:allUsersDocs,
-                                    followers:docs.followers.length,
-                                    following:docs.following.length,
-                                    bio:docs.bio,
-                                    imgData:imgDocs,
-                                    profilePicture:docs.profilePic
-                                  }); //in ejs file do <%=username%>
-                                });
+      Users.find({followers:req.params.id},function(error, allUsersDocs){
+        res.render('myfollowing_list',{ id:req.params.id,
+                                      username:docs.username,
+                                      totalFollowing:docs.following,
+                                      UsersInfo:allUsersDocs,
+                                      followers:docs.followers.length,
+                                      following:docs.following.length,
+                                      bio:docs.bio,
+                                      imgData:imgDocs,
+                                      profilePicture:docs.profilePic
+                                    });
+      });
     });
   });
 });
-app.get('/Following_List/:id/:searchID',function(req,res){
+app.get('/following_list/:id/:searchID',function(req,res){
 
   Users.findById(req.params.searchID,function(error,docs){
     Pics.find({ownerID:req.params.searchID}, function(error,imgDocs){
-      Users.find({},function(error, allUsersDocs){
-      res.render('Following_List',{ id:req.params.id,
-                                    username:docs.username,
-                                    totalFollowing:docs.following,
-                                    searchID:req.params.searchID,
-                                    UsersInfo:allUsersDocs,
-                                    followers:docs.followers.length,
-                                    following:docs.following.length,
-                                    bio:docs.bio,
-                                    imgData:imgDocs,
-                                    profilePicture:docs.profilePic
-                                  }); //in ejs file do <%=username%>
+      Users.find({followers:req.params.searchID},function(error, allUsersDocs){
+        res.render('Following_List',{ id:req.params.id,
+                                      username:docs.username,
+                                      totalFollowing:docs.following,
+                                      searchID:req.params.searchID,
+                                      UsersInfo:allUsersDocs,
+                                      followers:docs.followers.length,
+                                      following:docs.following.length,
+                                      bio:docs.bio,
+                                      imgData:imgDocs,
+                                      profilePicture:docs.profilePic
+                                    });
                                 });
     });
   });
@@ -963,7 +949,6 @@ app.get('/forgot_pass',function(req,res){
 
 app.post('/forgot_pass/:Email/:Username', function (req,res) {
   Users.findOne({username:req.params.Username},'username email password',{lean: true}, function(err, docs){
-    console.log(docs);
     if (docs==null)
     {
       console.log('Invalid Username or Email');
@@ -971,11 +956,11 @@ app.post('/forgot_pass/:Email/:Username', function (req,res) {
     }
     else {
       //Verify that the username and password are correct
-      console.log(docs.username);
-      console.log(req.params.Username);
-
-      console.log(docs.email[0]);
-      console.log(req.params.Email);
+      // console.log(docs.username);
+      // console.log(req.params.Username);
+      //
+      // console.log(docs.email[0]);
+      // console.log(req.params.Email);
 
 
       if((docs.username == req.params.Username) && (docs.email[0] == req.params.Email))
@@ -1040,7 +1025,7 @@ app.post('/change_backgroundcolor/:id', function(req,res){
 });
 
 app.post('/upload_background/:id/:currentBackgroundImg',(req, res)=> {
-  console.log(req.file);
+  // console.log(req.file);
   if (req.file!="undefined")
   {
     Users.findById(req.params.id,function(error,docs){

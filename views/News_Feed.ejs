@@ -121,10 +121,10 @@
                 <div id="<%=imgData[C].img.imgName%>_comments">
                   <!-- Data comes from show_hide_comments.js -->
                 </div>
-                <br/><button class="link" onclick="hideComments('<%=imgData[C].img.imgName%>')">Hide all</button>
+                <button class="link" onclick="hideComments('<%=imgData[C].img.imgName%>')">Hide all</button>
               </div>
 
-                <form>
+                <form style="margin-top:5px">
                   <input type="text" id="theComment_<%=imgData[C].img.imgName%>" name="theComment" placeholder="Leave a comment">
                   <input type="button" value="Submit" onclick="addComment('<%=id%>','<%=username%>','<%=imgData[C].ownerID%>','<%=imgData[C].img.imgName%>')">
                 </form>
