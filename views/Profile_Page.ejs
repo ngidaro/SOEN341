@@ -30,7 +30,7 @@
     <link href="/css/linkStyle.css" rel="stylesheet" />
     <link href="/css/dropdownButton.css" rel="stylesheet" />
     <link href="/css/customGrid.css" rel="stylesheet" />
-
+    <link href="/css/customCSS.css" rel="stylesheet" />
 
   </head>
 
@@ -92,29 +92,30 @@
           <a href="/post_profile_pic/<%=id%>">
             <img src="/uploads/<%=profilePicture%>" alt="profile pic" id="profilePic" class="profilePic"/>
           </a>
-          <h2 class="text-uppercase"><%=username%></h2>
+          <h2><%=username%></h2>
           <div class="row">
             <!-- todo : populate table with data from backend-->
             <div class="col">
               <h3 class="mx-auto mt-2 mb-5">Posts <br/><%=imgData.length%></h3>
             </div>
             <div class="col">
-              <h3 class="mx-auto mt-2 mb-5"><a style="color:black" method="GET" href="/myfollowers_list/<%=id%>">Followers </a><br/><%=followers%></h3>
+              <h3 class="mx-auto mt-2 mb-5"><a class="linkStyle" method="GET" href="/myfollowers_list/<%=id%>">Followers </a><br/><%=followers%></h3>
             </div>
             <div class="col">
-              <h3 class="mx-auto mt-2 mb-5"><a style="color:black" method="GET" href="/myfollowing_list/<%=id%>">Following </a><br/><%=following%></h3>
+              <h3 class="mx-auto mt-2 mb-5"><a class="linkStyle" method="GET" href="/myfollowing_list/<%=id%>">Following </a><br/><%=following%></h3>
             </div>
           </div>
           <button id="editProfileButton_id" method ="GET" onclick="editProfile()" class="btn btn-primary js-scroll-trigger">Edit Profile</button>
-                  &nbsp; &nbsp; &nbsp;           <a href="/edit_background/<%=id%>"<button method ="GET" class="btn btn-primary js-scroll-trigger">Edit Background</button></a>
 
           <div id="editProfile_id" style="display: none">
-                <button id="btCancelEdit_id" onclick="cancelEdit()" class="btn btn-primary js-scroll-trigger">Cancel</button>
-                <br/><br/>
                 <form>
                       <textarea id="bio" name="bio" placeholder="Tell us about yourself..."><%=bio%></textarea><br/>
                       <input type="button" onclick="updateProfile('<%=id%>')" value="Submit">
                 </form>
+                <br/>
+                <a href="/edit_background/<%=id%>"<button method ="GET" class="btn btn-primary js-scroll-trigger">Edit Background</button></a>
+                <br/><br/>
+                <button id="btCancelEdit_id" onclick="cancelEdit()" class="btn btn-primary js-scroll-trigger">Cancel</button>
           </div>
         </div>
       </div>

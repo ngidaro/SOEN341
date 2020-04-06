@@ -39,7 +39,7 @@ UserSchema = mongoose.Schema({
   required: false
 },
 email:{
-  type:Array,
+  type:String,
   required: true
 },
 backgroundColor:{

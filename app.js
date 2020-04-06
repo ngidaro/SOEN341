@@ -252,7 +252,7 @@ app.post('/create_account_page', function(req,res){
   user.password = req.body.password;
   user.firstName = req.body.fname;
   user.lastName = req.body.lname;
-  user.email=req.body.email;
+  user.email = req.body.email;
   user.backgroundColor= "#ffffff";
   user.backgroundImg="bg-masthead.jpg";
 
@@ -342,54 +342,58 @@ const uploadLocal = multer({ storage: localStorage }).single('file');
 
 */
 // ------------------------------------------------------------------------------
-app.post('/upload/:id'/*,upload.single('file')*/,(req, res)=> {
+app.post('/upload/:id',async (req, res)=> {
 
-  upload(req,res,(err) => {
-    //Callback function with parameter err
-    if (err) {
-      console.log("Failed to upload to local storage");
-    }
-    else {
-      User.findById(req.params.id,function(err,docs){
-        image = new Pics();
-        image.ownerID = req.params.id;
-        image.ownerUsername = docs.username;
-        image.img.imgName = req.file.filename;
-        image.img.contentType = req.file.contentType;
-        image.caption=req.body.caption;
+  function uploadToDatabase()
+  {
+    return new Promise(function(resolve,reject){
 
-        var currentDate = date();
-
-        image.date = currentDate;
-
-        image.save(function(err){
-          if(err){
-            console.log(err);
-            return;
-          }else {
-            console.log("Saved Image to the database");
-          }
-        });
+      //Calls the function uploadLocal
+      uploadLocal(req,res,(err) => {
+        //Callback function with parameter err
+        if (err) {
+          console.log("Failed to upload to local storage");
+        }
+        else {
+          console.log("Image saved");
+        }
       });
-    }
-  });
 
-  //Calls the function uploadLocal
-  uploadLocal(req,res,(err) => {
-    //Callback function with parameter err
-    if (err) {
-      console.log("Failed to upload to local storage");
-    }
-    else {
-      console.log("Image saved");
-      //Go back to user's profile page
-      //There is a timeout because when an image is posted it does not display in the user profile right away
-      setTimeout(function()
-      {
-        res.redirect('/profile_page/'+req.params.id);
-      },300);
-    }
-  });
+      upload(req,res,(err) => {
+        //Callback function with parameter err
+        if (err) {
+          console.log("Failed to upload to local storage");
+        }
+        else {
+          User.findById(req.params.id,function(err,docs){
+            image = new Pics();
+            image.ownerID = req.params.id;
+            image.ownerUsername = docs.username;
+            image.img.imgName = req.file.filename;
+            image.img.contentType = req.file.contentType;
+            image.caption=req.body.caption;
+
+            var currentDate = date();
+
+            image.date = currentDate;
+
+            image.save(function(err){
+              if(err){
+                console.log(err);
+                reject();
+              }else {
+                console.log("Saved Image to the database");
+                resolve();
+              }
+            });
+          });
+        }
+      });
+    });
+  }
+
+  await uploadToDatabase();
+  res.redirect('/profile_page/'+req.params.id);
 });
 
 // ------------------------------------------------------------------------------
@@ -450,12 +454,14 @@ app.post('/delete_photo/:imgName',function(req,res){
 
   var bDeleted = false;
 
-  Pics.deleteOne({"img.imgName":req.params.imgName},function(err,response){
-    if (err) return handleError(err);
-
+  if (fs.existsSync('public/uploads/'+req.params.imgName)) {
     fs.unlink('public/uploads/'+req.params.imgName, function (err) {
       if (err) throw err;
     });
+  }
+
+  Pics.deleteOne({"img.imgName":req.params.imgName},function(err,response){
+    if (err) return handleError(err);
 
     bDeleted = true;
     res.json({bDeleted:bDeleted});
@@ -613,7 +619,7 @@ app.post('/show_comments/:imgName', async function(req,res){
          }
          //resolve is happening too soon so timeout was added;
          //there is a timeout because async was not working -> resolve occured before for loop finished
-         setTimeout(()=>{resolve(userProfile);},2);
+         setTimeout(()=>{resolve(userProfile);},3);
 
       });
     }
@@ -877,7 +883,8 @@ app.get('/myfollowers_list/:id',function(req,res){
                                       following:docs.following.length,
                                       bio:docs.bio,
                                       imgData:imgDocs,
-                                      profilePicture:docs.profilePic
+                                      profilePicture:docs.profilePic,
+                                      backgroundImg:docs.backgroundImg[0]
                                     });
                                   });
     });
@@ -897,7 +904,8 @@ app.get('/followers_list/:id/:searchID',function(req,res){
                                     following:docs.following.length,
                                     bio:docs.bio,
                                     imgData:imgDocs,
-                                    profilePicture:docs.profilePic
+                                    profilePicture:docs.profilePic,
+                                    backgroundImg:docs.backgroundImg[0]
                                   });
                                 });
     });
@@ -917,7 +925,8 @@ app.get('/myfollowing_list/:id',function(req,res){
                                       following:docs.following.length,
                                       bio:docs.bio,
                                       imgData:imgDocs,
-                                      profilePicture:docs.profilePic
+                                      profilePicture:docs.profilePic,
+                                      backgroundImg:docs.backgroundImg[0]
                                     });
       });
     });
@@ -937,7 +946,8 @@ app.get('/following_list/:id/:searchID',function(req,res){
                                       following:docs.following.length,
                                       bio:docs.bio,
                                       imgData:imgDocs,
-                                      profilePicture:docs.profilePic
+                                      profilePicture:docs.profilePic,
+                                      backgroundImg:docs.backgroundImg[0]
                                     });
                                 });
     });
@@ -959,11 +969,10 @@ app.post('/forgot_pass/:Email/:Username', function (req,res) {
       // console.log(docs.username);
       // console.log(req.params.Username);
       //
-      // console.log(docs.email[0]);
+      // console.log(docs.email);
       // console.log(req.params.Email);
 
-
-      if((docs.username == req.params.Username) && (docs.email[0] == req.params.Email))
+      if((docs.username == req.params.Username) && (docs.email == req.params.Email))
       {
         console.log('Username and Email Correct');
       //  var sId = docs[0]._id;
