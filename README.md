@@ -9,15 +9,18 @@ facilitates this by allowing users to post photos, follow friends as well as lea
 
 
 ## Core Features
-- Posting a Picture (with text description)
+- Posting a picture (with text description)
 - Following a user
 - Leave comments to a posted pictures
 
 ## Additional Features
-- Advertisements from Google
-- Direct Messaging
-- Like Feature
-- Notifications
+- Account recovery ("Forgot your password" feature)
+- Change background and theme colours
+- News feed
+- Edit profile (add profile pictures and bio)
+- Photo deletion
+- View list of followers and account followers
+- View list of users who have liked a post
 
 ## Team Members
 - Celia Cai (CeliaCaii) (ID: 40098535)
@@ -25,17 +28,18 @@ facilitates this by allowing users to post photos, follow friends as well as lea
 - Riley Kilmer-Choi (rileykc98) (ID: 40048739)
 - Michael Lee (mlee97) (ID: 40054375)
 - Armando Mancino (mandocino) (ID: 40078466)
-- Veronique Young (VeroniqueYoung) (ID: 29700633)
 
 
 ## Technologies
 Front-End:
-- React/Angular
-- Vue.js
 - Bootstrap (CSS Library)
-- JQuery
+- HTML5
+- CSS3
+- JavaScript
 
 Back-End:
-- MongoDB (database) 
-- JQuery
+- MongoDB (database)
+- JavaScript
+- NodeJS
+- ExpressJS 
 
