@@ -98,14 +98,21 @@ app.get('/create_account_page',function(req,res){
 });
 
 app.get('/post_photo_page/:id',function(req,res){
-    res.render('post_photo_page',{id:req.params.id});
+  Users.findById(req.params.id,function(err,docs){
+
+    res.render('post_photo_page',{id:req.params.id,
+                                  backgroundImg:docs.profileSettings.bgImg,
+                                  textColor:docs.profileSettings.textColor});
+  });
 });
 
 app.get('/post_profile_pic/:id',function(req,res){
 
   User.findById(req.params.id,function(error,docs){
     res.render('Post_Profile_Pic',{id:req.params.id,
-                                   profilePic:docs.profilePic});
+                                   profilePic:docs.profilePic,
+                                   backgroundImg:docs.profileSettings.bgImg,
+                                   textColor:docs.profileSettings.textColor});
   });
 });
 
@@ -143,8 +150,9 @@ app.get('/profile_page/:id',function(req,res){
                                     following:docs.following.length,
                                     bio:docs.bio,
                                     imgData:imgDocs,
-                                    backgroundImg:docs.backgroundImg[0],
-                                    backgroundColor:docs.backgroundColor[0],
+                                    backgroundImg:docs.profileSettings.bgImg,
+                                    backgroundColor:docs.profileSettings.bgColor,
+                                    textColor:docs.profileSettings.textColor,
                                     profilePicture:docs.profilePic
                                   }); //in ejs file do <%=username%>
     });
@@ -253,8 +261,9 @@ app.post('/create_account_page', function(req,res){
   user.firstName = req.body.fname;
   user.lastName = req.body.lname;
   user.email = req.body.email;
-  user.backgroundColor= "#ffffff";
-  user.backgroundImg="bg-masthead.jpg";
+  user.profileSettings.bgColor= "#ffffff";
+  user.profileSettings.textColor= "#000000";
+  user.profileSettings.bgImg="bg-masthead.jpg";
 
   Users.countDocuments({username: user.username}, function (err, count){
     if(count>0){
@@ -484,12 +493,16 @@ app.post('/delete_photo/:imgName',function(req,res){
 // ------------------------------------------------------------------------------
 app.get('/search_page/:id/:name',function(req,res){
 
-  Users.find({username:{$regex: req.params.name, $options: "i"}}, function(err, docs){
+  Users.findById(req.params.id,function(error,userDocs){
 
-    res.render('search_page',{id:req.params.id,
-                              data: docs,
-                              profilePicture: docs.profilePic
-                            });
+    Users.find({username:{$regex: req.params.name, $options: "i"}}, function(err, docs){
+
+      res.render('search_page',{id:req.params.id,
+                                data: docs,                                
+                                backgroundImg:userDocs.profileSettings.bgImg,
+                                textColor:userDocs.profileSettings.textColor
+                              });
+    });
   });
 });
 
@@ -675,8 +688,9 @@ app.get('/follow_page/:id/:searchID',function(req,res){
                                 sFollow: sFollow,
                                 bio:docs.bio,
                                 imgData:imgDocs,
-                                backgroundImg:docs.backgroundImg[0],
-                                backgroundColor:docs.backgroundColor[0],
+                                backgroundImg:docs.profileSettings.bgImg,
+                                backgroundColor:docs.profileSettings.bgColor,
+                                textColor:docs.profileSettings.textColor,
                                 profilePicture:docs.profilePic});
   });
 });
@@ -884,7 +898,8 @@ app.get('/myfollowers_list/:id',function(req,res){
                                       bio:docs.bio,
                                       imgData:imgDocs,
                                       profilePicture:docs.profilePic,
-                                      backgroundImg:docs.backgroundImg[0]
+                                      backgroundImg:docs.profileSettings.bgImg,
+                                      textColor:docs.profileSettings.textColor
                                     });
                                   });
     });
@@ -905,7 +920,8 @@ app.get('/followers_list/:id/:searchID',function(req,res){
                                     bio:docs.bio,
                                     imgData:imgDocs,
                                     profilePicture:docs.profilePic,
-                                    backgroundImg:docs.backgroundImg[0]
+                                    backgroundImg:docs.profileSettings.bgImg,
+                                    textColor:docs.profileSettings.textColor
                                   });
                                 });
     });
@@ -926,7 +942,8 @@ app.get('/myfollowing_list/:id',function(req,res){
                                       bio:docs.bio,
                                       imgData:imgDocs,
                                       profilePicture:docs.profilePic,
-                                      backgroundImg:docs.backgroundImg[0]
+                                      backgroundImg:docs.profileSettings.bgImg,
+                                      textColor:docs.profileSettings.textColor
                                     });
       });
     });
@@ -947,7 +964,8 @@ app.get('/following_list/:id/:searchID',function(req,res){
                                       bio:docs.bio,
                                       imgData:imgDocs,
                                       profilePicture:docs.profilePic,
-                                      backgroundImg:docs.backgroundImg[0]
+                                      backgroundImg:docs.profileSettings.bgImg,
+                                      textColor:docs.profileSettings.textColor
                                     });
                                 });
     });
@@ -1012,33 +1030,47 @@ app.get('/edit_background/:id',function(req,res){
                                     followers:docs.followers.length,
                                     following:docs.following.length,
                                     profilePicture:docs.profilePic,
-                                    backgroundImg:docs.backgroundImg[0],
-                                    backgroundColor:docs.backgroundColor[0],
+                                    backgroundImg:docs.profileSettings.bgImg,
+                                    textColor:docs.profileSettings.textColor,
                                     imgData:imgDocs
                                   });
     });
   });
 });
 
-app.post('/change_backgroundcolor/:id', function(req,res){
-  if (req.body.color!=null)
-  {
-    User.findOneAndUpdate({_id:req.params.id},{$set: {backgroundColor: req.body.color}},{new: true},function (error, docs) {
-        saved(error,docs);
-      });
-      setTimeout(function()
+app.post('/change_color/:id', function(req,res){
+
+  var bgColor = req.body.bgColor;
+  var textColor = req.body.textColor;
+
+    Users.findById(req.params.id, function(err,userDocs){
+
+      if(bgColor === "null")
       {
-        res.redirect('/profile_page/'+req.params.id);
-      },10);
-  }
+        bgColor = userDocs.profileSettings.bgColor;
+      }
+
+      if(textColor === "null")
+      {
+        textColor = userDocs.profileSettings.textColor;
+      }
+
+      Users.findOneAndUpdate({_id:req.params.id},
+                {$set: {"profileSettings.bgColor": bgColor,"profileSettings.textColor": textColor}},
+                {new: true},function (error, docs) {
+          saved(error,docs);
+          // console.log(docs);
+          res.json({returned:true});
+        });
+    });
 });
 
 app.post('/upload_background/:id/:currentBackgroundImg',(req, res)=> {
-  // console.log(req.file);
+
   if (req.file!="undefined")
   {
     Users.findById(req.params.id,function(error,docs){
-    if (docs.backgroundImg!="bg-masthead.jpg"){
+    if (docs.profileSettings.bgImg!="bg-masthead.jpg"){
         fs.unlink('public/uploads/'+req.params.currentBackgroundImg, function (err) {
           if (err) throw err;
           console.log("Background image deleted");
@@ -1051,7 +1083,7 @@ app.post('/upload_background/:id/:currentBackgroundImg',(req, res)=> {
         console.log("Failed to upload to local storage");
       }
       else {
-        User.findOneAndUpdate({_id:req.params.id},{$set: {backgroundImg: req.file.filename}},{new: true},function (error, docs) {
+        User.findOneAndUpdate({_id:req.params.id},{$set: {"profileSettings.bgImg": req.file.filename}},{new: true},function (error, docs) {
             saved(error,docs);
             console.log("Image saved");
             // setTimeout(function()
