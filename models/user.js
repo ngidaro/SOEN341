@@ -34,18 +34,25 @@ UserSchema = mongoose.Schema({
     type:Array,
     required: true
   },
-  backgroundImg:{
-  type:Array,
-  required: false
-},
-email:{
-  type:Array,
+  email:{
+  type:String,
   required: true
-},
-backgroundColor:{
-  type:Array,
-  required: true
-}
+  },
+  profileSettings:{
+    
+    textColor:{
+      type: String,
+      required:true
+    },
+    bgColor:{
+      type: String,
+      required:true
+    },
+    bgImg:{
+      type: String,
+      required:true
+    }
+  }
 });
 
 let User = module.exports = mongoose.model('User',UserSchema);

@@ -122,8 +122,8 @@
   line-height: 2.5rem;
   letter-spacing: 0.8rem;
   background: -webkit-linear-gradient(
-    rgba(255, 255, 255, 0.9),
-    rgba(255, 255, 255, 0)
+    rgba(0, 0, 0, 0.9),
+    rgba(0, 0, 0, 0)
   );
   -webkit-text-fill-color: transparent;
   -webkit-background-clip: text;

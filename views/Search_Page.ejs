@@ -27,6 +27,55 @@
 
     <!-- Custom styles for this template -->
     <link href="/css/grayscale.css" rel="stylesheet" />
+
+    <style>
+
+      .mastheadOverride {
+        position: relative;
+        width: 100%;
+        height: auto;
+        min-height: 10rem;
+        padding: 10rem 0 5rem 0;
+        background: linear-gradient(
+            to bottom,
+            rgba(22, 22, 22, 0.3) 0%,
+            rgba(22, 22, 22, 0.7) 75%,
+            #161616 100%
+          ),
+          url("../img/bg-masthead.jpg");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: scroll;
+        background-size: cover;
+      }
+
+      .mastheadOverride h1 {
+        font-family: "Varela Round";
+        font-size: 5rem;
+        line-height: 5.3rem;
+        letter-spacing: 0.8rem;
+        background: linear-gradient(<%=textColor%>, #C0C0C0);
+        -webkit-text-fill-color: transparent;
+        -webkit-background-clip: text;
+      }
+
+      .mastheadOverride h2 {
+        font-family: "Varela Round";
+        font-size: 3rem;
+        line-height: 3.4rem;
+        letter-spacing: 0.8rem;
+        background: linear-gradient(<%=textColor%>, #C0C0C0);
+        -webkit-text-fill-color: transparent;
+        -webkit-background-clip: text;
+      }
+
+      .mastheadOverride h3 {
+        max-width: 20rem;
+        font-size: 1.4rem;
+      }
+
+    </style>
+
   </head>
 
   <body id="page-top">
@@ -57,22 +106,22 @@
 
           <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="/news_feed/<%=id%>"
+              <a class="nav-link js-scroll-trigger" style="color:<%=textColor%>" href="/news_feed/<%=id%>"
                 >Feed</a
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#page-top"
+              <a class="nav-link js-scroll-trigger" style="color:<%=textColor%>" href="/profile_page/<%=id%>"
                 >My Profile</a
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="/post_photo_page/<%=id%>"
+              <a class="nav-link js-scroll-trigger" style="color:<%=textColor%>" href="/post_photo_page/<%=id%>"
                 >Post Photo</a
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="/">Logout</a>
+              <a class="nav-link js-scroll-trigger" style="color:<%=textColor%>" href="/">Logout</a>
             </li>
           </ul>
         </div>
@@ -82,13 +131,15 @@
     <!-- Header -->
 
      <!-- List of all users from the database -->
-     <header class="masthead" id="searchHead">
+     <header class="mastheadOverride" id="searchHead" style="background-image: url('/uploads/<%=backgroundImg%>');">
+
+     <!-- <header class="mastheadOverride" id="searchHead"> -->
        <h1>Search Results</h1>
        <div id="searchRes">
                   <% for(var i = 0; i < data.length; i++) {
                         if(data[i]._id == id) {i++}
                         else{%>
-                      <a method="GET" href="/follow_page/<%=id%>/<%=data[i]._id%>"><img src="/uploads/<%=data[i].profilePic%>" alt="profile pic" id="searchProfilePic"/><%= data[i].username %></a>
+                      <a method="GET" style="color:<%=textColor%>" href="/follow_page/<%=id%>/<%=data[i]._id%>"><img src="/uploads/<%=data[i].profilePic%>" alt="profile pic" id="searchProfilePic"/><%= data[i].username %></a>
                       <br/>
                   <%}}%>
         </div>

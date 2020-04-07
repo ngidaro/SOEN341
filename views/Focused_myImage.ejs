@@ -36,7 +36,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
       <div class="container">
-        <a class="navbar-brand js-scroll-trigger" style="color:black" href="#page-top">Pic5</a>
+        <a class="navbar-brand js-scroll-trigger" style="color:black" href="/news_feed/<%=id%>">Pic5</a>
         <button
           class="navbar-toggler navbar-toggler-right"
           type="button"
@@ -107,10 +107,10 @@
                 <div id="<%=imgData[0].img.imgName%>_comments">
                   <!-- Data comes from show_hide_comments.js -->
                 </div>
-                <br/><button class="link" onclick="hideComments('<%=imgData[0].img.imgName%>')">Hide all</button>
+                <button class="link" onclick="hideComments('<%=imgData[0].img.imgName%>')">Hide all</button>
               </div>
 
-              <form style="margin-top:10px">
+              <form style="margin-top:5px">
                 <input type="text" id="theComment_<%=imgData[0].img.imgName%>" name="theComment" placeholder="Leave a comment">
                 <input type="button" value="Submit" onclick="addComment('<%=id%>','<%=username%>','<%=imgData[0].ownerID%>','<%=imgData[0].img.imgName%>')">
               </form>

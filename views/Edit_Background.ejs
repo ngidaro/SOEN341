@@ -26,13 +26,67 @@
     />
     <!-- Custom styles for this template -->
     <link href="/css/grayscale.css" rel="stylesheet" />
+
+    <style>
+
+      .mastheadOverride {
+        position: relative;
+        width: 100%;
+        height: auto;
+        min-height: 10rem;
+        padding: 10rem 0 5rem 0;
+        background: linear-gradient(
+            to bottom,
+            rgba(22, 22, 22, 0.3) 0%,
+            rgba(22, 22, 22, 0.7) 75%,
+            #161616 100%
+          ),
+          url("../img/bg-masthead.jpg");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: scroll;
+        background-size: cover;
+      }
+
+      .mastheadOverride h1 {
+        font-family: "Varela Round";
+        font-size: 2.5rem;
+        line-height: 2.5rem;
+        letter-spacing: 0.8rem;
+        background: -webkit-linear-gradient(
+          rgba(255, 255, 255, 0.9),
+          rgba(255, 255, 255, 0)
+        );
+        -webkit-text-fill-color: transparent;
+        -webkit-background-clip: text;
+      }
+
+      .mastheadOverride h2 {
+        font-family: "Varela Round";
+        font-size: 3rem;
+        line-height: 3.4rem;
+        letter-spacing: 0.8rem;
+        background: linear-gradient(<%=textColor%>, #C0C0C0);
+        -webkit-text-fill-color: transparent;
+        -webkit-background-clip: text;
+      }
+
+      .mastheadOverride h3 {
+        max-width: 20rem;
+        font-size: 1.4rem;
+      }
+
+    </style>
+
+
+
   </head>
 
   <body id="page-top">
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
       <div class="container">
-        <a class="navbar-brand js-scroll-trigger" href="#page-top">Pic5</a>
+        <a class="navbar-brand js-scroll-trigger" style="color:<%=textColor%>" href="#page-top">Pic5</a>
         <button
           class="navbar-toggler navbar-toggler-right"
           type="button"
@@ -55,18 +109,23 @@
 
           <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="/news_feed"
+              <a class="nav-link js-scroll-trigger" style="color:<%=textColor%>" href="/news_feed/<%=id%>"
                 >Feed</a
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#page-top"
+              <a class="nav-link js-scroll-trigger" style="color:<%=textColor%>" href="/profile_page/<%=id%>"
                 >My Profile</a
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="/post_photo_page/<%=id%>"
+              <a class="nav-link js-scroll-trigger" style="color:<%=textColor%>" href="/post_photo_page/<%=id%>"
                 >Post Photo</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" style="color:<%=textColor%>" href="/"
+                >Logout</a
               >
             </li>
           </ul>
@@ -75,12 +134,13 @@
     </nav>
 
     <!-- Header -->
-    <header class="masthead" style="background-image: url('/uploads/<%=backgroundImg%>');">
+    <header class="mastheadOverride" style="background-image: url('/uploads/<%=backgroundImg%>');">
+    <!-- <header class="masthead"> -->
       <div class="container d-flex h-100 align-items-center">
         <div class="mx-auto text-center">
-                <form action="/upload_background/<%=id%>/<%=backgroundImg%>" method="POST" enctype="multipart/form-data">
+              <form action="/upload_background/<%=id%>/<%=backgroundImg%>" method="POST" enctype="multipart/form-data">
                 <h2 class="mx-auto my-0 text-uppercase">
-                    Choose photo from computer
+                    select<br/>background<br/>photo
                 </h2><br>
                 <input
                     type="file"
@@ -89,31 +149,39 @@
                     accept="image/png, image/jpeg"
                     />
                 <input type="submit" value="Submit"></input>
-</form>
+              </form>
           <br><br>
-          <h2 style="color:blue;"> Choose Background Colour </h2>
+          <h2 class="mx-auto my-0 text-uppercase" for="bg-colors"> Select<br/>Background<br/>Colour</h2>
           <br>
-          <form action="/change_backgroundcolor/<%=id%>" method="POST">
-            <input type="radio" id="black" name="color" value="#000000">
-            <label for="Black">Black</label>
-            <input type="radio" id="white" name="color" value="#ffffff ">
-            <label for="White">White</label>
-            <input type="radio" id="grey" name="color" value="#C0C0C0	">
-            <label for="Gray">Gray</label>
-            <input type="radio" id="lbeige" name="color" value="#e1c699 ">
-            <label for="Light Beige">Light Beige</label>
-            <input type="radio" id="lblue" name="color" value="#87CEFA">
-            <label for="Light Blue">Light Blue</label> &nbsp;&nbsp;&nbsp;
-            <input type="submit" value="Submit"></input>
-          </form>
+          <select id="bg-colors">
+            <option value = "null"   name="color">Select Color</option>
+            <option value = "#ffffff" name="color">White</option>
+            <option value = "#C0C0C0" name="color">Grey</option>
+            <option value = "#e1c699" name="color">Beige</option>
+            <option value = "#87CEFA" name="color">Blue</option>
+            <option value = "#FF0000" name="color">Red</option>
+          </select>
 
-          <a method ="GET" href="/profile_page/<%=id%>" class="btn btn-primary js-scroll-trigger" id= "cancelEditBtn">Cancel Edit</a>
+          <br><br>
+          <h2 class="mx-auto my-0 text-uppercase" for="colors"> Select<br/>Text<br/>Color</h2>
+          <br>
+          <select id="text-colors">
+            <option value = "null"    name="color">Select Color</option>
+            <option value = "#000000" name="color">Black</option>
+            <option value = "#ffffff" name="color">White</option>
+            <option value = "#C0C0C0" name="color">Grey</option>
+            <option value = "#e1c699" name="color">Beige</option>
+            <option value = "#87CEFA" name="color">Blue</option>
+            <option value = "#FF0000" name="color">Red</option>
+
+          </select>
+
+          <br/><a method ="GET" href="/profile_page/<%=id%>" class="btn btn-primary js-scroll-trigger" id= "cancelEditBtn">Cancel</a>
+          <a onclick="updateSettings('<%=id%>')" class="btn btn-primary js-scroll-trigger" style="color:white"id= "SaveBtn">&nbsp&nbspSave&nbsp&nbsp</a>
 
         </div>
       </div>
     </header>
-
-
 
     <!-- Footer -->
     <footer class="bg-black small text-center text-white-50">
@@ -131,5 +199,33 @@
 
     <!-- Custom scripts for this template -->
     <script src="/js/grayscale.min.js"></script>
+
+    <script>
+
+      function updateSettings(id)
+      {
+        textColor = document.getElementById('text-colors').value;
+        bgColor = document.getElementById('bg-colors').value;
+
+        fetch(`/change_color/${id}`,{
+          method:'POST',
+          headers: {
+                "Content-Type": "application/json"
+              },
+          body:JSON.stringify({"textColor":textColor, "bgColor":bgColor})
+        })
+          .then(res => res.json())
+          .then(function(data){
+            debugger;
+            window.location.href = "/profile_page/"+ id;
+          })
+          .catch((err) => {
+            alert("Error Changing Background/Text Color");
+          })
+
+      }
+
+    </script>
+
   </body>
 </html>

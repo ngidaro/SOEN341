@@ -30,6 +30,58 @@
     <link href="/css/profilePic.css" rel="stylesheet" />
     <link href="/css/linkStyle.css" rel="stylesheet" />
     <link href="/css/customGrid.css" rel="stylesheet" />
+    <link href="/css/customCSS.css" rel="stylesheet" />
+
+    <style>
+
+      .mastheadOverride {
+        position: relative;
+        width: 100%;
+        height: auto;
+        min-height: 10rem;
+        padding: 10rem 0 5rem 0;
+        background: linear-gradient(
+            to bottom,
+            rgba(22, 22, 22, 0.3) 0%,
+            rgba(22, 22, 22, 0.7) 75%,
+            #161616 100%
+          ),
+          url("../img/bg-masthead.jpg");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: scroll;
+        background-size: cover;
+      }
+
+      .mastheadOverride h1 {
+        font-family: "Varela Round";
+        font-size: 2.5rem;
+        line-height: 2.5rem;
+        letter-spacing: 0.8rem;
+        background: -webkit-linear-gradient(
+          rgba(255, 255, 255, 0.9),
+          rgba(255, 255, 255, 0)
+        );
+        -webkit-text-fill-color: transparent;
+        -webkit-background-clip: text;
+      }
+
+      .mastheadOverride h2 {
+        font-family: "Varela Round";
+        font-size: 3rem;
+        line-height: 3.4rem;
+        letter-spacing: 0.8rem;
+        background: linear-gradient(<%=textColor%>, #C0C0C0);
+        -webkit-text-fill-color: transparent;
+        -webkit-background-clip: text;
+      }
+
+      .mastheadOverride h3 {
+        max-width: 20rem;
+        font-size: 1.4rem;
+      }
+
+    </style>
 
   </head>
 
@@ -37,7 +89,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
       <div class="container">
-        <a class="navbar-brand js-scroll-trigger" href="/news_feed/<%=id%>">Pic5</a>
+        <a class="navbar-brand js-scroll-trigger" style="color:<%=textColor%>" href="/news_feed/<%=id%>">Pic5</a>
         <button
           class="navbar-toggler navbar-toggler-right"
           type="button"
@@ -60,17 +112,17 @@
 
           <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="/news_feed/<%=id%>"
+              <a class="nav-link js-scroll-trigger" style="color:<%=textColor%>" href="/news_feed/<%=id%>"
                 >Feed</a
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="/profile_page/<%=id%>"
+              <a class="nav-link js-scroll-trigger" style="color:<%=textColor%>" href="/profile_page/<%=id%>"
                 >My Profile</a
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="/"
+              <a class="nav-link js-scroll-trigger" style="color:<%=textColor%>" href="/"
                 >Logout</a
               >
             </li>
@@ -81,22 +133,22 @@
 
     <!-- Header -->
 
-    <header class="masthead" style="background-image: url('/uploads/<%=backgroundImg%>');">
+    <header class="mastheadOverride" style="background-image: url('/uploads/<%=backgroundImg%>');">
       <div class="container d-flex h-100 align-items-center">
         <div class="mx-auto text-center">
 
           <img src="/uploads/<%=profilePicture%>" alt="profile pic" id="profilePic" class="profilePic">
-          <h2 class="mx-auto my-0 text-uppercase"><%=username%></h2>
+          <h2 class="mx-auto my-0"><%=username%></h2>
           <div class="row">
             <!-- todo : populate table with data from backend-->
             <div class="col">
-              <h3 class="text-white-50 mx-auto mt-2 mb-5">Posts <br/><%=imgData.length%></h3>
+              <h3 class="text-black-50 mx-auto mt-2 mb-5"><a style="color:<%=textColor%>">Posts </a><a style="color:<%=textColor%>"/><br/><%=imgData.length%></h3>
             </div>
             <div class="col">
-              <h3 id="followers_id" class="text-white-50 mx-auto mt-2 mb-5"><a method="GET" href="/followers_list/<%=id%>/<%=searchID%>">Followers </a><a id="nbFollowers_id"><%=followers%></a></h3>
+              <h3 id="followers_id" class="text-black-50 mx-auto mt-2 mb-5"><a class="linkStyle" style="color:<%=textColor%>" method="GET" href="/followers_list/<%=id%>/<%=searchID%>">Followers </a><a style="color:<%=textColor%>"/><a style="color:<%=textColor%>" id="nbFollowers_id"><%=followers%></a></h3>
             </div>
             <div class="col">
-              <h3 id="following_id" class="text-white-50 mx-auto mt-2 mb-5"><a method="GET" href="/Following_List/<%=id%>/<%=searchID%>">Following </a> <%=following%></h3>
+              <h3 id="following_id" class="text-black-50 mx-auto mt-2 mb-5"><a class="linkStyle" style="color:<%=textColor%>" method="GET" href="/following_list/<%=id%>/<%=searchID%>">Following </a><a style="color:<%=textColor%>"/><%=following%></h3>
             </div>
           </div>
           <!-- <button onclick="updateFollowButton('<%=sFollow%>')" type="button" class="btn btn-primary js-scroll-trigger"
@@ -126,40 +178,42 @@
       <div id="profileContent">
         <% for (var C = imgData.length-1;C >= 0;C--){%>
           <div class="thumbnail">
-            <br/><img src="/uploads/<%=profilePicture%>" alt="not displaying" class="miniProfilePic"> <b><%=imgData[C].ownerUsername%></b>
-        <!-- todo : populate posts with data from back end, add some sort of recycler viewer-->
-        <a href="/focused_myimage/<%=id%>/<%=imgData[C].img.imgName%>">
-          <br/><img src="/uploads/<%=imgData[C].img.imgName%>" alt="not displaying" height="275" width ="275">
-        </a>
-          <%var heartColor = imgData[C].likes.includes(id) ? 'red' : 'gainsboro'%>
-          <br/><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" onclick="likePhoto('<%=id%>','<%=imgData[C].img.imgName%>','<%=imgData[C].ownerID%>')">
-            <path id="heart_id_<%=imgData[C].img.imgName%>" fill="<%=heartColor%>" d="M12 4.419c-2.826-5.695-11.999-4.064-11.999 3.27 0 7.27 9.903 10.938 11.999 15.311 2.096-4.373 12-8.041 12-15.311 0-7.327-9.17-8.972-12-3.27z"/>
-          </svg>
-          <a id="<%=imgData[C].img.imgName%>_likes" method="GET" href="/..."><%=imgData[C].likes.length%></a> likes
-          <% if (imgData[C].caption[0] != ""){%>
-              <br/><img src="/uploads/<%=profilePicture%>" style="margin-top:4px" alt="not displaying" class="miniminiProfilePic"> <b><%=imgData[C].ownerUsername%></b> <%=imgData[C].caption[0]%>
-            <%}%>
+            <br/><img src="/uploads/<%=profilePicture%>" alt="not displaying" class="miniProfilePic"> <b style="color:black"><%=imgData[C].ownerUsername%></b>
+            <!-- todo : populate posts with data from back end, add some sort of recycler viewer-->
+            <a href="/focused_myimage/<%=id%>/<%=imgData[C].img.imgName%>">
+              <br/><img src="/uploads/<%=imgData[C].img.imgName%>" alt="not displaying" class="feed-image">
+            </a>
 
-          <div id="<%=imgData[C].img.imgName%>_showAll">
-            Comments: <button class="link" id="showall_<%=imgData[C].img.imgName%>_id" onclick="showComments('<%=imgData[C].img.imgName%>','<%=imgData[C].comments.length%>')">Show all (<%=imgData[C].comments.length%>)</button>
-          </div>
+              <%var heartColor = imgData[C].likes.includes(id) ? 'red' : 'gainsboro'%>
+              <br/><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" onclick="likePhoto('<%=id%>','<%=imgData[C].img.imgName%>','<%=imgData[C].ownerID%>')">
+                <path id="heart_id_<%=imgData[C].img.imgName%>" fill="<%=heartColor%>" d="M12 4.419c-2.826-5.695-11.999-4.064-11.999 3.27 0 7.27 9.903 10.938 11.999 15.311 2.096-4.373 12-8.041 12-15.311 0-7.327-9.17-8.972-12-3.27z"/>
+              </svg>
+              <a id="<%=imgData[C].img.imgName%>_likes" method="GET" href="/..."><%=imgData[C].likes.length%></a> likes
 
-          <div id="<%=imgData[C].img.imgName%>_hideAll" style="display:none">
-            <div id="<%=imgData[C].img.imgName%>_comments">
-              <!-- Data comes from show_hide_comments.js -->
+              <% if (imgData[C].caption[0] != ""){%>
+                  <br/><img src="/uploads/<%=profilePicture%>" style="margin-top:4px" alt="not displaying" class="miniminiProfilePic"> <b><%=imgData[C].ownerUsername%></b> <%=imgData[C].caption[0]%>
+                <%}%>
+
+              <div id="<%=imgData[C].img.imgName%>_showAll">
+                Comments: <button class="link" id="showall_<%=imgData[C].img.imgName%>_id" onclick="showComments('<%=imgData[C].img.imgName%>','<%=imgData[C].comments.length%>')">Show all (<%=imgData[C].comments.length%>)</button>
+              </div>
+
+              <div id="<%=imgData[C].img.imgName%>_hideAll" style="display:none">
+                <div id="<%=imgData[C].img.imgName%>_comments">
+                  <!-- Data comes from show_hide_comments.js -->
+                </div>
+                <button class="link" onclick="hideComments('<%=imgData[C].img.imgName%>')">Hide all</button>
+              </div>
+
+              <form>
+                <input type="text" id="theComment_<%=imgData[C].img.imgName%>" name="theComment" placeholder="Leave a comment">
+                <input type="button"  style="margin-top:4px; margin-bottom:4px" value="Submit" onclick="addComment('<%=id%>','<%=username%>','<%=imgData[C].ownerID%>','<%=imgData[C].img.imgName%>')">
+              </form>
             </div>
-            <button class="link" onclick="hideComments('<%=imgData[C].img.imgName%>')">Hide all</button>
-          </div>
-
-          <form>
-            <input type="text" id="theComment_<%=imgData[C].img.imgName%>" name="theComment" placeholder="Leave a comment">
-            <input type="button"  style="margin-top:4px; margin-bottom:4px" value="Submit" onclick="addComment('<%=id%>','<%=username%>','<%=imgData[C].ownerID%>','<%=imgData[C].img.imgName%>')">
-          </form>
+          <%}%>
         </div>
-    <%}%>
-  </div>
-</div>
-</section>
+      </div>
+    </section>
     <!-- Footer -->
     <footer class="bg-black small text-center text-white-50">
       <div class="container">

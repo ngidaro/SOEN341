@@ -29,6 +29,58 @@
     <link href="/css/grayscale.css" rel="stylesheet" />
     <link href="/css/profilePic.css" rel="stylesheet" />
     <link href="/css/linkStyle.css" rel="stylesheet" />
+    <link href="/css/customCSS.css" rel="stylesheet" />
+
+    <style>
+
+      .mastheadOverride {
+        position: relative;
+        width: 100%;
+        height: auto;
+        min-height: 10rem;
+        padding: 10rem 0 5rem 0;
+        background: linear-gradient(
+            to bottom,
+            rgba(22, 22, 22, 0.3) 0%,
+            rgba(22, 22, 22, 0.7) 75%,
+            #161616 100%
+          ),
+          url("../img/bg-masthead.jpg");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: scroll;
+        background-size: cover;
+      }
+
+      .mastheadOverride h1 {
+        font-family: "Varela Round";
+        font-size: 2.5rem;
+        line-height: 2.5rem;
+        letter-spacing: 0.8rem;
+        background: -webkit-linear-gradient(
+          rgba(255, 255, 255, 0.9),
+          rgba(255, 255, 255, 0)
+        );
+        -webkit-text-fill-color: transparent;
+        -webkit-background-clip: text;
+      }
+
+      .mastheadOverride h2 {
+        font-family: "Varela Round";
+        font-size: 3rem;
+        line-height: 3.4rem;
+        letter-spacing: 0.8rem;
+        background: linear-gradient(<%=textColor%>, #C0C0C0);
+        -webkit-text-fill-color: transparent;
+        -webkit-background-clip: text;
+      }
+
+      .mastheadOverride h3 {
+        max-width: 20rem;
+        font-size: 1.4rem;
+      }
+
+    </style>
 
   </head>
 
@@ -36,7 +88,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
       <div class="container">
-        <a class="navbar-brand js-scroll-trigger" href="/news_feed/<%=id%>">Pic5</a>
+        <a class="navbar-brand js-scroll-trigger" style="color:<%=textColor%>" href="/news_feed/<%=id%>">Pic5</a>
         <button
           class="navbar-toggler navbar-toggler-right"
           type="button"
@@ -59,17 +111,17 @@
 
           <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="/news_feed/<%=id%>"
+              <a class="nav-link js-scroll-trigger" style="color:<%=textColor%>" href="/news_feed/<%=id%>"
                 >Feed</a
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="/profile_page/<%=id%>"
+              <a class="nav-link js-scroll-trigger" style="color:<%=textColor%>" href="/profile_page/<%=id%>"
                 >My Profile</a
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="/"
+              <a class="nav-link js-scroll-trigger" style="color:<%=textColor%>" href="/"
                 >Logout</a
               >
             </li>
@@ -80,22 +132,23 @@
 
     <!-- Header -->
 
-    <header class="masthead">
+    <header class="mastheadOverride" style="background-image: url('/uploads/<%=backgroundImg%>');">
+    <!-- <header class="masthead"> -->
       <div class="container d-flex h-100 align-items-center">
         <div class="mx-auto text-center">
 
           <img src="/uploads/<%=profilePicture%>" alt="profile pic" id="profilePic" class="profilePic">
-          <h2 class="mx-auto my-0 text-uppercase"><%=username%></h2>
+          <h2 class="mx-auto my-0"><%=username%></h2>
           <div class="row">
             <!-- todo : populate table with data from backend-->
             <div class="col">
-              <h3 class="text-white-50 mx-auto mt-2 mb-5">Posts <br/><%=imgData.length%></h3>
+              <h3 class="text-black-50 mx-auto mt-2 mb-5"><a style="color:<%=textColor%>">Posts </a><a style="color:<%=textColor%>"/><br/><%=imgData.length%></h3>
             </div>
             <div class="col">
-              <h3 id="followers_id" class="text-white-50 mx-auto mt-2 mb-5"><a method="GET" href="/Followers_List/<%=id%>/<%=searchID%>">Followers </a> <%=followers%></h3>
+              <h3 id="followers_id" class="text-black-50 mx-auto mt-2 mb-5"><a class="linkStyle" style="color:<%=textColor%>" method="GET" href="/followers_list/<%=id%>/<%=searchID%>">Followers </a><a style="color:<%=textColor%>"/><%=followers%></h3>
             </div>
             <div class="col">
-              <h3 id="following_id" class="text-white-50 mx-auto mt-2 mb-5"><a method="GET" href="/Following_List/<%=id%>/<%=searchID%>">Following </a> <%=following%></h3>
+              <h3 id="following_id" class="text-black-50 mx-auto mt-2 mb-5"><a class="linkStyle" style="color:<%=textColor%>" method="GET" href="/following_list/<%=id%>/<%=searchID%>">Following </a><a style="color:<%=textColor%>"/><%=following%></h3>
             </div>
           </div>
         </div>
