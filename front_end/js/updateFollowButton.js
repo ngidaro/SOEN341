@@ -1,3 +1,16 @@
+// ------------------------------------------------------------------------------
+/*  updateFollowButton(string,string)
+
+    Definition: This function updates the Follow button dynamically without
+                refreshing the page. Follow   -> Unfollow
+                                     Unfollow -> Follow
+
+    Variables:
+        id:         The id of the current user.
+        searchId:   The id of the user who the current user wants to follow/unfollow
+        data:       Data returned from the server side.
+*/
+// ------------------------------------------------------------------------------
 function updateFollowButton(id,searchId)
 {
   var FollowUnfollow = "";

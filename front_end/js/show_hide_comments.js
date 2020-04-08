@@ -1,4 +1,3 @@
-// var verify = require('/js/verifyUser.js');
 // ------------------------------------------------------------------------------
 /*  showComments(string,string)
 
@@ -27,11 +26,7 @@ function showComments(imgName,id)
       return;
     }
     else {
-
-      // alert(data.userProfile.length);
-
       // populate the comments section
-
       for (var i = 0; i < data.allComments.length; i++) {
         for (var j = 0; j < data.userProfile.length; j++) {
           if (data.allComments[i].username === data.userProfile[j].username) {

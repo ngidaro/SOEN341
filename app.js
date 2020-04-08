@@ -241,10 +241,16 @@ app.post('/login_page/:userName/:passWord', function (req,res) {
         req:      Request from page.
         res:      Response from page.
         user:     Object from the model Users() -> which is the UserSchema located in /models/user.js
-          user.username:  String data obtained from the username textfield.
-          user.password:  String data obtained from the password textfield.
-          user.firstname: String data obtained from the firstname textfield.
-          user.lastname:  String data obtained from the lastname textfield.
+          user.username:                    String data obtained from the username textfield.
+          user.password:                    String data obtained from the password textfield.
+          user.firstname:                   String data obtained from the firstname textfield.
+          user.lastname:                    String data obtained from the lastname textfield.
+          user.email:                       String data obtained from the email textfield.
+          user.profileSettings.bgColor:     String containing the hexadecimal value of the color white.
+                                            Color of the background on the user's profile page.
+          user.profileSettings.textColor:   String containing the hexadecimal value of the color black.
+                                            Color of the text on the user's profile page
+          user.profileSettings.bgImg:       String containing the name of the image used as the background.
         count:    The count of user's that have the username searched.
                   Either 0 or 1. If 0 then username does not exist.
                                  If 1 then username is already taken.
@@ -261,9 +267,9 @@ app.post('/create_account_page', function(req,res){
   user.firstName = req.body.fname;
   user.lastName = req.body.lname;
   user.email = req.body.email;
-  user.profileSettings.bgColor= "#ffffff";
-  user.profileSettings.textColor= "#000000";
-  user.profileSettings.bgImg="bg-masthead.jpg";
+  user.profileSettings.bgColor = "#ffffff";
+  user.profileSettings.textColor = "#000000";
+  user.profileSettings.bgImg = "bg-masthead.jpg";
 
   Users.countDocuments({username: user.username}, function (err, count){
     if(count>0){
@@ -320,6 +326,7 @@ const storage = new GridFsStorage({
 
 const upload = multer({ storage: storage }).single('file');
 
+// Local storage engine. Will add the image to the public/uploads folder in this project
 const localStorage = multer.diskStorage({
   destination: './public/uploads/',
   filename: function (req, file, cb) {
@@ -329,7 +336,7 @@ const localStorage = multer.diskStorage({
   }
 });
 
-//file in the next line is the fieldname from the post_photo_page_ejs file
+// File in the next line is the fieldname from the post_photo_page_ejs file
 const uploadLocal = multer({ storage: localStorage }).single('file');
 
 // ------------------------------------------------------------------------------
@@ -498,7 +505,7 @@ app.get('/search_page/:id/:name',function(req,res){
     Users.find({username:{$regex: req.params.name, $options: "i"}}, function(err, docs){
 
       res.render('search_page',{id:req.params.id,
-                                data: docs,                                
+                                data: docs,
                                 backgroundImg:userDocs.profileSettings.bgImg,
                                 textColor:userDocs.profileSettings.textColor
                               });
@@ -507,16 +514,16 @@ app.get('/search_page/:id/:name',function(req,res){
 });
 
 // -------------------------------------------------------------------------------------------
-// Definition: news_need is the page where the user can view all the images of the users that
-//             they follow. The images are displayed from newest to oldest.
-// Variables:
-//   id:                  The id of the current logged on user
-//   displayImage:        Array which contains all the images info to be displayed on the feed
-//   docs:                All data which is associated with the user's ID
-//   images:              All image data pertaining to the person being followed by the current user
-//   storeFollowedUsers:  Array which contains all the info pertaing to the users being followed by the
-//                        current User
-//
+/*   Definition: news_need is the page where the user can view all the images of the users that
+                 they follow. The images are displayed from newest to oldest.
+     Variables:
+        id:                  The id of the current logged on user
+        displayImage:        Array which contains all the images info to be displayed on the feed
+        docs:                All data which is associated with the user's ID
+        images:              All image data pertaining to the person being followed by the current user
+        storeFollowedUsers:  Array which contains all the info pertaing to the users being followed by the
+                             current User.
+*/
 // -------------------------------------------------------------------------------------------
 app.get('/news_feed/:id',function(req,res){
 
@@ -549,16 +556,12 @@ app.get('/news_feed/:id',function(req,res){
       }
     });
 
-    //The User.find... is needed so that this app.get can execute sequentially
-    //If the User.find... is not there then the screen will render before performing the above loops
     Users.findById(req.params.id,function(error,documents){
-      // console.log(displayImages.length);
 
       //Store current User
       storeFollowedUsers.push(documents);
-      // console.log(storeFollowedUsers);
 
-      //wait 1 second before rendering the news_feed -> need time to loop through files for images
+      //Wait 250 milisecond before rendering the news_feed -> need time to loop through files for images
       setTimeout(function(){
         res.render('news_feed',{ id:req.params.id,
                                       username:docs.username,
@@ -648,18 +651,18 @@ app.post('/show_comments/:imgName', async function(req,res){
 });
 
 // ------------------------------------------------------------------------------
-// Definition: follow_page is the page of the user who correspong to the searchID.
-//             This page contains a follow button and all information realting to the searched user
-//             This function populates the follow_page.ejs with a specific user's data
-// Variables:
-//   id:        The id of the current logged on user
-//   searchID:  The id of the user who has been searched
-//   docs:      All data which is associated with the searchID
-//   sFollow:   The string for the button -> Either "Follow" or "Unfollow"
-//
-//   NOTE: req.params.id gets the id coming from the url (:id)
-//         req.params.searchID get the searchID from the url (:searhID)
-//
+/*  Definition: follow_page is the page of the user who correspong to the searchID.
+                This page contains a follow button and all information realting to the searched user
+                This function populates the follow_page.ejs with a specific user's data
+    Variables:
+      id:        The id of the current logged on user
+      searchID:  The id of the user who has been searched
+      docs:      All data which is associated with the searchID
+      sFollow:   The string for the button -> Either "Follow" or "Unfollow"
+
+      NOTE: req.params.id gets the id coming from the url (:id)
+            req.params.searchID get the searchID from the url (:searhID)
+*/
 // ------------------------------------------------------------------------------
 app.get('/follow_page/:id/:searchID',function(req,res){
 
@@ -703,10 +706,9 @@ app.get('/follow_page/:id/:searchID',function(req,res){
                 user from the 'following' array of the user's id and remove the user's id
                 from the 'followers' array of the searchID user or it will update the arrays.
 
-                searchID user: The us that was looked up.
-                user id:       The logged on user (main).
-
     Variables:
+      searchID: The us that was looked up.
+      id:       The logged on user (main).
       isFollow: Boolean which determines if the use wants to Follow or Unfollow another user.
 */
 // ------------------------------------------------------------------------------
@@ -760,12 +762,11 @@ function saved(error,success)
 
     Definition: Pushed comment into the array of comments for a given picture
 
-                searchID user: The user that was looked up.
-                user id:       The logged on user (main).
-                imgName:       Name of the file accessed
-
     Variables:
-      searchDocs: query of user DB.
+      searchID:      The user that was looked up.
+      id:            The logged on user (main).
+      imgName:       Name of the file accessed
+      searchDocs:    Query of user DB.
 */
 // ------------------------------------------------------------------------------
 //This is where the current user can leave a comment
@@ -787,12 +788,22 @@ app.post('/leaveComment/:id/:username/:imgOwnerId/:imgName',function(req,res){
   });
 });
 
-//displays my image in a better view
+// ------------------------------------------------------------------------------
+/*  app.get('/focused_myimage/:id/:imgName')
+
+    Definition: When a user presses on an image, the image will be display on a new
+                screen.
+
+    Variables:
+      id:       The current user.
+      imgName:  Name of the file wanting to be focused on.
+      docs:     Query from the DB containing all the user's data.
+      imgDocs:  Query from the DB containing all data related to the image clicked.
+      imgData:  Query from the DB containing all data related to the user who posted the image.
+*/
+// ------------------------------------------------------------------------------
 app.get('/focused_myimage/:id/:imgName',function(req,res)
 {
-
-
-
   Users.findById(req.params.id,function(error,docs){
     Pics.find({"img.imgName":req.params.imgName}, function(error,imgDocs){
 
@@ -810,36 +821,16 @@ app.get('/focused_myimage/:id/:imgName',function(req,res)
     });
   });
 });
-//displays somebody's picture in a better view
-app.get('/focused_image/:id/:searchID/:imgName',function(req,res)
-{
-  Users.findById(req.params.searchID,function(error,searchDocs){ //gets the user were looking at
 
-  Users.findById(req.params.id,function(error,docs){
-  Pics.find({"img.imgName":req.params.imgName}, function(error,imgDocs){
-
-    res.render('focused_image',{ id:req.params.id,
-                                  username:searchDocs.username,
-                                  followers:searchDocs.followers.length,
-                                  following:searchDocs.following.length,
-                                  bio:searchDocs.bio,
-                                  searchID:req.params.searchID,
-                                  imgData:imgDocs
-                                });
-                              });
-                            });
-                          });
-});
 // ------------------------------------------------------------------------------
 /*  app.post('/like_photo/:id/:imgName/:searchID')
 
     Definition: Pushes a like into the array of likes for a given picture
 
-                user id:       The logged on user (main).
-                imgName:       Name of the file accessed
-
     Variables:
-      imgDocs: query of Pics DB.
+      id:      The logged on user (main).
+      imgName: Name of the file accessed
+      imgDocs: Query of Pics DB.
 */
 // ------------------------------------------------------------------------------
 //This is where the current user can like a photo
@@ -869,10 +860,9 @@ app.post('/like_photo/:id/:imgName/:imgOwnerID', async function(req,res){
 
     Definition: Pushes bio into the bio array
 
-                user id:       The logged on user (main).
-
     Variables:
-      req.body.bio yields the bio text inputted from the form.
+      id:       The logged on user (main).
+      req.body.bio:  Gets the bio text inputted from the form.
 */
 // ------------------------------------------------------------------------------
 //This is where the current user can edit their profile
@@ -884,6 +874,20 @@ app.post('/edit_profile/:id',function(req,res){
   });
 });
 
+// ------------------------------------------------------------------------------
+/*  app.get(/xxfollowxxx_list/:id)
+
+    Definition: Displays a list of the Followers/Following of a particular user.
+
+    Variables:
+      id:       Id of the current user.
+      searchID: Id of the searched user.
+
+
+    NOTE: If there is a "my" before the followxxx then a pertains to the current user.
+          This "documentation" is for the next 4 functions.
+*/
+// ------------------------------------------------------------------------------
 app.get('/myfollowers_list/:id',function(req,res){
 
   Users.findById(req.params.id,function(error,docs){
@@ -971,6 +975,24 @@ app.get('/following_list/:id/:searchID',function(req,res){
     });
   });
 });
+
+// ------------------------------------------------------------------------------
+/*  app.get(/forgot_pass)
+
+    Definition: If the user forgets their password, then they can press "Forgot Password".
+                The page will redirect where they will be prompted to enter their email and
+                username. A popup screen will appear, showing the user's password if the
+                data entered was correct.
+
+    Variables:
+      Email:      Email entered by the user.
+      Username:   Username entered by the user.
+      docs:       Query from the database containing the info from which the user entered.
+                  Will be null if the user entered the wrong info.
+
+    NOTE: This function is requested using the Fetch API on the frontend (Forgot_Pass.ejs).
+*/
+// ------------------------------------------------------------------------------
 app.get('/forgot_pass',function(req,res){
   res.render("Forgot_Pass");
 });
@@ -983,18 +1005,10 @@ app.post('/forgot_pass/:Email/:Username', function (req,res) {
       res.json({queryExists:false});
     }
     else {
-      //Verify that the username and password are correct
-      // console.log(docs.username);
-      // console.log(req.params.Username);
-      //
-      // console.log(docs.email);
-      // console.log(req.params.Email);
 
       if((docs.username == req.params.Username) && (docs.email == req.params.Email))
       {
         console.log('Username and Email Correct');
-      //  var sId = docs[0]._id;
-        // res.redirect('/profile_page/' + sId);
         res.json({queryExists:true,
                   thePass:docs.password});
       }
@@ -1005,21 +1019,24 @@ app.post('/forgot_pass/:Email/:Username', function (req,res) {
     }
   });
 });
-//Diplsays the get request for a request to edit the profile page
-app.get('/edit_profile/:id',function(req,res){
-  //findById returns object NOT Array of objects
-  User.findById(req.params.id,function(error,docs){
-    Pics.find({ownerID:req.params.id}, function(error,imgDocs){
-      res.render('profile_edit',{ id:req.params.id,
-                                    username:docs.username,
-                                    followers:docs.followers.length,
-                                    following:docs.following.length,
-                                    bio:docs.bio,
-                                    imgData:imgDocs
-                                  }); //in ejs file do <%=username%>
-    });
-  });
-});
+
+// ------------------------------------------------------------------------------
+/*  app.get(/edit_background/:id)
+
+    Definition: When the User presses the Edit Background Button on their profile
+                page, they will be able to change the background image by selecting
+                the image from their computer and then pressing "submit". Image name will
+                be saved to the DB under the User's collection. The user can also
+                change the color of their text on the profile page.
+
+    Variables:
+      id:         The id of the current user.
+      bgColor:    The color selected by the user to be their background color.
+      textColor:  The color selected by the user to be their text color.
+
+    NOTE: This "Documentation" is for the next 3 functions.
+*/
+// ------------------------------------------------------------------------------
 app.get('/edit_background/:id',function(req,res){
 
   Users.findById(req.params.id,function(error,docs){
@@ -1086,10 +1103,6 @@ app.post('/upload_background/:id/:currentBackgroundImg',(req, res)=> {
         User.findOneAndUpdate({_id:req.params.id},{$set: {"profileSettings.bgImg": req.file.filename}},{new: true},function (error, docs) {
             saved(error,docs);
             console.log("Image saved");
-            // setTimeout(function()
-            // {
-            //   res.redirect('/profile_page/'+req.params.id);
-            // },100);
             res.redirect('/profile_page/' + req.params.id);
         });
       }
@@ -1114,8 +1127,6 @@ app.post('/upload_background/:id/:currentBackgroundImg',(req, res)=> {
                 seconds:    The current second.
 */
 // ------------------------------------------------------------------------------
-
-
 function date()
 {
   let dateObj = new Date();

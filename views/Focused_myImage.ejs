@@ -85,13 +85,13 @@
         <div class="row">
           <div class="centerFocused">
             <!-- todo : loaded image goes here-->
-              <br/><img src="/uploads/<%=profilePicture%>" alt="profile pic" style="margin-top:4px" class="miniProfilePic"/> <b><%=imgData[0].ownerUsername%></b>
+              <br/><img src="/uploads/<%=profilePicture%>" alt="profile pic" onclick="verifyID('<%=id%>','<%=imgData[0].ownerID%>')" style="margin-top:4px" class="miniProfilePic"/> <b><%=imgData[0].ownerUsername%></b>
               <br/><img src="/uploads/<%=imgData[0].img.imgName%>" alt="not displaying" height="500" width ="500">
               <%var heartColor = imgData[0].likes.includes(id) ? 'red' : 'gainsboro'%>
               <br/><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="margin-top:4px" onclick="likePhoto('<%=id%>','<%=imgData[0].img.imgName%>','<%=imgData[0].ownerID%>')">
                 <path id="heart_id_<%=imgData[0].img.imgName%>" fill="<%=heartColor%>" d="M12 4.419c-2.826-5.695-11.999-4.064-11.999 3.27 0 7.27 9.903 10.938 11.999 15.311 2.096-4.373 12-8.041 12-15.311 0-7.327-9.17-8.972-12-3.27z"/>
                   </svg>
-              <a id="<%=imgData[0].img.imgName%>_likes" method="GET" href="/..."><%=imgData[0].likes.length%></a> likes
+              <a id="<%=imgData[0].img.imgName%>_likes" method="GET"><%=imgData[0].likes.length%></a> likes
               <% if (imgData[0].caption[0] != ""){%>
                   <br/><img src="/uploads/<%=profilePicture%>" alt="profile pic" style="margin-top:4px" class="miniminiProfilePic"/> <b><%=imgData[0].ownerUsername%></b> <%=imgData[0].caption[0]%>
                 <%}%>
@@ -155,6 +155,7 @@
     <script src="/js/leaveComment.js"></script>
     <script src="/js/likePhoto.js"></script>
     <script src="/js/show_hide_comments.js"></script>
+    <script src="/js/verifyUser.js"></script>
 
   </body>
 </html>
