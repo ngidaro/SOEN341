@@ -1,23 +1,24 @@
 .profilePic {
-border-radius: 50%;
-width: 200px;
-height: 200px;
+  border-radius: 50%;
+  width: 200px;
+  height: 200px;
 }
 
 .miniProfilePic{
   border-radius: 50%;
   width: 30px;
   height: 30px;
-  margin-bottom: 4px
+  margin-bottom: 4px;
 }
 
 .miniminiProfilePic{
   border-radius: 50%;
   width: 20px;
   height: 20px;
-  margin-bottom: 4px
+  margin-bottom: 4px;
 }
 
 .clickableIcon {
   cursor: pointer;
 }
+

@@ -41,7 +41,7 @@ function showComments(imgName,id)
     }
   })
   .catch((err) => {
-    alert("Show Comments Error");
+    return;
   })
 }
 

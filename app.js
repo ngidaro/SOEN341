@@ -13,7 +13,6 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const crypto = require('crypto');
 const multer = require('multer');
 const GridFsStorage = require('multer-gridfs-storage');
 const Grid = require('gridfs-stream');
@@ -308,18 +307,12 @@ const storage = new GridFsStorage({
   url: MONGODB_URI,
   file: (req, file) => {
     return new Promise((resolve, reject) => {
-      crypto.randomBytes(16, (err, buf) => {
-        if (err) {
-          return reject(err);
-        }
-        const filename = /*buf.toString('hex')*/date() + file.originalname;
-        // console.log(filename + "  storage");
-        const fileInfo = {
-          filename: filename,
-          bucketName: 'pics' //Has to match the collection name gfs.collection('pics');
-        };
-        resolve(fileInfo);
-      });
+      const filename = date() + file.originalname;
+      const fileInfo = {
+        filename: filename,
+        bucketName: 'pics' //Has to match the collection name gfs.collection('pics');
+      };
+      resolve(fileInfo);
     });
   }
 });
