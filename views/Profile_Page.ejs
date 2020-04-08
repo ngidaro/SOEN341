@@ -30,9 +30,9 @@
     <link href="/css/linkStyle.css" rel="stylesheet" />
     <link href="/css/dropdownButton.css" rel="stylesheet" />
     <link href="/css/customGrid.css" rel="stylesheet" />
-    <link href="/css/customCSS.css" rel="stylesheet" />
 
     <style>
+    /* These styles are in a few of the ejs files because they require a dynamic variable (textColor) */
 
     .linkStyle{
       color: <%=textColor%>;
@@ -111,8 +111,8 @@
           <i class="fas fa-bars"></i>
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
+
           <!-- Search Bar -->
-          <!-- Must go to the profile_page "post" which will then redirect to search_page -->
           <form class="Search" action="/profile_page/<%=id%>" method="POST">
             <input type="text" name="search" id="search" placeholder="Search..">
             <button type="submit"><i class="fa fa-search"></i></button>
@@ -148,12 +148,12 @@
     <!-- <header class="masthead"> -->
       <div class="container d-flex h-100 align-items-center">
         <div class="mx-auto text-center">
+          <!-- Displays the user's profile picture, username, # of posts, # of followers, and # of following -->
           <a href="/post_profile_pic/<%=id%>">
             <img src="/uploads/<%=profilePicture%>" alt="profile pic" id="profilePic" class="profilePic"/>
           </a>
           <h2><%=username%></h2>
           <div class="row">
-            <!-- todo : populate table with data from backend-->
             <div class="col">
               <h3 class="mx-auto mt-2 mb-5" style="color:<%=textColor%>">Posts <br/><%=imgData.length%></h3>
             </div>
@@ -205,19 +205,26 @@
               <div style="Text-align:right;float:right">
                 <div class="dots" onclick="displayDropdown('<%=imgData[C].img.imgName%>')"><img src="/uploads/vertical_dots.png" alt="dots" id="dots_<%=imgData[C].img.imgName%>" class="dots-img"/></div>
                 <div id="myDropdown_<%=imgData[C].img.imgName%>" class="dropdown-content">
+                  <!-- Button to delete the user's photo -->
                   <button onclick="deletePhoto('<%=id%>','<%=imgData[C].img.imgName%>')" class="dropdownButton">Delete</button>
                 </div>
               </div>
             </div>
 
+            <!-- User's posted images -->
             <a href="/focused_myimage/<%=id%>/<%=imgData[C].img.imgName%>" >
               <img src="/uploads/<%=imgData[C].img.imgName%>" alt="not displaying" class="feed-image">
             </a>
+
+            <!-- Like button (heart) below the image -->
             <%var heartColor = imgData[C].likes.includes(id) ? 'red' : 'gainsboro'%>
             <br/><svg xmlns="http://www.w3.org/2000/svg" style="margin:auto" width="24" height="24" viewBox="0 0 24 24" onclick="likePhoto('<%=id%>','<%=imgData[C].img.imgName%>','<%=imgData[C].ownerID%>')">
               <path id="heart_id_<%=imgData[C].img.imgName%>" fill="<%=heartColor%>" d="M12 4.419c-2.826-5.695-11.999-4.064-11.999 3.27 0 7.27 9.903 10.938 11.999 15.311 2.096-4.373 12-8.041 12-15.311 0-7.327-9.17-8.972-12-3.27z"/>
             </svg>
+
+            <!-- Displays the number of likes for that particular photo -->
             <a id="<%=imgData[C].img.imgName%>_likes" style="margin-left:4px" method="GET"><%=imgData[C].likes.length%></a> likes
+
             <!-- Display Caption if it exists -->
             <% if (imgData[C].caption[0] != ""){%>
                 <br/><img src="/uploads/<%=profilePicture%>" style="margin-top:4px" alt="profile pic" class="miniminiProfilePic"/> <b><%=imgData[C].ownerUsername%></b> <%=imgData[C].caption[0]%>
@@ -243,27 +250,22 @@
         <%}%>
       </div>
     </div>
-</section>
-          <div class="col-8">
-            <div class="row">
-              <div class="col-2">
-                <h3 class="text-white"></h3>
-              </div>
-              <div class="col-2">
-                <h3 class="text-white"></h3>
-                <!-- todo : likes number goes here -->
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-8">
-                <h3 class="text-white"></h3>
-                <!-- todo: load caption here-->
-              </div>
-            </div>
-          </div>
+  </section>
+    <div class="col-8">
+      <div class="row">
+        <div class="col-2">
+          <h3 class="text-white"></h3>
+        </div>
+        <div class="col-2">
+          <h3 class="text-white"></h3>
         </div>
       </div>
-    </section>
+      <div class="row">
+        <div class="col-8">
+          <h3 class="text-white"></h3>
+        </div>
+      </div>
+    </div>
 
     <!-- Footer -->
     <footer class="bg-black small text-center text-white-50">
@@ -287,25 +289,32 @@
 
 
     <script>
-
+      // ------------------------------------------------------------------------------
+      /*  Definition: When the image of the 3 dots is pressed, a dropdown box will appear,
+                      displaying a delete button, which then the user can press and it Will
+                      delete their photo.
+          Variables:
+            id:       The id of the current user.
+            imgName:  The name of the image the user wants to delete.
+      */
+      // ------------------------------------------------------------------------------
       function displayDropdown(imgName)
       {
         document.getElementById("myDropdown_"+imgName).classList.toggle("show");
       }
+
       //If user clicks outside the menu, the menu will close
       window.onclick = function(event) {
         if (!event.target.matches('.dots')) {
-          var dropdowns = document.getElementsByClassName("dropdown-content");
-          var i;
-          for (i = 0; i < dropdowns.length; i++) {
-            var openDropdown = dropdowns[i];
+          var dropdown = document.getElementsByClassName("dropdown-content");
+          for (var i = 0; i < dropdown.length; i++) {
+            var openDropdown = dropdown[i];
             if (openDropdown.classList.contains('show')) {
               openDropdown.classList.remove('show');
             }
           }
         }
       }
-
       function deletePhoto(id,imgName)
       {
         if(confirm("Are you sure you want to delete this photo?"))
@@ -333,6 +342,17 @@
         }
       }
 
+      // ------------------------------------------------------------------------------
+      /*  updateProfile(string)
+
+          Definition: When the edit profile button is pressed, the bio textbox Will
+                      appear. The user can type in this textbox and then press submit,
+                      and whatever the user typed will be display below the "About Me" section
+          Variables:
+            id:       The id of the current user.
+            bio:      Contains the content written in the bio textbox by the user.
+      */
+      // ------------------------------------------------------------------------------
       function updateProfile(id)
       {
         var bio = document.getElementById("bio").value;
@@ -352,6 +372,7 @@
             alert("Edit Profile Error");
           })
       }
+      //Toggles between showing and unshowing the Biography text box and edit Background button
       function editProfile()
       {
         debugger;
