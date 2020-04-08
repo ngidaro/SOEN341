@@ -179,29 +179,47 @@
 
   <script>
 
+    // ------------------------------------------------------------------------------
+    /*  loginAuthentication()
+
+        Definition: Verifies the data inputted by the user. If the username and password
+                    exists, the user will be redirected to their profile page.
+
+        Variables:
+          username:   The username the user entered.
+          password:   The password the user entered.
+    */
+    // ------------------------------------------------------------------------------
     function loginAuthentication()
     {
       var username = document.getElementById("user").value;
       var password = document.getElementById("pass").value;
 
-      fetch(`/login_page/${username}/${password}`,{method:'POST','Content-Type': 'application/json'})
-        .then(res => res.json())
-        .then(function(data){
-          // debugger;
-          if(!data.bExists)
-          {
-            alert("Invalid username or password, please try again.");
-          }
-          else {
-            window.location.href = "profile_page/" + data.id;
+      if(username === "" || password === "")
+      {
+        alert("Please do not leave any empty fields, make sure to enter a username and a password!");
+      }
+      else
+      {
+        fetch(`/login_page/${username}/${password}`,{method:'POST','Content-Type': 'application/json'})
+          .then(res => res.json())
+          .then(function(data){
+            // debugger;
+            if(!data.bExists)
+            {
+              alert("Invalid username or password, please try again.");
+            }
+            else {
+              window.location.href = "profile_page/" + data.id;
 
-          }
-        })
-        .catch((err) => {
-          // debugger;
-          alert("Please do not leave any empty fields, make sure to enter a username and a password!");
+            }
+          })
+          .catch((err) => {
+            // debugger;
+            alert("Login Authentication Error");
 
-        })
+          })
+      }
     }
 
   </script>

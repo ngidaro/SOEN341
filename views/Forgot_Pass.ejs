@@ -123,33 +123,6 @@
       </div>
 
     </div>
-    <script>
-    function checkAuthentication()
-    {
-      var email = document.getElementById("email").value;
-      var username = document.getElementById("user").value;
-      fetch(`/forgot_pass/${email}/${username}`,{method:'POST',
-      headers: {
-              "Content-Type": "application/json"
-          },
-        body:JSON.stringify({"email":email, "username":username})})
-        .then(res => res.json())
-        .then(function(data){
-          console.log(data.queryExists);
-          if(!data.queryExists)
-          {
-            alert("Invalid info. Please try again.");
-          }
-          else {
-            confirm("Your password is: "+ data.thePass);
-            window.location.href = "/login_page";
-          }
-        })
-        .catch((err) => {
-          alert("Error when entering information!");
-        })
-    }
-    </script>
   </section>
   <!-- Footer -->
   <footer class="bg-black small text-center text-white-50">
@@ -167,9 +140,59 @@
 
   <!-- Custom scripts for this template -->
   <script src="js/grayscale.min.js"></script>
-  <script>
 
+    <script>
 
-</body>
+      // ------------------------------------------------------------------------------
+      /*  checkAuthentication()
+
+          Definition: This function takes the user inputted data from the Forgot_Pass page
+                      and verifies if the username and email exist. If they exist, this function
+                      will display the password to the user.
+
+          Variables:
+            email:    The user's inputted email.
+            username: The user's inputted username.
+
+      */
+      // ------------------------------------------------------------------------------
+      function checkAuthentication()
+      {
+        var email = document.getElementById("email").value;
+        var username = document.getElementById("user").value;
+
+        if(email === "" || username === "")
+        {
+          alert("One or more fields are empty.");
+          document.getElementById("email").value = "";
+          document.getElementById("user").value = "";
+        }
+        else
+        {
+          fetch(`/forgot_pass/${email}/${username}`,{method:'POST',
+          headers: {
+                  "Content-Type": "application/json"
+              },
+            body:JSON.stringify({"email":email, "username":username})})
+            .then(res => res.json())
+            .then(function(data){
+              console.log(data.queryExists);
+              if(!data.queryExists)
+              {
+                alert("Invalid info. Please try again.");
+              }
+              else {
+                confirm("Your password is: "+ data.thePass);
+                window.location.href = "/login_page";
+              }
+            })
+            .catch((err) => {
+              alert("Error when entering information!");
+            })
+        }
+      }
+    </script>
+
+  </body>
 
 </html>
