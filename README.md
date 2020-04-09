@@ -1,4 +1,4 @@
-# SOEN-341
+# SOEN-341: Pic5
 
 ## Objective
 Develop an instagram application
