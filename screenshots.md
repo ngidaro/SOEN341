@@ -49,6 +49,7 @@ Users can also select a background color and a text color. To confirm changes, u
 Final result:
 
 ![](Screenshots/result-background-pic-text-color.png)
+
 ![](Screenshots/result-background-color.png)
 
 ## Post Pictures
@@ -135,6 +136,7 @@ Users can view the list of followers on a user's profile page by clicking on "Fo
 ![](Screenshots/click-to-view-followers.png)
 
 The list:
+
 ![](Screenshots/followers-list.png)
 
 ## Following List
