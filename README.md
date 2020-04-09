@@ -43,3 +43,5 @@ Back-End:
 - NodeJS
 - ExpressJS 
 
+## Screenshots
+[Link to screenshots](https://github.com/ngidaro/SOEN341/blob/master/screenshots.md)
